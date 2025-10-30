@@ -9,9 +9,9 @@ const CONFIG = {
   outputFile: 'index.html', // Fichier de sortie
   excludeFiles: ['index.html', 'generate-index.js', 'package.json', 'package-lock.json', 'node_modules', '.git', '.github'],
   extensions: ['.html', '.htm'], // Extensions à inclure
-  title: 'Mon Site - Index',
-  header: 'Bienvenue sur mon site',
-  description: 'Liste de toutes les pages disponibles'
+  title: 'Institut du Couple - Marie-Christine Abatte',
+  header: 'Institut du Couple',
+  description: 'Tous les outils et questionnaires pour évaluer et améliorer votre relation'
 };
 
 /**
@@ -132,7 +132,7 @@ function generateIndexHtml(files) {
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
       min-height: 100vh;
       padding: 20px;
     }
@@ -152,7 +152,7 @@ function generateIndexHtml(files) {
     }
 
     h1 {
-      color: #667eea;
+      color: #f5576c;
       font-size: 2.5rem;
       margin-bottom: 10px;
       font-weight: 800;
@@ -179,7 +179,7 @@ function generateIndexHtml(files) {
     }
 
     .stat-number {
-      color: #667eea;
+      color: #f5576c;
       font-size: 1.5rem;
     }
 
