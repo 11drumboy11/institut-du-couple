@@ -1,0 +1,42 @@
+name: Générer Index Automatiquement
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  generate-index:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout du code
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: 🔧 Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: 🚀 Générer l'index
+      run: node generate-index.js
+    
+    - name: 📊 Vérifier les changements
+      id: verify-changed
+      run: |
+        if git diff --quiet index.html; then
+          echo "changed=false" >> $GITHUB_OUTPUT
+        else
+          echo "changed=true" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: 💾 Commit et Push
+      if: steps.verify-changed.outputs.changed == 'true'
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add index.html
+        git commit -m "🤖 Mise à jour automatique de l'index [skip ci]"
+        git push
