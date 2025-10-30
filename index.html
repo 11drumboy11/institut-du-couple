@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilan de Compétences du Couple - Marie-Christine Abatte</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --vert-sauge: #C8D0C3;
+            --beige-sable: #D8CDBB;
+            --sable: #E6D7C3;
+            --mer: #8FAFB1;
+            --blanc: #FFFFFF;
+            --gris-texte: #333333;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--blanc);
+            color: var(--gris-texte);
+            line-height: 1.6;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--mer) 0%, var(--vert-sauge) 100%);
+            color: var(--blanc);
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            font-weight: 400;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            color: var(--mer);
+            font-size: 2.2em;
+            font-weight: 600;
+            margin-bottom: 40px;
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--vert-sauge);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .tool-card {
+            background: linear-gradient(135deg, var(--sable) 0%, var(--beige-sable) 100%);
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 5px solid var(--mer);
+            text-decoration: none;
+            color: var(--gris-texte);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .tool-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(143, 175, 177, 0.3);
+            border-left-width: 8px;
+        }
+
+        .tool-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .tool-card h3 {
+            color: var(--mer);
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .tool-card p {
+            font-size: 0.95em;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .resources-section {
+            background: linear-gradient(135deg, var(--sable) 0%, var(--beige-sable) 100%);
+            padding: 50px 20px;
+            margin: 60px 0;
+            border-radius: 20px;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .resource-card {
+            background: var(--blanc);
+            padding: 25px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--gris-texte);
+            transition: transform 0.3s;
+            border: 2px solid var(--vert-sauge);
+        }
+
+        .resource-card:hover {
+            transform: scale(1.05);
+            border-color: var(--mer);
+        }
+
+        .resource-card h4 {
+            color: var(--mer);
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, var(--mer) 0%, var(--vert-sauge) 100%);
+            color: var(--blanc);
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 80px;
+        }
+
+        .footer p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .hero p {
+                font-size: 1.1em;
+            }
+
+            .section-title {
+                font-size: 1.8em;
+            }
+
+            .tools-grid,
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Bilan de Compétences du Couple</h1>
+        <p>Marie-Christine Abatte - Psychologue</p>
+    </div>
+
+    <div class="container">
+        <h2 class="section-title">🎯 Outils d'Évaluation du Couple</h2>
+
+        <div class="tools-grid">
+            <a href="isqv-couple.html" class="tool-card">
+                <span class="tool-icon">📊</span>
+                <h3>ISQV - Indice de Satisfaction</h3>
+                <p>Évaluez votre satisfaction conjugale à travers différentes dimensions de votre relation.</p>
+            </a>
+
+            <a href="das32.html" class="tool-card">
+                <span class="tool-icon">💑</span>
+                <h3>DAS-32 - Ajustement Dyadique</h3>
+                <p>Questionnaire complet pour mesurer la qualité de l'ajustement dans votre couple.</p>
+            </a>
+
+            <a href="controle-technique.html" class="tool-card">
+                <span class="tool-icon">🔧</span>
+                <h3>Contrôle Technique du Couple</h3>
+                <p>Un diagnostic complet de votre relation sur 10 dimensions essentielles.</p>
+            </a>
+
+            <a href="swot-conjugal.html" class="tool-card">
+                <span class="tool-icon">📋</span>
+                <h3>SWOT Conjugal</h3>
+                <p>Analysez les forces, faiblesses, opportunités et menaces de votre couple.</p>
+            </a>
+
+            <a href="exercice-gottman.html" class="tool-card">
+                <span class="tool-icon">💬</span>
+                <h3>Exercice Gottman</h3>
+                <p>Méthode éprouvée pour améliorer la communication et la connexion émotionnelle.</p>
+            </a>
+
+            <a href="big5.html" class="tool-card">
+                <span class="tool-icon">🧠</span>
+                <h3>Big Five - Personnalité</h3>
+                <p>Explorez les traits de personnalité et leur impact sur votre relation.</p>
+            </a>
+        </div>
+
+        <h2 class="section-title">🔍 Outils d'Analyse et de Visualisation</h2>
+
+        <div class="tools-grid">
+            <a href="relatiogramme.html" class="tool-card">
+                <span class="tool-icon">🕸️</span>
+                <h3>Relatiogramme</h3>
+                <p>Visualisez votre réseau relationnel et les liens qui vous entourent.</p>
+            </a>
+
+            <a href="appartenancogramme.html" class="tool-card">
+                <span class="tool-icon">🌐</span>
+                <h3>Appartenancogramme</h3>
+                <p>Cartographiez vos appartenances sociales et leur influence sur votre couple.</p>
+            </a>
+
+            <a href="agenda-couple.html" class="tool-card">
+                <span class="tool-icon">📅</span>
+                <h3>Agenda du Couple</h3>
+                <p>Analysez la répartition de votre temps et vos priorités au quotidien.</p>
+            </a>
+
+            <a href="centres-interet.html" class="tool-card">
+                <span class="tool-icon">🎨</span>
+                <h3>Centres d'Intérêt</h3>
+                <p>Découvrez vos compatibilités et différences dans vos loisirs et passions.</p>
+            </a>
+        </div>
+    </div>
+
+    <div class="resources-section">
+        <div class="container">
+            <h2 class="section-title" style="border-bottom-color: var(--mer);">📚 Ressources</h2>
+            <div class="resources-grid">
+                <a href="charte-graphique.html" class="resource-card">
+                    <h4>🎨 Charte Graphique Générale</h4>
+                    <p>Guide complet de l'identité visuelle du projet</p>
+                </a>
+
+                <a href="charte-categories.html" class="resource-card">
+                    <h4>🌈 Palette des Catégories</h4>
+                    <p>Couleurs et codes pour les différentes catégories</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p><strong>Bilan de Compétences du couple©</strong></p>
+        <p>Marie-Christine Abatte - Psychologue</p>
+        <p style="margin-top: 20px; font-size: 0.85em;">Tous les outils sont conçus pour accompagner les couples dans leur cheminement</p>
+    </div>
+</body>
+</html>

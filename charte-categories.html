@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Charte graphique â€” Palette des catÃ©gories</title>
+<style>
+  /* === Palette des catÃ©gories (variables CSS) === */
+  :root{
+    --color-sommeil:#7B68EE;
+    --color-travail:#4A90E2;
+    --color-famille:#FFD700;
+    --color-taches:#FF6B35;
+    --color-solo:#BD10E0;
+    --color-social:#00D9FF;
+    --color-couple:#E74C3C;
+
+    /* Base UI (neutres, optionnels) */
+    --base-bg:#FFFFFF;
+    --base-text:#2A2A2A;
+    --base-muted:#9FA4A6;
+    --base-card:#F7F7F8;
+    --base-ring:#D9E3E4;
+  }
+
+  /* === Reset doux + mise en page === */
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+    color:var(--base-text);
+    background:linear-gradient(180deg,#fbfbfb,#f2f6f7);
+  }
+  .container{
+    max-width:1100px;
+    margin:24px auto;
+    padding:20px;
+  }
+  .header{
+    background:linear-gradient(135deg,#2A6D74,#86B1AE);
+    color:#fff;
+    padding:20px;
+    border-radius:14px;
+    box-shadow:0 10px 30px rgba(42,109,116,.25);
+    border:2px solid #86B1AE;
+  }
+  .title{
+    margin:0 0 6px;
+    font-size:28px;
+    letter-spacing:.3px;
+  }
+  .subtitle{
+    margin:0;
+    font-size:13px;
+    opacity:.9;
+  }
+
+  /* === Zone variables === */
+  .vars{
+    margin:18px 0 12px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .code{
+    background:var(--base-card);
+    border:1px solid var(--base-ring);
+    border-radius:10px;
+    padding:10px 12px;
+    font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-size:13px;
+    white-space:pre-wrap;
+    word-break:break-word;
+    flex:1 1 520px;
+    position:relative;
+  }
+  .copy-btn{
+    position:absolute;
+    top:8px; right:8px;
+    border:1px solid var(--base-ring);
+    background:#fff;
+    border-radius:8px;
+    padding:6px 10px;
+    font-size:12px;
+    cursor:pointer;
+  }
+  .copy-btn:active{transform:translateY(1px)}
+
+  /* === Grille des couleurs === */
+  .grid{
+    margin-top:18px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:14px;
+  }
+  .card{
+    background:#fff;
+    border:1px solid var(--base-ring);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 4px 14px rgba(0,0,0,.06);
+  }
+  .swatch{
+    height:96px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-weight:700;
+    letter-spacing:.3px;
+  }
+  .card-body{
+    padding:12px 14px 14px;
+  }
+  .name{font-weight:700; margin:0 0 6px}
+  .hex{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:14px; margin:0 0 10px}
+  .row{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    margin:8px 0;
+  }
+  .chip{
+    border-radius:999px;
+    padding:6px 10px;
+    font-size:12px;
+    border:1px solid var(--base-ring);
+    background:var(--base-card);
+  }
+  .sample{
+    flex:1;
+    border:1px dashed var(--base-ring);
+    border-radius:8px;
+    overflow:hidden;
+  }
+  .sample > div{
+    padding:8px 10px;
+    font-size:12px;
+  }
+  .sample .onwhite{background:#fff; color:#111}
+  .sample .oncolor{color:#fff}
+  .tips{
+    font-size:12px;
+    color:#4b5a5c;
+  }
+  .footer{
+    margin-top:24px;
+    font-size:12px;
+    color:#5a6a6c;
+    text-align:center;
+  }
+
+  /* petites animations */
+  .card:hover{transform:translateY(-2px); transition:.2s ease}
+</style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1 class="title">Charte graphique â€“ Palette des catÃ©gories</h1>
+      <p class="subtitle">Version autonome â€¢ Agenda du Couple â€¢ 7 catÃ©gories colorÃ©es</p>
+    </header>
+
+    <section class="vars" aria-label="Variables CSS">
+      <div class="code" id="varsCode">
+/* Palette catÃ©gories */
+:root{
+  --color-sommeil: #7B68EE;   /* Sommeil */
+  --color-travail: #4A90E2;   /* Travail */
+  --color-famille: #FFD700;   /* Famille (enfants) */
+  --color-taches:  #FF6B35;   /* TÃ¢ches mÃ©nagÃ¨res */
+  --color-solo:    #BD10E0;   /* ActivitÃ©s solo/perso */
+  --color-social:  #00D9FF;   /* Famille d'origine / social */
+  --color-couple:  #E74C3C;   /* Couple / sexualitÃ© / activitÃ©s partagÃ©es */
+}
+      </div>
+      <button class="copy-btn" data-target="varsCode" title="Copier les variables">Copier</button>
+    </section>
+
+    <section class="grid" id="grid" aria-label="Ã‰chantillons de couleurs"></section>
+
+    <p class="footer">Conseil : utilisez ces variables pour colorer les badges, graphiques, icÃ´nes et indicateurs dans vos interfaces.</p>
+  </div>
+
+<script>
+  // DÃ©finition de la palette (nom, clÃ©, hex, description courte)
+  const PALETTE = [
+    {label:"Sommeil", key:"sommeil", hex:getComputedStyle(document.documentElement).getPropertyValue("--color-sommeil").trim(), note:"Calme, reposant, nuit"},
+    {label:"Travail", key:"travail", hex:getComputedStyle(document.documentElement).getPropertyValue("--color-travail").trim(), note:"Professionnel, dynamique"},
+    {label:"Famille (enfants)", key:"famille", hex:getComputedStyle(document.documentElement).getPropertyValue("--color-famille").trim(), note:"Chaleureux, lumineux"},
+    {label:"TÃ¢ches mÃ©nagÃ¨res", key:"taches", hex:getComputedStyle(document.documentElement).getPropertyValue("--color-taches").trim(), note:"Ã‰nergique, orientÃ© action"},
+    {label:"ActivitÃ©s solo/perso", key:"solo", hex:getComputedStyle(document.documentElement).getPropertyValue("--color-solo").trim(), note:"CrÃ©atif, personnel"},
+    {label:"Famille d'origine / social", key:"social", hex:getComputedStyle(document.documentElement).getPropertyValue("--color-social").trim(), note:"Ouvert, relationnel"},
+    {label:"Couple / sexualitÃ© / activitÃ©s partagÃ©es", key:"couple", hex:getComputedStyle(document.documentElement).getPropertyValue("--color-couple").trim(), note:"Passion, lien affectif"},
+  ];
+
+  // Utilitaire: calcule une teinte assombrie pour l'Ã©chantillon "oncolor"
+  function darken(hex, p=0.12){
+    const m = hex.replace("#","");
+    const r = parseInt(m.substring(0,2),16);
+    const g = parseInt(m.substring(2,4),16);
+    const b = parseInt(m.substring(4,6),16);
+    const nr = Math.max(0, Math.round(r*(1-p)));
+    const ng = Math.max(0, Math.round(g*(1-p)));
+    const nb = Math.max(0, Math.round(b*(1-p)));
+    return "#" + [nr,ng,nb].map(v=>v.toString(16).padStart(2,"0")).join("");
+  }
+
+  // GÃ©nÃ¨re la grille
+  const grid = document.getElementById("grid");
+  PALETTE.forEach(({label,key,hex,note})=>{
+    const card = document.createElement("article");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="swatch" style="background:${hex}">${label}</div>
+      <div class="card-body">
+        <p class="name">${label}</p>
+        <p class="hex">${hex} &nbsp;â€¢&nbsp; var(--color-${key})</p>
+        <div class="row">
+          <span class="chip">Usage : .bg-${key}</span>
+          <span class="chip">Token : --color-${key}</span>
+        </div>
+        <div class="row sample">
+          <div class="onwhite">Texte sur fond blanc</div>
+          <div class="oncolor" style="background:${darken(hex)}">Texte sur couleur</div>
+        </div>
+        <p class="tips">${note}</p>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // Copier le bloc de variables
+  function copyTextFrom(el){
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    try{
+      document.execCommand("copy");
+    }finally{
+      sel.removeAllRanges();
+    }
+  }
+  document.querySelectorAll(".copy-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const id = btn.getAttribute("data-target");
+      const target = document.getElementById(id);
+      copyTextFrom(target);
+      btn.textContent = "CopiÃ© !";
+      setTimeout(()=>btn.textContent="Copier", 1200);
+    });
+  });
+</script>
+</body>
+</html>
