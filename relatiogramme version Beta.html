@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatiogramme de Neuburger - Tutoriel Interactif</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #FFF; padding: 20px; color: #2A6D74; }
+        .container { max-width: 1500px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(42, 109, 116, 0.15); border: 2px solid #2A6D74; overflow: hidden; }
+        header { background: #2A6D74; color: white; padding: 25px; text-align: center; position: relative; }
+        h1 { font-size: 2em; margin-bottom: 8px; }
+        .subtitle { font-size: 0.95em; opacity: 0.95; font-style: italic; }
+        .help-toggle { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2); border: 2px solid white; color: white; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold; transition: all 0.3s; }
+        .help-toggle:hover { background: white; color: #2A6D74; }
+        .help-toggle.active { background: #8FAFB1; border-color: #8FAFB1; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(143, 175, 177, 0.7); } 50% { box-shadow: 0 0 0 10px rgba(143, 175, 177, 0); } }
+        .main-content { display: flex; height: calc(100vh - 180px); position: relative; }
+        .toolbar { width: 340px; background: #FFF; padding: 20px; overflow-y: auto; border-right: 3px solid #2A6D74; position: relative; }
+        .toolbar-section { background: #FFF; border-radius: 8px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(42, 109, 116, 0.12); border: 1px solid rgba(42, 109, 116, 0.2); position: relative; transition: all 0.3s; }
+        .toolbar-section.highlight { box-shadow: 0 0 0 3px #8FAFB1, 0 4px 20px rgba(143, 175, 177, 0.4); transform: scale(1.02); z-index: 100; }
+        .toolbar-section.locked { opacity: 0.5; pointer-events: none; }
+        .toolbar-section h3 { color: #2A6D74; margin-bottom: 12px; font-size: 1em; font-weight: 700; border-bottom: 2px solid #2A6D74; padding-bottom: 8px; text-transform: uppercase; }
+        .section-help { font-size: 0.85em; color: #2A6D74; opacity: 0.8; margin-bottom: 12px; font-style: italic; }
+        .btn { width: 100%; padding: 12px; margin: 6px 0; border: 2px solid; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.3s; background: #FFF; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; }
+        .btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(42, 109, 116, 0.25); }
+        .btn.pulse { animation: btnPulse 2s infinite; }
+        @keyframes btnPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(143, 175, 177, 0.7); } 50% { box-shadow: 0 0 0 8px rgba(143, 175, 177, 0); } }
+        .btn-primary { background: #2A6D74; color: white; border-color: #2A6D74; }
+        .btn-danger { color: #c53030; border-color: #c53030; }
+        .btn-danger:hover { background: #c53030; color: #FFF; }
+        .btn-info { color: #2A6D74; border-color: #2A6D74; }
+        .btn-info:hover { background: #2A6D74; color: #FFF; }
+        .btn-normal { border-color: #2A6D74; color: #2A6D74; }
+        .btn-normal:hover, .btn-normal.active { background: #2A6D74; color: white; }
+        .btn-strong { border-color: #1a472e; color: #1a472e; }
+        .btn-strong:hover, .btn-strong.active { background: #1a472e; color: white; }
+        .btn-conflict { border-color: #c53030; color: #c53030; }
+        .btn-conflict:hover, .btn-conflict.active { background: #c53030; color: white; }
+        .btn-fusion { border-color: #7c2d12; color: #7c2d12; }
+        .btn-fusion:hover, .btn-fusion.active { background: #7c2d12; color: white; }
+        .btn-distant { border-color: #9f7aea; color: #9f7aea; }
+        .btn-distant:hover, .btn-distant.active { background: #9f7aea; color: white; }
+        .btn-ambivalent { border-color: #2c5282; color: #2c5282; }
+        .btn-ambivalent:hover, .btn-ambivalent.active { background: #2c5282; color: white; }
+        .btn-cut { border-color: #b7791f; color: #b7791f; }
+        .btn-cut:hover, .btn-cut.active { background: #b7791f; color: white; }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .gender-selector { display: flex; gap: 10px; margin: 12px 0; }
+        .gender-option { flex: 1; padding: 14px; border: 3px solid rgba(42, 109, 116, 0.3); border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.3s; background: #FFF; }
+        .gender-option:hover { border-color: #2A6D74; transform: scale(1.03); }
+        .gender-option.selected { border-color: #2A6D74; background: rgba(42, 109, 116, 0.15); box-shadow: 0 0 0 3px rgba(42, 109, 116, 0.2); }
+        .gender-option.pulse { animation: btnPulse 2s infinite; }
+        .gender-icon { font-size: 42px; margin-bottom: 6px; }
+        .canvas-container { flex: 1; position: relative; background: linear-gradient(to bottom, #fff 0%, #f8fafb 100%); }
+        canvas { cursor: crosshair; display: block; }
+        .input-group { margin: 10px 0; position: relative; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #2A6D74; font-size: 13px; }
+        .input-group input, .input-group textarea { width: 100%; padding: 9px; border: 2px solid rgba(42, 109, 116, 0.3); border-radius: 6px; font-size: 13px; color: #2A6D74; font-family: inherit; transition: all 0.3s; }
+        .input-group input:focus, .input-group textarea:focus { outline: none; border-color: #2A6D74; box-shadow: 0 0 0 3px rgba(42, 109, 116, 0.1); }
+        .input-group.pulse input { animation: inputPulse 2s infinite; }
+        @keyframes inputPulse { 0%, 100% { border-color: rgba(143, 175, 177, 0.5); } 50% { border-color: #8FAFB1; box-shadow: 0 0 0 3px rgba(143, 175, 177, 0.3); } }
+        .input-group textarea { resize: vertical; min-height: 60px; }
+        .info-panel { position: absolute; top: 15px; right: 15px; background: white; padding: 16px; border-radius: 8px; box-shadow: 0 4px 15px rgba(42, 109, 116, 0.25); max-width: 280px; border: 2px solid #2A6D74; display: none; z-index: 200; }
+        .info-panel h4 { color: #2A6D74; margin-bottom: 10px; font-size: 1.05em; }
+        .mode-indicator { position: absolute; top: 15px; left: 15px; background: rgba(42, 109, 116, 0.95); color: white; padding: 10px 16px; border-radius: 6px; font-size: 0.9em; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.2); z-index: 200; }
+        .role-selector { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+        .role-tag { padding: 4px 10px; background: rgba(42, 109, 116, 0.1); border: 1px solid #2A6D74; border-radius: 4px; cursor: pointer; font-size: 0.85em; transition: all 0.2s; }
+        .role-tag:hover, .role-tag.selected { background: #2A6D74; color: white; }
+        .role-tag.pulse { animation: btnPulse 2s infinite; }
+        .zoom-controls { position: absolute; bottom: 15px; right: 15px; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 4px 15px rgba(42, 109, 116, 0.25); border: 2px solid #2A6D74; display: flex; flex-direction: column; gap: 8px; z-index: 50; }
+        .zoom-btn { width: 40px; height: 40px; background: #2A6D74; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 1.2em; font-weight: bold; transition: all 0.3s; }
+        .zoom-btn:hover { background: #1f5158; transform: scale(1.1); }
+        .zoom-indicator { text-align: center; font-size: 0.85em; color: #2A6D74; font-weight: 600; padding: 4px 0; }
+        .notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 12px 24px; border-radius: 8px; box-shadow: 0 4px 15px rgba(42, 109, 116, 0.3); border: 2px solid #2A6D74; color: #2A6D74; font-weight: 600; z-index: 2000; display: none; animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateX(-50%) translateY(-20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        
+        /* TUTORIEL */
+        .tutorial-bubble { position: fixed; background: linear-gradient(135deg, #8FAFB1 0%, #6D9296 100%); color: white; padding: 20px 25px; border-radius: 16px; box-shadow: 0 10px 30px rgba(143, 175, 177, 0.5), 0 0 0 2px rgba(255,255,255,0.3); z-index: 1500; max-width: 450px; width: 420px; display: none; animation: bubbleAppear 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); cursor: move; }
+        .tutorial-bubble.show { display: block; }
+        .tutorial-bubble.dragging { cursor: grabbing; opacity: 0.9; }
+        @keyframes bubbleAppear { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+        .tutorial-header { display: flex; align-items: center; margin-bottom: 15px; cursor: move; }
+        .tutorial-icon { font-size: 32px; margin-right: 12px; }
+        .tutorial-title { font-weight: bold; font-size: 19px; flex: 1; }
+        .tutorial-step-badge { background: rgba(255,255,255,0.3); padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-left: 10px; }
+        .drag-hint { position: absolute; top: 5px; right: 5px; color: rgba(255,255,255,0.6); font-size: 11px; font-weight: normal; }
+        .tutorial-content { line-height: 1.8; font-size: 15px; margin-bottom: 18px; white-space: pre-line; }
+        .tutorial-actions { display: flex; gap: 10px; justify-content: flex-end; }
+        .tutorial-btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; transition: all 0.3s; }
+        .tutorial-btn-skip { background: rgba(255,255,255,0.2); color: white; }
+        .tutorial-btn-skip:hover { background: rgba(255,255,255,0.3); }
+        .tutorial-btn-next { background: white; color: #6D9296; }
+        .tutorial-btn-next:hover { transform: scale(1.05); background: #f0f8f9; }
+        .tutorial-btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .tutorial-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1300; display: none; pointer-events: none; }
+        .tutorial-overlay.show { display: block; }
+        
+        .tutorial-progress-bar { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: white; padding: 15px 30px; border-radius: 50px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); z-index: 1600; display: none; border: 2px solid #8FAFB1; }
+        .tutorial-progress-bar.show { display: flex; align-items: center; gap: 15px; }
+        .progress-label { color: #2A6D74; font-weight: bold; font-size: 14px; }
+        .progress-track { width: 200px; height: 8px; background: #e0e0e0; border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #8FAFB1, #6D9296); transition: width 0.6s ease; border-radius: 10px; }
+        
+        .achievement-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 40px; border-radius: 20px; box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4); text-align: center; max-width: 450px; z-index: 2500; border: 4px solid #8FAFB1; display: none; }
+        .achievement-popup.show { display: block; animation: achievementPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        @keyframes achievementPop { from { transform: translate(-50%, -50%) scale(0); } to { transform: translate(-50%, -50%) scale(1); } }
+        .achievement-icon { font-size: 80px; margin-bottom: 20px; }
+        .achievement-title { color: #6D9296; font-size: 28px; font-weight: bold; margin-bottom: 15px; }
+        .achievement-text { color: #666; font-size: 16px; line-height: 1.6; margin-bottom: 25px; }
+        .achievement-continue { padding: 12px 30px; background: linear-gradient(135deg, #8FAFB1, #6D9296); color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 16px; }
+        .achievement-continue:hover { transform: scale(1.05); }
+        
+        .lock-icon { position: absolute; top: 10px; right: 10px; font-size: 20px; opacity: 0.4; }
+        .canvas-pulse { animation: canvasPulse 2s infinite; }
+        @keyframes canvasPulse { 0%, 100% { box-shadow: inset 0 0 0 3px rgba(143, 175, 177, 0); } 50% { box-shadow: inset 0 0 0 3px rgba(143, 175, 177, 0.5); } }
+        
+        /* MODAL RELATIONS */
+        .relation-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: none; align-items: center; justify-content: center; }
+        .relation-modal.show { display: flex; }
+        .relation-modal-content { background: white; border-radius: 12px; padding: 30px; max-width: 500px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.3); animation: modalPop 0.3s ease; }
+        @keyframes modalPop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .relation-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .relation-modal-header h3 { color: #2A6D74; font-size: 1.3em; margin: 0; }
+        .modal-close { background: none; border: none; font-size: 28px; color: #666; cursor: pointer; line-height: 1; }
+        .modal-close:hover { color: #c53030; }
+        .relation-info { background: rgba(42, 109, 116, 0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #2A6D74; }
+        .relation-info p { margin: 8px 0; color: #2A6D74; font-weight: 600; }
+        .relation-type-selector { margin: 20px 0; }
+        .relation-type-selector h4 { color: #2A6D74; margin-bottom: 12px; font-size: 1em; }
+        .relation-type-option { padding: 12px; margin: 8px 0; border: 2px solid rgba(42, 109, 116, 0.3); border-radius: 8px; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 12px; }
+        .relation-type-option:hover { border-color: #2A6D74; background: rgba(42, 109, 116, 0.05); transform: translateX(5px); }
+        .relation-type-option.selected { border-color: #2A6D74; background: rgba(42, 109, 116, 0.1); box-shadow: 0 0 0 3px rgba(42, 109, 116, 0.2); }
+        .relation-type-icon { font-size: 20px; min-width: 80px; font-weight: bold; }
+        .relation-type-label { flex: 1; font-weight: 600; color: #2A6D74; }
+        .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px; }
+        .modal-btn { padding: 12px 24px; border: 2px solid; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.3s; }
+        .modal-btn-delete { background: white; color: #c53030; border-color: #c53030; }
+        .modal-btn-delete:hover { background: #c53030; color: white; }
+        .modal-btn-save { background: #2A6D74; color: white; border-color: #2A6D74; }
+        .modal-btn-save:hover { background: #1f5158; }
+        .modal-btn-cancel { background: white; color: #666; border-color: #999; }
+        .modal-btn-cancel:hover { background: #f5f5f5; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Relatiogramme de Neuburger</h1>
+            <p class="subtitle">Visualisez votre système relationnel</p>
+            <button class="help-toggle" id="helpToggle">🎓 Démarrer le tutoriel</button>
+        </header>
+        
+        <div class="main-content">
+            <div class="toolbar">
+                <div class="toolbar-section" id="section-add-person">
+                    <h3>👤 Ajouter une personne</h3>
+                    <p class="section-help">Commencez par vous identifier</p>
+                    <div class="input-group" id="nameGroup">
+                        <label>Votre prénom :</label>
+                        <input type="text" id="personName" placeholder="Ex: Marie, Jean...">
+                    </div>
+                    <label style="font-weight:600;color:#2A6D74;margin:12px 0 8px 0;display:block;font-size:13px;">Genre :</label>
+                    <div class="gender-selector" id="genderSelector">
+                        <div class="gender-option selected" id="maleBtn">
+                            <div class="gender-icon">👨</div>
+                            <div>Homme</div>
+                        </div>
+                        <div class="gender-option" id="femaleBtn">
+                            <div class="gender-icon">👩</div>
+                            <div>Femme</div>
+                        </div>
+                    </div>
+                    <label style="font-weight:600;color:#2A6D74;margin:12px 0 8px 0;display:block;font-size:13px;">Rôle :</label>
+                    <div class="role-selector" id="roleSelector">
+                        <div class="role-tag" data-role="Moi">Moi</div>
+                        <div class="role-tag" data-role="Parent">Parent</div>
+                        <div class="role-tag" data-role="Enfant">Enfant</div>
+                        <div class="role-tag" data-role="Conjoint">Conjoint(e)</div>
+                        <div class="role-tag" data-role="Frère/Sœur">Frère/Sœur</div>
+                        <div class="role-tag" data-role="Ami">Ami(e)</div>
+                    </div>
+                    <div class="input-group">
+                        <label>Âge (optionnel) :</label>
+                        <input type="number" id="personAge" placeholder="35" min="0" max="120">
+                    </div>
+                    <div class="input-group">
+                        <label>Note (optionnel) :</label>
+                        <textarea id="personNote" placeholder="Ce que cette personne représente..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" id="addBtn">➕ Ajouter sur le schéma</button>
+                </div>
+                
+                <div class="toolbar-section locked" id="section-relations">
+                    <span class="lock-icon">🔒</span>
+                    <h3>🔗 Définir les relations</h3>
+                    <p class="section-help">Caractérisez les liens</p>
+                    <button class="btn btn-normal" id="rel-normal">─── Relation harmonieuse</button>
+                    <button class="btn btn-strong" id="rel-strong">═══ Lien fort</button>
+                    <button class="btn btn-conflict" id="rel-conflict">╳╳╳ Conflit</button>
+                    <button class="btn btn-fusion" id="rel-fusion">▓▓▓ Fusion</button>
+                    <button class="btn btn-distant" id="rel-distant">┄┄┄ Distance</button>
+                    <button class="btn btn-ambivalent" id="rel-ambivalent">≈≈≈ Ambivalence</button>
+                    <button class="btn btn-cut" id="rel-cut">╱╱╱ Rupture</button>
+                </div>
+                
+                <div class="toolbar-section locked" id="section-tools">
+                    <span class="lock-icon">🔒</span>
+                    <h3>🛠️ Outils</h3>
+                    <button class="btn btn-info" id="selectBtn">👆 Mode Sélection</button>
+                    <button class="btn btn-info" id="undoBtn" disabled>↶ Annuler</button>
+                    <button class="btn btn-info" id="redoBtn" disabled>↷ Rétablir</button>
+                    <button class="btn btn-danger" id="deleteBtn">🗑️ Supprimer</button>
+                    <button class="btn btn-danger" id="clearBtn">🔄 Tout effacer</button>
+                </div>
+                
+                <div class="toolbar-section locked" id="section-save">
+                    <span class="lock-icon">🔒</span>
+                    <h3>💾 Sauvegarde</h3>
+                    <button class="btn btn-primary" id="saveBtn">💾 Sauvegarder</button>
+                    <button class="btn btn-primary" id="loadBtn">📂 Charger</button>
+                    <button class="btn btn-info" id="imageBtn">📸 Exporter image</button>
+                </div>
+            </div>
+            
+            <div class="canvas-container" id="canvasContainer">
+                <div class="mode-indicator" id="modeInd">Mode : Sélection</div>
+                <canvas id="canvas"></canvas>
+                <div class="info-panel" id="info"></div>
+                <div class="zoom-controls">
+                    <button class="zoom-btn" id="zoomInBtn">+</button>
+                    <div class="zoom-indicator" id="zoomInd">100%</div>
+                    <button class="zoom-btn" id="zoomOutBtn">-</button>
+                    <button class="zoom-btn" id="resetViewBtn">⟲</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tutorial-overlay" id="tutorialOverlay"></div>
+    
+    <div class="tutorial-bubble" id="tutorialBubble">
+        <span class="drag-hint">👆 Glissez pour déplacer</span>
+        <div class="tutorial-header" id="bubbleHeader">
+            <span class="tutorial-icon" id="bubbleIcon">💡</span>
+            <span class="tutorial-title" id="bubbleTitle"></span>
+            <span class="tutorial-step-badge" id="bubbleStep"></span>
+        </div>
+        <div class="tutorial-content" id="bubbleContent"></div>
+        <div class="tutorial-actions">
+            <button class="tutorial-btn tutorial-btn-skip" id="bubbleSkip">Passer</button>
+            <button class="tutorial-btn tutorial-btn-next" id="bubbleNext">Suivant →</button>
+        </div>
+    </div>
+    
+    <div class="tutorial-progress-bar" id="tutorialProgress">
+        <span class="progress-label" id="progressLabel">Étape 1/11</span>
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+    
+    <div class="achievement-popup" id="achievementPopup">
+        <div class="achievement-icon" id="achievementIcon">🎉</div>
+        <div class="achievement-title" id="achievementTitle"></div>
+        <div class="achievement-text" id="achievementText"></div>
+        <button class="achievement-continue" id="achievementContinue">Continuer →</button>
+    </div>
+    
+    <div class="notification" id="notification"></div>
+    
+    <div class="relation-modal" id="relationModal">
+        <div class="relation-modal-content">
+            <div class="relation-modal-header">
+                <h3>🔗 Modifier la relation</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="relation-info" id="relationInfo"></div>
+            <div class="relation-type-selector">
+                <h4>Choisissez le type de relation :</h4>
+                <div class="relation-type-option" data-type="normal">
+                    <span class="relation-type-icon">───</span>
+                    <span class="relation-type-label">Relation harmonieuse</span>
+                </div>
+                <div class="relation-type-option" data-type="strong">
+                    <span class="relation-type-icon">═══</span>
+                    <span class="relation-type-label">Lien fort / Alliance</span>
+                </div>
+                <div class="relation-type-option" data-type="conflict">
+                    <span class="relation-type-icon">╳╳╳</span>
+                    <span class="relation-type-label">Conflit / Tension</span>
+                </div>
+                <div class="relation-type-option" data-type="fusion">
+                    <span class="relation-type-icon">▓▓▓</span>
+                    <span class="relation-type-label">Fusion / Dépendance</span>
+                </div>
+                <div class="relation-type-option" data-type="distant">
+                    <span class="relation-type-icon">┄┄┄</span>
+                    <span class="relation-type-label">Distance émotionnelle</span>
+                </div>
+                <div class="relation-type-option" data-type="ambivalent">
+                    <span class="relation-type-icon">≈≈≈</span>
+                    <span class="relation-type-label">Ambivalence</span>
+                </div>
+                <div class="relation-type-option" data-type="cut">
+                    <span class="relation-type-icon">╱╱╱</span>
+                    <span class="relation-type-label">Rupture / Coupure</span>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-delete" id="modalDelete">🗑️ Supprimer</button>
+                <button class="modal-btn modal-btn-cancel" id="modalCancel">Annuler</button>
+                <button class="modal-btn modal-btn-save" id="modalSave">✓ Enregistrer</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+const c=document.getElementById('canvas'),ctx=c.getContext('2d');
+let persons=[],relations=[],mode='select',relType='normal',gender='male',selectedRole='',selected=null,relStart=null,dragging=false,offset={x:0,y:0};
+let history=[],historyIndex=-1,zoom=1,panX=0,panY=0,isPanning=false,panStart={x:0,y:0};
+const STORAGE_KEY='relatiogramme_save';
+
+let tutorialActive=false,currentStep=0,tutorialState={name:false,gender:false,role:false,added:false,placed:false,second:false,relation:false};
+let bubbleDragging=false,bubbleOffset={x:0,y:0};
+let selectedRelation=null;
+
+const steps=[
+    {icon:'👋',title:'Bienvenue !',content:'Le Relatiogramme vous aide à visualiser\nvos relations familiales et sociales.\n\nSuivez ce guide pas à pas !',position:'center'},
+    {icon:'✍️',title:'Étape 1 : Votre prénom',content:'Tapez VOTRE prénom dans le champ ci-dessous.\n\nC\'est vous qui serez au centre du schéma.',highlight:'#nameGroup',wait:'name'},
+    {icon:'⚧️',title:'Étape 2 : Votre genre',content:'Choisissez votre genre.\n\nSi "Homme" vous convient, cliquez quand même\ndessus pour valider cette étape.',highlight:'#genderSelector',wait:'gender'},
+    {icon:'🎭',title:'Étape 3 : Sélectionnez "Moi"',content:'Cliquez sur le bouton "Moi".\n\nVous serez représenté(e) plus grand(e)\net en noir au centre.',highlight:'#roleSelector',wait:'role'},
+    {icon:'📝',title:'Étape 4 : Informations optionnelles',content:'Vous pouvez ajouter votre âge et une note\nsi vous le souhaitez.\n\nMais ce n\'est pas obligatoire.\nCes champs sont optionnels.',highlight:'#section-add-person'},
+    {icon:'➕',title:'Étape 5 : Cliquez "Ajouter"',content:'Maintenant cliquez sur le bouton vert\n"Ajouter sur le schéma"\n\npour passer en mode placement.',highlight:'#addBtn',wait:'added'},
+    {icon:'📍',title:'Étape 6 : Placez-vous',content:'Cliquez au CENTRE du schéma blanc\npour vous y placer.\n\nVous apparaîtrez en noir, plus grand.',highlight:'#canvas',wait:'placed'},
+    {icon:'🎉',title:'Bravo !',content:'Vous êtes maintenant au centre\nde votre relatiogramme !\n\nContinuons...',achievement:true},
+    {icon:'👥',title:'Étape 7 : Ajoutez un proche',content:'Remplissez à nouveau les champs :\n- Prénom d\'une personne proche\n- Genre et rôle\n- Puis "Ajouter sur le schéma"\n\nPlacez-la PRÈS ou LOIN de vous\nselon son importance !',highlight:'#section-add-person',wait:'second'},
+    {icon:'🔗',title:'Section déverrouillée !',content:'Les relations sont maintenant disponibles.\n\nVous pouvez créer des liens\nentre les personnes.',highlight:'#section-relations'},
+    {icon:'🎨',title:'Étape 8 : Créez une relation',content:'1. Choisissez un type de relation\n2. Cliquez sur une personne\n3. Cliquez sur une autre personne\n\nUn trait apparaîtra entre elles !',highlight:'#rel-normal',wait:'relation'},
+    {icon:'🎊',title:'Excellente Première relation !',content:'Vous avez créé votre première relation !\n\nContinuez à enrichir votre carte.',achievement:true},
+    {icon:'✏️',title:'Modifier une relation',content:'Pour MODIFIER ou SUPPRIMER une relation :\n\n1. Activez "Mode Sélection"\n2. Cliquez directement sur le TRAIT\n3. Une fenêtre s\'ouvre\n4. Changez le type ou supprimez',highlight:'#selectBtn'},
+    {icon:'🛠️',title:'Boîte à outils',content:'Dans cette section vous trouverez :\n\n• Mode Sélection : pour déplacer/modifier\n• Annuler/Rétablir : corriger vos erreurs\n• Supprimer : retirer une personne\n• Tout effacer : recommencer à zéro',highlight:'#section-tools'},
+    {icon:'💾',title:'Sauvegarde et Export',content:'IMPORTANT - Ne perdez pas votre travail :\n\n• Sauvegarder : enregistre dans le navigateur\n• Charger : récupère votre sauvegarde\n• Exporter image : télécharge en PNG\n\nPensez à sauvegarder régulièrement !',highlight:'#section-save'},
+    {icon:'🏆',title:'Tutoriel terminé !',content:'Vous maîtrisez maintenant les bases.\n\nContinuez à construire\nvotre relatiogramme complet !',achievement:true}
+];
+
+function showNotification(msg){
+    const n=document.getElementById('notification');
+    n.textContent=msg;
+    n.style.display='block';
+    setTimeout(()=>n.style.display='none',2500);
+}
+
+function initTutorial(){
+    document.getElementById('helpToggle').onclick=()=>{
+        if(!tutorialActive)startTutorial();
+        else stopTutorial();
+    };
+    
+    document.getElementById('personName').oninput=function(){
+        if(this.value.trim()&&tutorialActive&&!tutorialState.name){
+            tutorialState.name=true;
+            console.log('Nom détecté:', this.value);
+            checkAdvance('name');
+        }
+    };
+    
+    // Alternative : aussi détecter au focus out
+    document.getElementById('personName').onblur=function(){
+        if(this.value.trim()&&tutorialActive&&!tutorialState.name){
+            tutorialState.name=true;
+            checkAdvance('name');
+        }
+    };
+    
+    document.getElementById('bubbleNext').onclick=()=>nextStep();
+    document.getElementById('bubbleSkip').onclick=()=>{
+        if(confirm('Passer le tutoriel ?'))stopTutorial();
+    };
+    document.getElementById('achievementContinue').onclick=()=>{
+        document.getElementById('achievementPopup').classList.remove('show');
+        nextStep();
+    };
+    
+    // Rendre la bulle déplaçable
+    const bubble=document.getElementById('tutorialBubble');
+    const header=document.getElementById('bubbleHeader');
+    
+    header.onmousedown=e=>{
+        if(e.target.closest('.tutorial-btn'))return; // Ne pas déplacer si on clique sur un bouton
+        bubbleDragging=true;
+        bubble.classList.add('dragging');
+        bubble.dataset.customPosition='true';
+        const rect=bubble.getBoundingClientRect();
+        bubbleOffset.x=e.clientX-rect.left;
+        bubbleOffset.y=e.clientY-rect.top;
+        e.preventDefault();
+        e.stopPropagation();
+    };
+    
+    document.addEventListener('mousemove',e=>{
+        if(bubbleDragging){
+            const newX=e.clientX-bubbleOffset.x;
+            const newY=e.clientY-bubbleOffset.y;
+            
+            // Limites de l'écran
+            const maxX=window.innerWidth-bubble.offsetWidth;
+            const maxY=window.innerHeight-bubble.offsetHeight;
+            
+            bubble.style.left=Math.max(0,Math.min(newX,maxX))+'px';
+            bubble.style.top=Math.max(0,Math.min(newY,maxY))+'px';
+            bubble.style.transform='none';
+        }
+    });
+    
+    document.addEventListener('mouseup',()=>{
+        if(bubbleDragging){
+            bubbleDragging=false;
+            bubble.classList.remove('dragging');
+        }
+    });
+    
+    setTimeout(()=>{
+        if(!localStorage.getItem(STORAGE_KEY)&&persons.length===0){
+            if(confirm('👋 Bienvenue ! Voulez-vous suivre le tutoriel interactif guidé ?'))startTutorial();
+        }
+    },1000);
+    
+    // Gestion du modal de relations
+    document.getElementById('modalClose').onclick=closeRelationModal;
+    document.getElementById('modalCancel').onclick=closeRelationModal;
+    
+    document.querySelectorAll('.relation-type-option').forEach(opt=>{
+        opt.onclick=function(){
+            document.querySelectorAll('.relation-type-option').forEach(o=>o.classList.remove('selected'));
+            this.classList.add('selected');
+        };
+    });
+    
+    document.getElementById('modalSave').onclick=()=>{
+        if(!selectedRelation)return;
+        const selectedOpt=document.querySelector('.relation-type-option.selected');
+        if(selectedOpt){
+            selectedRelation.type=selectedOpt.dataset.type;
+            saveToHistory();
+            draw();
+            showNotification('✓ Relation modifiée');
+            closeRelationModal();
+        }
+    };
+    
+    document.getElementById('modalDelete').onclick=()=>{
+        if(!selectedRelation)return;
+        if(confirm('Supprimer cette relation ?')){
+            relations=relations.filter(r=>r.id!==selectedRelation.id);
+            saveToHistory();
+            draw();
+            showNotification('✓ Relation supprimée');
+            closeRelationModal();
+        }
+    };
+    
+    document.getElementById('relationModal').onclick=e=>{
+        if(e.target.id==='relationModal')closeRelationModal();
+    };
+}
+
+function startTutorial(){
+    tutorialActive=true;
+    currentStep=0;
+    
+    // Détecter l'avance de l'utilisateur
+    detectUserProgress();
+    
+    document.getElementById('helpToggle').textContent='❌ Quitter';
+    document.getElementById('helpToggle').classList.add('active');
+    document.getElementById('tutorialProgress').classList.add('show');
+    showStep(0);
+}
+
+function detectUserProgress(){
+    // Analyse intelligente de ce qui a déjà été fait
+    if(document.getElementById('personName').value.trim()){
+        tutorialState.name=true;
+    }
+    
+    // Si l'utilisateur a déjà du contenu, proposer de sauter
+    if(persons.length>0||relations.length>0){
+        const skip=confirm('Vous avez déjà commencé votre relatiogramme.\n\nVoulez-vous :\n• OUI = Voir uniquement les fonctionnalités avancées\n• NON = Suivre tout le tutoriel depuis le début');
+        
+        if(skip){
+            // Marquer toutes les étapes de base comme complétées
+            tutorialState.name=true;
+            tutorialState.gender=true;
+            tutorialState.role=true;
+            tutorialState.added=true;
+            tutorialState.placed=true;
+            if(persons.length>=2)tutorialState.second=true;
+            if(relations.length>0)tutorialState.relation=true;
+            
+            // Aller directement à l'étape "Modifier une relation" (étape 11, index 10)
+            currentStep=10;
+            showNotification('📚 Mode avancé : nous passons aux fonctionnalités importantes !');
+        }
+    }
+}
+
+function stopTutorial(){
+    tutorialActive=false;
+    document.getElementById('helpToggle').textContent='🎓 Démarrer le tutoriel';
+    document.getElementById('helpToggle').classList.remove('active');
+    document.getElementById('tutorialBubble').classList.remove('show');
+    document.getElementById('tutorialOverlay').classList.remove('show');
+    document.getElementById('tutorialProgress').classList.remove('show');
+    clearHighlights();
+    unlockAll();
+}
+
+function nextStep(){
+    if(currentStep<steps.length-1){
+        currentStep++;
+        
+        // Intelligence : sauter automatiquement les étapes déjà accomplies
+        while(currentStep<steps.length-1&&shouldSkipStep(currentStep)){
+            currentStep++;
+        }
+        
+        showStep(currentStep);
+    }else{
+        stopTutorial();
+        showNotification('🎉 Tutoriel terminé !');
+    }
+}
+
+function shouldSkipStep(stepIndex){
+    const step=steps[stepIndex];
+    if(!step||!step.wait)return false;
+    
+    // Vérifier si l'étape est déjà accomplie
+    if(step.wait==='name'&&tutorialState.name)return true;
+    if(step.wait==='gender'&&tutorialState.gender)return true;
+    if(step.wait==='role'&&tutorialState.role)return true;
+    if(step.wait==='added'&&tutorialState.added)return true;
+    if(step.wait==='placed'&&(tutorialState.placed||persons.length>0))return true;
+    if(step.wait==='second'&&(tutorialState.second||persons.length>=2))return true;
+    if(step.wait==='relation'&&(tutorialState.relation||relations.length>0))return true;
+    
+    return false;
+}
+
+function showStep(idx){
+    const step=steps[idx];
+    if(!step)return;
+    
+    clearHighlights();
+    updateProgress(idx);
+    
+    if(step.achievement){
+        showAchievement(step);
+        return;
+    }
+    
+    lockSections();
+    
+    const bubble=document.getElementById('tutorialBubble');
+    
+    // Réinitialiser la position personnalisée lors du changement d'étape
+    bubble.dataset.customPosition='';
+    bubble.style.transform='none';
+    
+    document.getElementById('bubbleIcon').textContent=step.icon;
+    document.getElementById('bubbleTitle').textContent=step.title;
+    document.getElementById('bubbleContent').textContent=step.content;
+    document.getElementById('bubbleStep').textContent=`${idx+1}/${steps.length}`;
+    
+    const nextBtn=document.getElementById('bubbleNext');
+    if(step.wait){
+        // Vérifier si la condition est déjà remplie
+        let alreadyCompleted=false;
+        if(step.wait==='name'&&(tutorialState.name||document.getElementById('personName').value.trim()))alreadyCompleted=true;
+        if(step.wait==='gender'&&tutorialState.gender)alreadyCompleted=true;
+        if(step.wait==='role'&&tutorialState.role)alreadyCompleted=true;
+        if(step.wait==='added'&&tutorialState.added)alreadyCompleted=true;
+        if(step.wait==='placed'&&(tutorialState.placed||persons.length>0))alreadyCompleted=true;
+        if(step.wait==='second'&&(tutorialState.second||persons.length>=2))alreadyCompleted=true;
+        if(step.wait==='relation'&&(tutorialState.relation||relations.length>0))alreadyCompleted=true;
+        
+        if(alreadyCompleted){
+            nextBtn.disabled=false;
+            nextBtn.textContent='Continuer →';
+            nextBtn.style.opacity='1';
+            // Auto-avancer si déjà fait (sauf étape 1 pour laisser lire)
+            if(idx>0){
+                setTimeout(()=>{
+                    showNotification('✓ Étape déjà accomplie, passage automatique...');
+                    nextStep();
+                },1500);
+            }
+        }else{
+            nextBtn.disabled=true;
+            nextBtn.textContent='En attente...';
+            nextBtn.style.opacity='0.5';
+        }
+    }else{
+        nextBtn.disabled=false;
+        nextBtn.textContent=idx===steps.length-1?'Terminer ✓':'Suivant →';
+        nextBtn.style.opacity='1';
+    }
+    
+    if(step.highlight){
+        highlightElement(step.highlight);
+    }
+    
+    if(step.position==='center'){
+        bubble.style.position='fixed';
+        bubble.style.left='50%';
+        bubble.style.top='50%';
+        bubble.style.transform='translate(-50%,-50%)';
+    }else{
+        positionBubble(bubble,step.highlight);
+    }
+    
+    bubble.classList.add('show');
+    document.getElementById('tutorialOverlay').classList.add('show');
+}
+
+function positionBubble(bubble,selector){
+    if(!selector)return;
+    const el=document.querySelector(selector);
+    if(!el)return;
+    
+    bubble.style.position='fixed';
+    
+    const rect=el.getBoundingClientRect();
+    const bubbleWidth=420;
+    const padding=20;
+    const toolbarWidth=340;
+    
+    // POSITION FIXE : En haut à gauche du canvas, sous l'indicateur de mode
+    const left=toolbarWidth+padding;
+    const top=padding+60; // 60px pour être juste en dessous de "Mode : Sélection"
+    
+    // Stocker la position initiale
+    bubble.dataset.defaultLeft=left;
+    bubble.dataset.defaultTop=top;
+    
+    // Utiliser la position personnalisée si elle existe, sinon la position par défaut
+    if(!bubble.dataset.customPosition){
+        bubble.style.left=left+'px';
+        bubble.style.top=top+'px';
+        bubble.style.transform='none';
+    }
+}
+
+function highlightElement(selector){
+    const el=document.querySelector(selector);
+    if(!el)return;
+    
+    if(selector==='#canvas'){
+        el.classList.add('canvas-pulse');
+    }else if(selector==='#nameGroup'||selector==='#genderSelector'||selector==='#roleSelector'){
+        el.classList.add('pulse');
+    }else if(selector.startsWith('#rel-')||selector==='#addBtn'){
+        el.classList.add('pulse');
+    }else{
+        const section=el.closest('.toolbar-section');
+        if(section)section.classList.add('highlight');
+    }
+}
+
+function clearHighlights(){
+    document.querySelectorAll('.pulse, .canvas-pulse').forEach(el=>{
+        el.classList.remove('pulse','canvas-pulse');
+    });
+    document.querySelectorAll('.highlight').forEach(el=>{
+        el.classList.remove('highlight');
+    });
+}
+
+function showAchievement(step){
+    clearHighlights();
+    const popup=document.getElementById('achievementPopup');
+    document.getElementById('achievementIcon').textContent=step.icon||'🎉';
+    document.getElementById('achievementTitle').textContent=step.title;
+    document.getElementById('achievementText').textContent=step.content;
+    popup.classList.add('show');
+    document.getElementById('tutorialBubble').classList.remove('show');
+    document.getElementById('tutorialOverlay').classList.remove('show');
+}
+
+function updateProgress(idx){
+    const total=steps.filter(s=>!s.achievement).length;
+    const done=steps.slice(0,idx+1).filter(s=>!s.achievement).length;
+    const pct=Math.round((done/total)*100);
+    document.getElementById('progressFill').style.width=pct+'%';
+    document.getElementById('progressLabel').textContent=`Étape ${done}/${total}`;
+}
+
+function checkAdvance(type){
+    console.log('checkAdvance appelé avec type:', type, 'currentStep:', currentStep, 'step.wait:', steps[currentStep]?.wait);
+    const step=steps[currentStep];
+    if(step&&step.wait===type){
+        setTimeout(()=>{
+            const nextBtn=document.getElementById('bubbleNext');
+            nextBtn.disabled=false;
+            nextBtn.textContent='Continuer →';
+            nextBtn.style.opacity='1';
+            nextBtn.classList.add('pulse');
+            showNotification('✓ Parfait ! Cliquez sur "Continuer"');
+            setTimeout(()=>{
+                nextBtn.classList.remove('pulse');
+            },1500);
+        },300);
+    }
+}
+
+function lockSections(){
+    document.getElementById('section-add-person').classList.remove('locked');
+    if(persons.length>=2){
+        document.getElementById('section-relations').classList.remove('locked');
+    }else{
+        document.getElementById('section-relations').classList.add('locked');
+    }
+    if(persons.length>=1){
+        document.getElementById('section-tools').classList.remove('locked');
+        document.getElementById('section-save').classList.remove('locked');
+    }else{
+        document.getElementById('section-tools').classList.add('locked');
+        document.getElementById('section-save').classList.add('locked');
+    }
+}
+
+function unlockAll(){
+    document.querySelectorAll('.toolbar-section').forEach(s=>s.classList.remove('locked'));
+}
+
+function saveToHistory(){
+    if(historyIndex<history.length-1)history=history.slice(0,historyIndex+1);
+    history.push(JSON.stringify({persons:[...persons],relations:[...relations]}));
+    if(history.length>50)history.shift();else historyIndex++;
+    document.getElementById('undoBtn').disabled=historyIndex<=0;
+    document.getElementById('redoBtn').disabled=historyIndex>=history.length-1;
+}
+
+function undo(){
+    if(historyIndex>0){
+        historyIndex--;
+        const state=JSON.parse(history[historyIndex]);
+        persons=state.persons;
+        relations=state.relations;
+        draw();
+        document.getElementById('undoBtn').disabled=historyIndex<=0;
+        document.getElementById('redoBtn').disabled=historyIndex>=history.length-1;
+        showNotification('↶ Annulé');
+    }
+}
+
+function redo(){
+    if(historyIndex<history.length-1){
+        historyIndex++;
+        const state=JSON.parse(history[historyIndex]);
+        persons=state.persons;
+        relations=state.relations;
+        draw();
+        document.getElementById('undoBtn').disabled=historyIndex<=0;
+        document.getElementById('redoBtn').disabled=historyIndex>=history.length-1;
+        showNotification('↷ Rétabli');
+    }
+}
+
+function saveToLocalStorage(){
+    localStorage.setItem(STORAGE_KEY,JSON.stringify({persons,relations,date:new Date().toISOString()}));
+    showNotification('✓ Sauvegardé');
+}
+
+function loadFromLocalStorage(){
+    const data=localStorage.getItem(STORAGE_KEY);
+    if(data){
+        const parsed=JSON.parse(data);
+        persons=parsed.persons||[];
+        relations=parsed.relations||[];
+        saveToHistory();
+        draw();
+        lockSections();
+        showNotification('✓ Chargé');
+    }else{
+        alert('Aucune sauvegarde');
+    }
+}
+
+function resize(){
+    c.width=c.parentElement.clientWidth;
+    c.height=c.parentElement.clientHeight;
+    draw();
+}
+
+function updateMode(t){
+    document.getElementById('modeInd').textContent=t;
+}
+
+function getAt(x,y){
+    for(let i=persons.length-1;i>=0;i--){
+        const p=persons[i];
+        if(Math.abs(x-p.x)<40&&Math.abs(y-p.y)<40)return p;
+    }
+    return null;
+}
+
+function getRelationAt(x,y){
+    const threshold=10;
+    for(let i=relations.length-1;i>=0;i--){
+        const r=relations[i];
+        const from=persons.find(p=>p.id===r.from);
+        const to=persons.find(p=>p.id===r.to);
+        if(!from||!to)continue;
+        
+        const dist=distanceToLine(x,y,from.x,from.y,to.x,to.y);
+        if(dist<threshold)return r;
+    }
+    return null;
+}
+
+function distanceToLine(px,py,x1,y1,x2,y2){
+    const A=px-x1;
+    const B=py-y1;
+    const C=x2-x1;
+    const D=y2-y1;
+    const dot=A*C+B*D;
+    const lenSq=C*C+D*D;
+    let param=-1;
+    if(lenSq!==0)param=dot/lenSq;
+    let xx,yy;
+    if(param<0){xx=x1;yy=y1;}
+    else if(param>1){xx=x2;yy=y2;}
+    else{xx=x1+param*C;yy=y1+param*D;}
+    const dx=px-xx;
+    const dy=py-yy;
+    return Math.sqrt(dx*dx+dy*dy);
+}
+
+function openRelationModal(relation){
+    selectedRelation=relation;
+    const from=persons.find(p=>p.id===relation.from);
+    const to=persons.find(p=>p.id===relation.to);
+    
+    if(!from||!to)return;
+    
+    document.getElementById('relationInfo').innerHTML=`
+        <p><strong>${from.name}</strong> ↔ <strong>${to.name}</strong></p>
+    `;
+    
+    document.querySelectorAll('.relation-type-option').forEach(opt=>{
+        opt.classList.remove('selected');
+        if(opt.dataset.type===relation.type){
+            opt.classList.add('selected');
+        }
+    });
+    
+    document.getElementById('relationModal').classList.add('show');
+}
+
+function closeRelationModal(){
+    document.getElementById('relationModal').classList.remove('show');
+    selectedRelation=null;
+}
+
+function showInfo(p){
+    const inf=document.getElementById('info');
+    let h='<h4>'+p.name+'</h4>';
+    if(p.role)h+='<p><b>Rôle :</b> '+p.role+'</p>';
+    if(p.age)h+='<p><b>Âge :</b> '+p.age+' ans</p>';
+    if(p.note)h+='<p><b>Note :</b> '+p.note+'</p>';
+    h+='<p><b>Genre :</b> '+(p.gender==='male'?'Homme':'Femme')+'</p>';
+    inf.innerHTML=h;
+    inf.style.display='block';
+}
+
+function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    ctx.save();
+    ctx.translate(panX*zoom,panY*zoom);
+    ctx.scale(zoom,zoom);
+    
+    relations.forEach(r=>{
+        const f=persons.find(p=>p.id===r.from);
+        const t=persons.find(p=>p.id===r.to);
+        if(f&&t)drawRel(f,t,r.type);
+    });
+    
+    persons.forEach(p=>drawPerson(p,p===selected));
+    
+    if(relStart){
+        ctx.fillStyle='rgba(42,109,116,0.2)';
+        ctx.beginPath();
+        ctx.arc(relStart.x,relStart.y,45,0,Math.PI*2);
+        ctx.fill();
+    }
+    
+    ctx.restore();
+}
+
+function drawPerson(p,sel){
+    ctx.save();
+    ctx.translate(p.x,p.y);
+    
+    const isMe=p.role==='Moi';
+    const scale=isMe?1.5:1;
+    const col=isMe?'#000':(sel?'#2A6D74':(p.gender==='male'?'#4299e1':'#ed64a6'));
+    const dark=isMe?'#333':(sel?'#1f5158':(p.gender==='male'?'#2c5282':'#97266d'));
+    
+    ctx.scale(scale,scale);
+    
+    ctx.fillStyle=col;
+    ctx.beginPath();
+    ctx.arc(0,-25,12,0,Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle=dark;
+    ctx.lineWidth=2;
+    ctx.stroke();
+    
+    ctx.fillStyle=col;
+    ctx.beginPath();
+    if(p.gender==='male'){
+        ctx.rect(-8,-10,16,20);
+    }else{
+        ctx.moveTo(0,-10);
+        ctx.lineTo(-12,10);
+        ctx.lineTo(12,10);
+        ctx.closePath();
+    }
+    ctx.fill();
+    ctx.strokeStyle=dark;
+    ctx.lineWidth=2;
+    ctx.stroke();
+    
+    ctx.strokeStyle=dark;
+    ctx.lineWidth=3;
+    ctx.lineCap='round';
+    ctx.beginPath();
+    ctx.moveTo(-8,-5);
+    ctx.lineTo(-15,5);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(8,-5);
+    ctx.lineTo(15,5);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(-4,10);
+    ctx.lineTo(-8,25);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(4,10);
+    ctx.lineTo(8,25);
+    ctx.stroke();
+    
+    ctx.fillStyle=dark;
+    ctx.beginPath();
+    ctx.arc(-4,-27,1.5,0,Math.PI*2);
+    ctx.arc(4,-27,1.5,0,Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle=dark;
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.arc(0,-25,6,0.2,Math.PI-0.2);
+    ctx.stroke();
+    
+    if(sel){
+        ctx.strokeStyle='#2A6D74';
+        ctx.lineWidth=3;
+        ctx.setLineDash([5,5]);
+        ctx.beginPath();
+        ctx.arc(0,0,35,0,Math.PI*2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+    
+    ctx.scale(1/scale,1/scale);
+    
+    ctx.fillStyle=isMe?'#000':'#2A6D74';
+    ctx.font=isMe?'bold 18px Arial':'bold 16px Arial';
+    ctx.textAlign='center';
+    ctx.fillText(p.name,0,isMe?55:45);
+    
+    if(p.age){
+        ctx.font='13px Arial';
+        ctx.fillText(p.age+' ans',0,isMe?70:60);
+    }
+    
+    ctx.restore();
+}
+
+function drawRel(f,t,tp){
+    ctx.save();
+    const cols={normal:'#2A6D74',strong:'#1a472e',conflict:'#c53030',fusion:'#7c2d12',distant:'#9f7aea',ambivalent:'#2c5282',cut:'#b7791f'};
+    const widths={normal:3,strong:6,conflict:3,fusion:7,distant:3,ambivalent:3,cut:3};
+    ctx.strokeStyle=cols[tp];
+    ctx.lineWidth=widths[tp];
+    if(tp==='distant'||tp==='cut')ctx.setLineDash([10,5]);
+    else if(tp==='ambivalent')ctx.setLineDash([5,3]);
+    else ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(f.x,f.y);
+    ctx.lineTo(t.x,t.y);
+    ctx.stroke();
+    if(tp==='conflict'){
+        const mx=(f.x+t.x)/2,my=(f.y+t.y)/2;
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.moveTo(mx-10,my-10);
+        ctx.lineTo(mx+10,my+10);
+        ctx.moveTo(mx+10,my-10);
+        ctx.lineTo(mx-10,my+10);
+        ctx.stroke();
+    }
+    ctx.restore();
+}
+
+function screenToWorld(sx,sy){
+    return{x:sx/zoom-panX,y:sy/zoom-panY};
+}
+
+function updateZoom(){
+    document.getElementById('zoomInd').textContent=Math.round(zoom*100)+'%';
+}
+
+function zoomAt(sx,sy,delta){
+    const before=screenToWorld(sx,sy);
+    zoom=Math.max(0.5,Math.min(3,zoom*(delta>0?1.1:0.9)));
+    const after=screenToWorld(sx,sy);
+    panX+=after.x-before.x;
+    panY+=after.y-before.y;
+    updateZoom();
+    draw();
+}
+
+window.addEventListener('resize',resize);
+
+document.getElementById('maleBtn').onclick=()=>{
+    const wasSelected = document.getElementById('maleBtn').classList.contains('selected');
+    gender='male';
+    document.getElementById('maleBtn').classList.add('selected');
+    document.getElementById('femaleBtn').classList.remove('selected');
+    // Valider même si déjà sélectionné (pour le tutoriel)
+    if(tutorialActive&&!tutorialState.gender){
+        tutorialState.gender=true;
+        checkAdvance('gender');
+    }
+};
+
+document.getElementById('femaleBtn').onclick=()=>{
+    const wasSelected = document.getElementById('femaleBtn').classList.contains('selected');
+    gender='female';
+    document.getElementById('femaleBtn').classList.add('selected');
+    document.getElementById('maleBtn').classList.remove('selected');
+    // Valider même si déjà sélectionné (pour le tutoriel)
+    if(tutorialActive&&!tutorialState.gender){
+        tutorialState.gender=true;
+        checkAdvance('gender');
+    }
+};
+
+document.querySelectorAll('.role-tag').forEach(t=>{
+    t.onclick=function(){
+        document.querySelectorAll('.role-tag').forEach(x=>x.classList.remove('selected'));
+        this.classList.add('selected');
+        selectedRole=this.getAttribute('data-role');
+        if(tutorialActive&&!tutorialState.role&&selectedRole==='Moi'){
+            tutorialState.role=true;
+            checkAdvance('role');
+        }
+    };
+});
+
+document.getElementById('addBtn').onclick=()=>{
+    const n=document.getElementById('personName').value.trim();
+    if(!n){alert('Entrez un nom');return;}
+    
+    // Valider l'étape 4 du tutoriel AVANT de passer en mode add
+    if(tutorialActive&&!tutorialState.added){
+        tutorialState.added=true;
+        checkAdvance('added');
+    }
+    
+    mode='add';
+    updateMode('Cliquez pour placer '+n);
+};
+
+['normal','strong','conflict','fusion','distant','ambivalent','cut'].forEach(t=>{
+    document.getElementById('rel-'+t).onclick=function(){
+        mode='relation';
+        relType=t;
+        relStart=null;
+        document.querySelectorAll('[id^="rel-"]').forEach(b=>b.classList.remove('active'));
+        this.classList.add('active');
+        updateMode('Cliquez sur 2 personnes');
+    };
+});
+
+document.getElementById('selectBtn').onclick=()=>{
+    mode='select';
+    relStart=null;
+    document.querySelectorAll('[id^="rel-"]').forEach(b=>b.classList.remove('active'));
+    updateMode('Mode : Sélection');
+};
+
+document.getElementById('deleteBtn').onclick=()=>{
+    if(selected){
+        if(confirm('Supprimer "'+selected.name+'" ?')){
+            persons=persons.filter(p=>p.id!==selected.id);
+            relations=relations.filter(r=>r.from!==selected.id&&r.to!==selected.id);
+            selected=null;
+            document.getElementById('info').style.display='none';
+            saveToHistory();
+            draw();
+            lockSections();
+            showNotification('✓ Supprimé');
+        }
+    }else{
+        alert('Sélectionnez une personne');
+    }
+};
+
+document.getElementById('clearBtn').onclick=()=>{
+    if(confirm('Tout effacer ?')){
+        persons=[];
+        relations=[];
+        selected=null;
+        document.getElementById('info').style.display='none';
+        saveToHistory();
+        draw();
+        lockSections();
+        showNotification('✓ Effacé');
+    }
+};
+
+document.getElementById('undoBtn').onclick=undo;
+document.getElementById('redoBtn').onclick=redo;
+document.getElementById('saveBtn').onclick=saveToLocalStorage;
+document.getElementById('loadBtn').onclick=loadFromLocalStorage;
+
+document.getElementById('imageBtn').onclick=()=>{
+    document.getElementById('modeInd').style.display='none';
+    document.getElementById('info').style.display='none';
+    setTimeout(()=>{
+        const a=document.createElement('a');
+        a.download='relatiogramme.png';
+        a.href=c.toDataURL('image/png');
+        a.click();
+        document.getElementById('modeInd').style.display='block';
+        showNotification('✓ Image exportée');
+    },100);
+};
+
+document.getElementById('zoomInBtn').onclick=()=>zoomAt(c.width/2,c.height/2,1);
+document.getElementById('zoomOutBtn').onclick=()=>zoomAt(c.width/2,c.height/2,-1);
+document.getElementById('resetViewBtn').onclick=()=>{
+    zoom=1;panX=0;panY=0;updateZoom();draw();
+};
+
+c.onwheel=e=>{
+    e.preventDefault();
+    const r=c.getBoundingClientRect();
+    zoomAt(e.clientX-r.left,e.clientY-r.top,e.deltaY);
+};
+
+c.onmousedown=e=>{
+    if(e.button===2){
+        isPanning=true;
+        panStart.x=e.clientX-panX*zoom;
+        panStart.y=e.clientY-panY*zoom;
+        c.style.cursor='grabbing';
+        return;
+    }
+    
+    const r=c.getBoundingClientRect();
+    const sx=e.clientX-r.left;
+    const sy=e.clientY-r.top;
+    const world=screenToWorld(sx,sy);
+    
+    if(mode==='add'){
+        const n=document.getElementById('personName').value.trim();
+        const a=document.getElementById('personAge').value;
+        const nt=document.getElementById('personNote').value;
+        
+        persons.push({
+            id:Date.now(),
+            name:n,
+            gender,
+            age:a,
+            role:selectedRole,
+            note:nt,
+            x:world.x,
+            y:world.y
+        });
+        
+        document.getElementById('personName').value='';
+        document.getElementById('personAge').value='';
+        document.getElementById('personNote').value='';
+        document.querySelectorAll('.role-tag').forEach(t=>t.classList.remove('selected'));
+        selectedRole='';
+        
+        mode='select';
+        updateMode('Mode : Sélection');
+        saveToHistory();
+        draw();
+        lockSections();
+        showNotification('✓ '+n+' ajouté(e)');
+        
+        // Validation tutoriel
+        if(tutorialActive){
+            if(persons.length===1&&!tutorialState.placed){
+                tutorialState.placed=true;
+                setTimeout(()=>checkAdvance('placed'),100);
+            }else if(persons.length>=2&&!tutorialState.second){
+                tutorialState.second=true;
+                setTimeout(()=>checkAdvance('second'),100);
+            }
+        }
+        
+    }else if(mode==='select'){
+        // Vérifier d'abord si on clique sur une relation
+        const rel=getRelationAt(world.x,world.y);
+        if(rel){
+            openRelationModal(rel);
+            return;
+        }
+        
+        // Sinon vérifier si on clique sur une personne
+        const p=getAt(world.x,world.y);
+        if(p){
+            selected=p;
+            dragging=true;
+            offset.x=world.x-p.x;
+            offset.y=world.y-p.y;
+            showInfo(p);
+        }else{
+            selected=null;
+            document.getElementById('info').style.display='none';
+        }
+        draw();
+        
+    }else if(mode==='relation'){
+        const p=getAt(world.x,world.y);
+        if(p){
+            if(!relStart){
+                relStart=p;
+                updateMode('Cliquez sur la 2ème personne');
+                draw();
+            }else{
+                if(relStart.id!==p.id){
+                    relations.push({
+                        id:Date.now(),
+                        from:relStart.id,
+                        to:p.id,
+                        type:relType
+                    });
+                    saveToHistory();
+                    showNotification('✓ Relation créée');
+                    if(tutorialActive&&relations.length===1&&!tutorialState.relation){
+                        tutorialState.relation=true;
+                        checkAdvance('relation');
+                    }
+                }
+                relStart=null;
+                updateMode('Mode : Relation');
+                draw();
+            }
+        }
+    }
+};
+
+c.onmousemove=e=>{
+    if(isPanning){
+        panX=(e.clientX-panStart.x)/zoom;
+        panY=(e.clientY-panStart.y)/zoom;
+        draw();
+        return;
+    }
+    
+    if(dragging&&selected){
+        const r=c.getBoundingClientRect();
+        const world=screenToWorld(e.clientX-r.left,e.clientY-r.top);
+        selected.x=world.x-offset.x;
+        selected.y=world.y-offset.y;
+        draw();
+    }
+};
+
+c.onmouseup=()=>{
+    if(dragging&&selected){
+        saveToHistory();
+        showNotification('✓ Position mise à jour');
+    }
+    dragging=false;
+    if(isPanning){
+        isPanning=false;
+        c.style.cursor='crosshair';
+    }
+};
+
+c.oncontextmenu=e=>e.preventDefault();
+
+resize();
+draw();
+initTutorial();
+lockSections();
+    </script>
+</body>
+</html>
