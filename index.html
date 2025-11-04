@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Institut du Couple - Bibliothèque</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; background: #FFFFFF; padding: 20px; color: #333333; }
+        .container { max-width: 1400px; margin: 0 auto; background: #FFFFFF; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); overflow: hidden; }
+        header { background: linear-gradient(135deg, #8FAFB1 0%, #C8D0C3 100%); color: white; padding: 60px 40px; text-align: center; }
+        header h1 { font-size: 48px; margin-bottom: 15px; font-weight: 700; }
+        .subtitle { font-size: 20px; opacity: 0.95; margin-top: 10px; }
+        .search-bar { position: sticky; top: 0; background: #FFFFFF; padding: 20px 40px; border-bottom: 3px solid #8FAFB1; z-index: 1000; }
+        #searchInput { width: 100%; padding: 15px 20px; font-size: 16px; border: 2px solid #8FAFB1; border-radius: 10px; font-family: 'Montserrat', sans-serif; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 40px; background: #E6D7C3; }
+        .stat-card { background: #FFFFFF; padding: 25px; border-radius: 12px; text-align: center; border-top: 4px solid #8FAFB1; }
+        .stat-number { font-size: 36px; font-weight: 700; color: #8FAFB1; }
+        .stat-label { color: #666; font-size: 14px; text-transform: uppercase; font-weight: 600; }
+        main { padding: 40px; }
+        .section-header { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 3px solid #8FAFB1; }
+        .section-title { font-size: 28px; color: #8FAFB1; font-weight: 600; }
+        .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .file-card { background: linear-gradient(135deg, #E6D7C3 0%, #D8CDBB 100%); border-left: 4px solid #8FAFB1; border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.3s; }
+        .file-card:hover { box-shadow: 0 8px 20px rgba(143, 175, 177, 0.3); transform: translateY(-3px); }
+        .file-icon { font-size: 32px; margin-bottom: 10px; }
+        .file-name { font-weight: 600; margin-bottom: 8px; }
+        .file-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+        .tag { background: #8FAFB1; color: white; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+        footer { background: #333333; color: white; text-align: center; padding: 40px 20px; font-size: 11px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💑 Institut du Couple</h1>
+            <div class="subtitle">Base de Connaissances et Ressources</div>
+            <div style="margin-top:20px; font-size:14px;">📅 04/11/2025 16:12</div>
+        </header>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="🔍 Rechercher...">
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-number">27</div><div class="stat-label">Fichiers</div></div>
+            <div class="stat-card"><div class="stat-number">13</div><div class="stat-label">Pages HTML</div></div>
+        </div>
+        <main id="mainContent">
+            <div class="section-header"><span class="section-title">📝 Tous les Fichiers</span></div>
+            <div class="file-grid" id="fileGrid"></div>
+        </main>
+        <footer><p>Institut du Couple - Système Automatisé v1.0.0</p><p style="margin-top:10px;">Marie-Christine Abatte - Psychologue</p></footer>
+    </div>
+    <script>
+        const filesData = [{"name": "charte-graphique.html", "path": "charte-graphique.html", "category": "quiz", "extension": ".html", "size": 15900, "size_formatted": "15.5 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "Charte Graphique - Marie-Christine Abatte Psychologue", "icon": "📝"}, {"name": "requirements.txt", "path": "requirements.txt", "category": "data", "extension": ".txt", "size": 237, "size_formatted": "237 B", "modified": "2025-11-04 16:12", "tags": [], "preview": "", "icon": "📊"}, {"name": "generate-index.js", "path": "generate-index.js", "category": "web", "extension": ".js", "size": 10039, "size_formatted": "9.8 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "", "icon": "🌐"}, {"name": "centres-interet.html", "path": "centres-interet.html", "category": "quiz", "extension": ".html", "size": 45954, "size_formatted": "44.9 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "Centres d'Intérêt du Couple - Questionnaire Interactif", "icon": "📝"}, {"name": "swot-conjugal.html", "path": "swot-conjugal.html", "category": "quiz", "extension": ".html", "size": 13974, "size_formatted": "13.6 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "SWOT Conjugal - Marie-Christine Abatte Psychologue", "icon": "📝"}, {"name": "big5.html", "path": "big5.html", "category": "quiz", "extension": ".html", "size": 24043, "size_formatted": "23.5 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "Qui est \"Nous\" ? - Questionnaire de Personnalité", "icon": "📝"}, {"name": "das32.html", "path": "das32.html", "category": "quiz", "extension": ".html", "size": 96178, "size_formatted": "93.9 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "Échelle d'Ajustement Dyadique (DAS-32) - Questionnaire Couple", "icon": "📝"}, {"name": "exercice-gottman.html", "path": "exercice-gottman.html", "category": "quiz", "extension": ".html", "size": 36128, "size_formatted": "35.3 KB", "modified": "2025-11-04 16:12", "tags": ["exercice"], "preview": "Exercice de Connaissance Mutuelle - Couple", "icon": "📝"}, {"name": "charte-categories.html", "path": "charte-categories.html", "category": "quiz", "extension": ".html", "size": 8112, "size_formatted": "7.9 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "Charte graphique â€” Palette des catÃ©gories", "icon": "📝"}, {"name": "agenda-couple.html", "path": "agenda-couple.html", "category": "quiz", "extension": ".html", "size": 30824, "size_formatted": "30.1 KB", "modified": "2025-11-04 16:12", "tags": ["couple"], "preview": "L'Agenda du Couple - Version Interactive", "icon": "📝"}, {"name": "relatiogramme.html", "path": "relatiogramme.html", "category": "quiz", "extension": ".html", "size": 59573, "size_formatted": "58.2 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "Relatiogramme de Neuburger - Tutoriel Interactif", "icon": "📝"}, {"name": "readme.md", "path": "readme.md", "category": "other", "extension": ".md", "size": 8, "size_formatted": "8 B", "modified": "2025-11-04 16:12", "tags": [], "preview": "", "icon": "📁"}, {"name": "isqv-couple.html", "path": "isqv-couple.html", "category": "quiz", "extension": ".html", "size": 42565, "size_formatted": "41.6 KB", "modified": "2025-11-04 16:12", "tags": ["couple"], "preview": "ISQV - Inventaire Systémique de Qualité de Vie Relationnelle", "icon": "📝"}, {"name": "Test Schema 1.html", "path": "Test Schema 1.html", "category": "quiz", "extension": ".html", "size": 46459, "size_formatted": "45.4 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "Questionnaire des Schémas de Young (YSQ-S3)", "icon": "📝"}, {"name": "appartenancogramme.html", "path": "appartenancogramme.html", "category": "quiz", "extension": ".html", "size": 91400, "size_formatted": "89.3 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "Appartenancogramme Interactif - Bilan de Compétences du Couple", "icon": "📝"}, {"name": "controle-technique.html", "path": "controle-technique.html", "category": "quiz", "extension": ".html", "size": 146475, "size_formatted": "143.0 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "Le Contrôle Technique du Couple", "icon": "📝"}, {"name": "00-COMMENCER-ICI.md", "path": "Module 10/00-COMMENCER-ICI.md", "category": "other", "extension": ".md", "size": 8210, "size_formatted": "8.0 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "", "icon": "📁"}, {"name": "00-COMMENCER-ICI.md", "path": "Module 2/00-COMMENCER-ICI.md", "category": "other", "extension": ".md", "size": 8210, "size_formatted": "8.0 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "", "icon": "📁"}, {"name": "00-COMMENCER-ICI.md", "path": "Module 5/00-COMMENCER-ICI.md", "category": "other", "extension": ".md", "size": 8210, "size_formatted": "8.0 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "", "icon": "📁"}, {"name": "00-COMMENCER-ICI.md", "path": "Module 7/00-COMMENCER-ICI.md", "category": "other", "extension": ".md", "size": 8210, "size_formatted": "8.0 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "", "icon": "📁"}, {"name": "00-COMMENCER-ICI.md", "path": "Module 4/00-COMMENCER-ICI.md", "category": "other", "extension": ".md", "size": 8210, "size_formatted": "8.0 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "", "icon": "📁"}, {"name": "00-COMMENCER-ICI.md", "path": "Module 8/00-COMMENCER-ICI.md", "category": "other", "extension": ".md", "size": 8210, "size_formatted": "8.0 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "", "icon": "📁"}, {"name": "00-COMMENCER-ICI.md", "path": "Module 9/00-COMMENCER-ICI.md", "category": "other", "extension": ".md", "size": 8210, "size_formatted": "8.0 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "", "icon": "📁"}, {"name": "00-COMMENCER-ICI.md", "path": "Module 6/00-COMMENCER-ICI.md", "category": "other", "extension": ".md", "size": 8210, "size_formatted": "8.0 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "", "icon": "📁"}, {"name": "00-COMMENCER-ICI.md", "path": "Module 3/00-COMMENCER-ICI.md", "category": "other", "extension": ".md", "size": 8210, "size_formatted": "8.0 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "", "icon": "📁"}, {"name": "00-COMMENCER-ICI.md", "path": "Module 1/00-COMMENCER-ICI.md", "category": "other", "extension": ".md", "size": 8210, "size_formatted": "8.0 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "", "icon": "📁"}, {"name": "00-COMMENCER-ICI.md", "path": "Outils/00-COMMENCER-ICI.md", "category": "other", "extension": ".md", "size": 8210, "size_formatted": "8.0 KB", "modified": "2025-11-04 16:12", "tags": [], "preview": "", "icon": "📁"}];
+        function displayFiles(files) {
+            const grid = document.getElementById('fileGrid');
+            grid.innerHTML = '';
+            files.forEach(file => {
+                const card = document.createElement('div');
+                card.className = 'file-card';
+                card.onclick = () => window.open('https://11drumboy11.github.io/institut-du-couple/' + file.path, '_blank');
+                const tags = file.tags.map(t => `<span class="tag">${t}</span>`).join('');
+                card.innerHTML = `<div class="file-icon">${file.icon}</div><div class="file-name">${file.name}</div><div class="file-tags">${tags}</div>`;
+                grid.appendChild(card);
+            });
+        }
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase();
+            if (!q) { displayFiles(filesData); return; }
+            const filtered = filesData.filter(f => f.name.toLowerCase().includes(q) || f.tags.some(t => t.includes(q)));
+            displayFiles(filtered);
+        });
+        displayFiles(filesData);
+    </script>
+</body>
+</html>
