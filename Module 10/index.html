@@ -3,26 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Module 10</title>
+    <title>Module 10 - Institut du Couple</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Montserrat', sans-serif; background: #FFFFFF; padding: 20px; color: #333333; }
-        .container { max-width: 1200px; margin: 0 auto; background: #FFFFFF; border-radius: 20px; padding: 40px; }
-        h1 { color: #8FAFB1; font-size: 36px; margin-bottom: 20px; }
-        .back-button { background: #8FAFB1; color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; display: inline-block; margin-bottom: 30px; }
-        .file-list { list-style: none; }
-        .file-item { background: linear-gradient(135deg, #E6D7C3 0%, #D8CDBB 100%); border-left: 4px solid #8FAFB1; padding: 15px; margin: 10px 0; border-radius: 8px; }
-        .file-item a { color: #333333; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #FFFFFF;
+            color: #333333;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #8FAFB1 0%, #C8D0C3 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        
+        .nav-back {
+            background: #E6D7C3;
+            padding: 15px 20px;
+            border-bottom: 3px solid #8FAFB1;
+        }
+        
+        .nav-back a {
+            color: #8FAFB1;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: color 0.3s;
+        }
+        
+        .nav-back a:hover {
+            color: #C8D0C3;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #E6D7C3 0%, #D8CDBB 100%);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            border-left: 4px solid #8FAFB1;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #8FAFB1;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+        
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .file-card {
+            background: linear-gradient(135deg, #E6D7C3 0%, #D8CDBB 100%);
+            border-left: 4px solid #8FAFB1;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .file-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(143, 175, 177, 0.3);
+        }
+        
+        .file-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .file-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .file-meta {
+            font-size: 0.85em;
+            color: #666;
+        }
+        
+        .file-label {
+            display: inline-block;
+            background: #8FAFB1;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        
+        .empty-state-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        footer {
+            background: #333333;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .files-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <a href="https://11drumboy11.github.io/institut-du-couple/index.html" class="back-button">← Retour</a>
-        <h1>📁 Module 10</h1>
-        <ul class="file-list">
-            <li class="file-item"><a href="https://11drumboy11.github.io/institut-du-couple/Module%2010/00-COMMENCER-ICI.md"><span>📁</span><span>00-COMMENCER-ICI.md</span></a></li>
-        </ul>
+    <div class="header">
+        <h1>Module 10</h1>
+        <div class="subtitle">Institut du Couple - Bilan de Compétences du Couple</div>
     </div>
+    
+    <div class="nav-back">
+        <a href="../index.html">← Retour à l'accueil</a>
+    </div>
+    
+    <div class="container">
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">2</div>
+                <div class="stat-label">Ressources</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">1</div>
+                <div class="stat-label">Pages Interactives</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Documents</div>
+            </div>
+        </div>
+        <div class="files-grid">
+            <div class="file-card" onclick="window.open('./Module 10/00-COMMENCER-ICI.md', '_blank')">
+                <div class="file-icon">📋</div>
+                <div class="file-name">00-COMMENCER-ICI.md</div>
+                <div class="file-meta">8.0 KB • 2025-11-05 18:17</div>
+                <div class="file-label">Documentation</div>
+            </div>
+            <div class="file-card" onclick="window.open('./Module 10/index.html', '_blank')">
+                <div class="file-icon">📄</div>
+                <div class="file-name">index.html</div>
+                <div class="file-meta">1.6 KB • 2025-11-05 18:17</div>
+                <div class="file-label">Page Interactive</div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Institut du Couple - Marie-Christine Abatte Psychologue</p>
+        <p style="margin-top: 10px; font-size: 0.85em;">Généré automatiquement le 05/11/2025 à 18:17</p>
+    </footer>
 </body>
 </html>
