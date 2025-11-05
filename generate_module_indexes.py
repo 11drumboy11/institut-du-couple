@@ -268,10 +268,10 @@ def generate_module_index(module_name, files):
         html += """        <div class="files-grid">\n"""
         
         for file in files:
-            # Construire le chemin relatif
-            file_path = file['path'].replace('\\', '/')
+            # Utiliser seulement le nom du fichier (chemin relatif depuis l'index du module)
+            file_name = os.path.basename(file['path'])
             
-            html += f"""            <div class="file-card" onclick="window.open('{file_path}', '_blank')">
+            html += f"""            <div class="file-card" onclick="window.open('{file_name}', '_blank')">
                 <div class="file-icon">{file['icon']}</div>
                 <div class="file-name">{file['name']}</div>
                 <div class="file-meta">{file['size_formatted']} • {file['modified']}</div>
@@ -569,7 +569,9 @@ def generate_main_index(all_modules_data):
     if "Outils" in all_modules_data:
         for file in all_modules_data["Outils"]['files']:
             if file['extension'] == '.html':
-                html += f"""                <a href="{file['path']}" class="tool-card" target="_blank">
+                # Construire le chemin relatif correct : Outils/nom_fichier.html
+                file_path = f"Outils/{os.path.basename(file['path'])}"
+                html += f"""                <a href="{file_path}" class="tool-card" target="_blank">
                     <div class="tool-icon">{file['icon']}</div>
                     <div class="tool-name">{file['name'].replace('.html', '')}</div>
                 </a>
