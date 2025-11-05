@@ -7,340 +7,105 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: #FFFFFF;
-            color: #333333;
-            line-height: 1.6;
-        }
-        
-        .hero {
-            background: linear-gradient(135deg, #8FAFB1 0%, #C8D0C3 100%);
-            color: white;
-            padding: 80px 20px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        
-        .hero h1 {
-            font-size: 3em;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-        
-        .hero .tagline {
-            font-size: 1.3em;
-            opacity: 0.95;
-            margin-bottom: 30px;
-        }
-        
-        .hero .cta {
-            background: white;
-            color: #8FAFB1;
-            padding: 15px 40px;
-            border-radius: 30px;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 20px;
-            transition: transform 0.3s;
-        }
-        
-        .hero .cta:hover {
-            transform: scale(1.05);
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-        
-        .section-title {
-            font-size: 2em;
-            color: #8FAFB1;
-            margin: 40px 0 30px;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #C8D0C3;
-            font-weight: 600;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-bottom: 50px;
-        }
-        
-        .stat-card {
-            background: linear-gradient(135deg, #E6D7C3 0%, #D8CDBB 100%);
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            border-top: 4px solid #8FAFB1;
-            transition: transform 0.3s;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .stat-number {
-            font-size: 3em;
-            font-weight: 700;
-            color: #8FAFB1;
-        }
-        
-        .stat-label {
-            color: #666;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.9em;
-            margin-top: 10px;
-        }
-        
-        .modules-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-        
-        .module-card {
-            background: linear-gradient(135deg, #E6D7C3 0%, #D8CDBB 100%);
-            border-left: 4px solid #8FAFB1;
-            border-radius: 15px;
-            padding: 30px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            color: #333;
-            display: block;
-        }
-        
-        .module-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 30px rgba(143, 175, 177, 0.4);
-        }
-        
-        .module-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .module-icon {
-            font-size: 2.5em;
-        }
-        
-        .module-title {
-            font-size: 1.5em;
-            font-weight: 600;
-            color: #8FAFB1;
-        }
-        
-        .module-count {
-            background: #8FAFB1;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: 600;
-            display: inline-block;
-            margin-top: 15px;
-        }
-        
-        .tools-section {
-            background: #E6D7C3;
-            border-radius: 15px;
-            padding: 40px;
-            margin-top: 50px;
-        }
-        
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 25px;
-        }
-        
-        .tool-card {
-            background: white;
-            border-left: 4px solid #8FAFB1;
-            border-radius: 12px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            color: #333;
-            display: block;
-        }
-        
-        .tool-card:hover {
-            transform: translateX(8px);
-            box-shadow: 0 6px 20px rgba(143, 175, 177, 0.3);
-        }
-        
-        .tool-icon {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-        
-        .tool-name {
-            font-weight: 600;
-            color: #8FAFB1;
-            font-size: 1.1em;
-        }
-        
-        footer {
-            background: #333333;
-            color: white;
-            text-align: center;
-            padding: 40px 20px;
-            margin-top: 80px;
-            font-size: 0.9em;
-        }
-        
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2em; }
-            .modules-grid { grid-template-columns: 1fr; }
-            .tools-grid { grid-template-columns: 1fr; }
-        }
+        body { font-family: 'Montserrat', sans-serif; background: #FFFFFF; color: #333333; line-height: 1.6; }
+        .hero { background: linear-gradient(135deg, #8FAFB1 0%, #C8D0C3 100%); color: white; padding: 60px 20px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .hero h1 { font-size: 3em; margin-bottom: 15px; font-weight: 700; }
+        .hero .tagline { font-size: 1.3em; opacity: 0.95; margin-bottom: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 40px 20px; }
+        .section-title { font-size: 2em; color: #8FAFB1; margin: 40px 0 30px; padding-bottom: 15px; border-bottom: 3px solid #C8D0C3; font-weight: 600; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 25px; margin-bottom: 50px; }
+        .stat-card { background: linear-gradient(135deg, #E6D7C3 0%, #D8CDBB 100%); padding: 30px; border-radius: 15px; text-align: center; border-top: 4px solid #8FAFB1; transition: transform 0.3s; }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-number { font-size: 3em; font-weight: 700; color: #8FAFB1; }
+        .stat-label { color: #666; font-weight: 600; text-transform: uppercase; font-size: 0.9em; margin-top: 10px; }
+        .modules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }
+        .module-card { background: linear-gradient(135deg, #E6D7C3 0%, #D8CDBB 100%); border-left: 4px solid #8FAFB1; border-radius: 15px; padding: 30px; cursor: pointer; transition: all 0.3s; text-decoration: none; color: #333; display: block; }
+        .module-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(143, 175, 177, 0.4); }
+        .module-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .module-icon { font-size: 2.5em; }
+        .module-title { font-size: 1.5em; font-weight: 600; color: #8FAFB1; }
+        .module-count { background: #8FAFB1; color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.9em; font-weight: 600; display: inline-block; margin-top: 15px; }
+        .tools-section { background: #E6D7C3; border-radius: 15px; padding: 40px; margin-top: 50px; }
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; margin-top: 25px; }
+        .tool-card { background: white; border-left: 4px solid #8FAFB1; border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.3s; text-decoration: none; color: #333; display: block; }
+        .tool-card:hover { transform: translateX(8px); box-shadow: 0 6px 20px rgba(143, 175, 177, 0.3); }
+        .tool-icon { font-size: 2em; margin-bottom: 10px; }
+        .tool-name { font-weight: 600; color: #8FAFB1; font-size: 1.1em; }
+        footer { background: #333333; color: white; text-align: center; padding: 40px 20px; margin-top: 80px; font-size: 11px; }
+        @media (max-width: 768px) { .hero h1 { font-size: 2em; } .modules-grid { grid-template-columns: 1fr; } .tools-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <div class="hero">
         <h1>Institut du Couple</h1>
         <div class="tagline">Bibliothèque de Formation et Ressources</div>
-        <div style="margin-top: 20px; font-size: 0.9em; opacity: 0.9;">
-            Marie-Christine Abatte - Psychologue
-        </div>
+        <div style="margin-top: 20px; font-size: 0.9em; opacity: 0.9;">Marie-Christine Abatte - Psychologue</div>
     </div>
-    
     <div class="container">
         <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number">11</div>
-                <div class="stat-label">Modules de Formation</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">52</div>
-                <div class="stat-label">Ressources Totales</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">25</div>
-                <div class="stat-label">Outils Interactifs</div>
-            </div>
+            <div class="stat-card"><div class="stat-number">11</div><div class="stat-label">Modules</div></div>
+            <div class="stat-card"><div class="stat-number">39</div><div class="stat-label">Ressources</div></div>
+            <div class="stat-card"><div class="stat-number">13</div><div class="stat-label">Pages Interactives</div></div>
+            <div class="stat-card"><div class="stat-number">9</div><div class="stat-label">Documents</div></div>
+            <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Médias</div></div>
         </div>
-        
         <h2 class="section-title">Modules de Formation</h2>
         <div class="modules-grid">
             <a href="Module 0/index.html" class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">📚</div>
-                    <div class="module-title">Module 0</div>
-                </div>
-                <div class="module-count">6 ressources</div>
+                <div class="module-header"><div class="module-icon">📚</div><div class="module-title">Module 0</div></div>
+                <div class="module-count">5 ressources</div>
             </a>
             <a href="Module 1/index.html" class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">📚</div>
-                    <div class="module-title">Module 1</div>
-                </div>
-                <div class="module-count">17 ressources</div>
+                <div class="module-header"><div class="module-icon">📚</div><div class="module-title">Module 1</div></div>
+                <div class="module-count">12 ressources</div>
             </a>
             <a href="Module 2/index.html" class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">📚</div>
-                    <div class="module-title">Module 2</div>
-                </div>
-                <div class="module-count">9 ressources</div>
+                <div class="module-header"><div class="module-icon">📚</div><div class="module-title">Module 2</div></div>
+                <div class="module-count">8 ressources</div>
             </a>
             <a href="Module 3/index.html" class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">📚</div>
-                    <div class="module-title">Module 3</div>
-                </div>
-                <div class="module-count">2 ressources</div>
+                <div class="module-header"><div class="module-icon">📚</div><div class="module-title">Module 3</div></div>
+                <div class="module-count">1 ressource</div>
             </a>
             <a href="Module 4/index.html" class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">📚</div>
-                    <div class="module-title">Module 4</div>
-                </div>
-                <div class="module-count">2 ressources</div>
+                <div class="module-header"><div class="module-icon">📚</div><div class="module-title">Module 4</div></div>
+                <div class="module-count">1 ressource</div>
             </a>
             <a href="Module 5/index.html" class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">📚</div>
-                    <div class="module-title">Module 5</div>
-                </div>
-                <div class="module-count">2 ressources</div>
+                <div class="module-header"><div class="module-icon">📚</div><div class="module-title">Module 5</div></div>
+                <div class="module-count">1 ressource</div>
             </a>
             <a href="Module 6/index.html" class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">📚</div>
-                    <div class="module-title">Module 6</div>
-                </div>
-                <div class="module-count">2 ressources</div>
+                <div class="module-header"><div class="module-icon">📚</div><div class="module-title">Module 6</div></div>
+                <div class="module-count">1 ressource</div>
             </a>
             <a href="Module 7/index.html" class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">📚</div>
-                    <div class="module-title">Module 7</div>
-                </div>
-                <div class="module-count">2 ressources</div>
+                <div class="module-header"><div class="module-icon">📚</div><div class="module-title">Module 7</div></div>
+                <div class="module-count">1 ressource</div>
             </a>
             <a href="Module 8/index.html" class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">📚</div>
-                    <div class="module-title">Module 8</div>
-                </div>
-                <div class="module-count">2 ressources</div>
+                <div class="module-header"><div class="module-icon">📚</div><div class="module-title">Module 8</div></div>
+                <div class="module-count">1 ressource</div>
             </a>
             <a href="Module 9/index.html" class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">📚</div>
-                    <div class="module-title">Module 9</div>
-                </div>
-                <div class="module-count">2 ressources</div>
+                <div class="module-header"><div class="module-icon">📚</div><div class="module-title">Module 9</div></div>
+                <div class="module-count">1 ressource</div>
             </a>
             <a href="Module 10/index.html" class="module-card">
-                <div class="module-header">
-                    <div class="module-icon">📚</div>
-                    <div class="module-title">Module 10</div>
-                </div>
-                <div class="module-count">2 ressources</div>
+                <div class="module-header"><div class="module-icon">📚</div><div class="module-title">Module 10</div></div>
+                <div class="module-count">1 ressource</div>
             </a>
         </div>
-        
         <div class="tools-section">
-            <h2 class="section-title" style="border-color: #8FAFB1; color: #8FAFB1;">Outils et Questionnaires</h2>
+            <h2 class="section-title" style="border-color: #8FAFB1; color: #8FAFB1;">Outils et Questionnaires Généraux</h2>
             <div class="tools-grid">
-                <a href="Outils/charte-categories.html" class="tool-card" target="_blank">
-                    <div class="tool-icon">📄</div>
-                    <div class="tool-name">charte-categories</div>
-                </a>
-                <a href="Outils/charte-graphique.html" class="tool-card" target="_blank">
-                    <div class="tool-icon">📄</div>
-                    <div class="tool-name">charte-graphique</div>
-                </a>
-                <a href="Outils/index.html" class="tool-card" target="_blank">
-                    <div class="tool-icon">📄</div>
-                    <div class="tool-name">index</div>
-                </a>
             </div>
         </div>
     </div>
-    
     <footer>
         <p>Institut du Couple - Bilan de Compétences du Couple</p>
         <p style="margin-top: 10px;">Marie-Christine Abatte Psychologue</p>
-        <p style="margin-top: 15px; font-size: 0.85em; opacity: 0.8;">
-            Généré automatiquement le 05/11/2025 à 18:36
-        </p>
+        <p style="margin-top: 15px;">Généré automatiquement le 05/11/2025 à 18:46</p>
     </footer>
 </body>
 </html>
