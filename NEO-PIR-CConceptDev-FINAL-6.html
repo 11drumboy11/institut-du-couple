@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NEO PI-R — C Concept&Dev</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/glacial-indifference" rel="stylesheet">
 <style>
 :root {
   --vert-sauge: #C8D0C3;
@@ -34,11 +35,18 @@
 html { scroll-behavior:smooth; }
 
 body {
-  font-family: 'Montserrat', 'Segoe UI', sans-serif;
-  background: linear-gradient(160deg, var(--sable) 0%, var(--beige-sable) 40%, var(--gris-bg) 100%);
+  font-family: 'Glacial Indifference', 'Jost', 'Segoe UI', sans-serif;
+  background: #F2F2F2;
   color: var(--gris);
   line-height: 1.7;
   min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6,
+.header h1,
+.setup-section h2,
+.results-hero h2 {
+  font-family: 'Lora', 'Georgia', serif;
 }
 
 .container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
@@ -47,6 +55,14 @@ body {
 .header {
   text-align: center;
   padding: 50px 20px 35px;
+}
+
+.header-logo {
+  display: block;
+  width: 90px;
+  height: auto;
+  margin: 0 auto 18px;
+  border-radius: 8px;
 }
 
 .header-brand {
@@ -530,6 +546,7 @@ body {
 
 <!-- ═══════════ HEADER ═══════════ -->
 <div class="header">
+  <img src="Logo Institut Tarnais.jpeg" alt="Institut Tarnais" class="header-logo">
   <div class="header-brand">C Concept&amp;Dev</div>
   <h1>NEO PI-R <span>Inventaire de Personnalité</span></h1>
   <div class="header-sub">240 affirmations · 30 facettes · 5 domaines · Scoring automatique</div>
@@ -1395,10 +1412,10 @@ function drawRadar(dp) {
     ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
 
     var lx=cx+(R+30)*Math.cos(a),ly=cy+(R+30)*Math.sin(a);
-    ctx.fillStyle=cols[i];ctx.font='600 13px Montserrat';
+    ctx.fillStyle=cols[i];ctx.font='600 13px "Glacial Indifference", Jost, sans-serif';
     ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText(labs[i],lx,ly-8);
-    ctx.fillStyle='#666';ctx.font='12px Montserrat';
+    ctx.fillStyle='#666';ctx.font='12px "Glacial Indifference", Jost, sans-serif';
     ctx.fillText(dp[doms[i]]+'%',lx,ly+8);
   }
 }
