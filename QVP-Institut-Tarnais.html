@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QVP — Questionnaire des Valeurs Professionnelles de Super</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+/* ========== RESET & BASE ========== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+:root{
+  --bg:#E6D7C3;
+  --bg-soft:#D8CDBB;
+  --ink:#1a1a1a;
+  --ink-soft:#3d4543;
+  --ink-mute:#6d7472;
+  --paper:#FFFFFF;
+  --line:#C8D0C3;
+  --line-soft:#D8CDBB;
+  --accent:#8FAFB1;
+  --accent-dark:#6E8F91;
+  --ochre:#B89968;
+  --forest:#6E8A74;
+  --indigo:#5A7577;
+  --plum:#8FAFB1;
+  --sage:#C8D0C3;
+  --shadow-sm:0 1px 2px rgba(26,26,26,.06),0 2px 4px rgba(26,26,26,.04);
+  --shadow-md:0 4px 16px rgba(26,26,26,.08),0 2px 6px rgba(26,26,26,.04);
+  --shadow-lg:0 12px 40px rgba(26,26,26,.12),0 4px 12px rgba(26,26,26,.06);
+  --radius:2px;
+  --radius-lg:4px;
+  --f-display:'Montserrat',-apple-system,BlinkMacSystemFont,sans-serif;
+  --f-body:'Montserrat',-apple-system,BlinkMacSystemFont,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,monospace;
+}
+body{
+  font-family:var(--f-body);
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.55;
+  font-size:15px;
+  min-height:100vh;
+  background-image:
+    radial-gradient(circle at 15% 10%,rgba(143,175,177,.08) 0%,transparent 45%),
+    radial-gradient(circle at 85% 90%,rgba(200,208,195,.12) 0%,transparent 45%);
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;
+  pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .04 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity:.55;mix-blend-mode:multiply;
+}
+
+.app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+
+/* Topbar */
+.topbar{
+  background:var(--paper);
+  border-bottom:1px solid var(--line);
+  padding:18px 28px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:18px;
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(8px);
+  background:rgba(255,255,255,.92);
+}
+.brand{display:flex;align-items:center;gap:14px}
+.brand-logo{
+  width:58px;height:58px;
+  object-fit:contain;
+  flex-shrink:0;
+  filter:contrast(1.08);
+}
+.brand-text{display:flex;flex-direction:column;line-height:1.1}
+.brand-mark{
+  font-family:var(--f-display);
+  font-weight:800;
+  font-size:22px;letter-spacing:.08em;
+  color:var(--ink);
+  text-transform:uppercase;
+}
+.brand-sub{
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-mute);font-weight:500;
+  margin-top:3px;
+}
+.topbar-actions{display:flex;gap:8px;align-items:center}
+
+/* Buttons */
+.btn{
+  font-family:var(--f-body);
+  font-size:13px;font-weight:500;
+  padding:8px 14px;
+  border:1px solid var(--line);
+  background:var(--paper);
+  color:var(--ink);
+  cursor:pointer;
+  border-radius:var(--radius);
+  transition:all .15s ease;
+  display:inline-flex;align-items:center;gap:6px;
+  letter-spacing:.01em;
+}
+.btn:hover{border-color:var(--ink);background:var(--bg-soft)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.primary:hover{background:var(--accent-dark);border-color:var(--accent-dark)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.ghost:hover{background:var(--bg-soft)}
+.btn.sm{padding:5px 10px;font-size:12px}
+.btn svg{width:14px;height:14px}
+
+.main{flex:1;padding:32px 28px 60px;max-width:1400px;margin:0 auto;width:100%}
+
+.view{display:none;animation:fadeIn .35s ease}
+.view.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* Dashboard */
+.dash-header{
+  margin-bottom:40px;
+  display:flex;justify-content:space-between;align-items:flex-end;
+  gap:24px;flex-wrap:wrap;
+}
+.dash-title{
+  font-family:var(--f-display);
+  font-size:clamp(32px,4.5vw,48px);
+  font-weight:700;
+  line-height:1.05;letter-spacing:-.02em;
+  color:var(--ink);
+  text-transform:uppercase;
+}
+.dash-title em{color:var(--accent);font-style:normal;font-weight:700}
+.dash-subtitle{
+  font-size:14px;color:var(--ink-soft);
+  max-width:620px;margin-top:12px;
+  line-height:1.6;
+}
+
+.bilans-list{
+  display:grid;gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  box-shadow:var(--shadow-sm);
+}
+.bilan-row{
+  background:var(--paper);
+  padding:18px 22px;
+  display:grid;
+  grid-template-columns:auto 1fr auto auto auto;
+  gap:20px;align-items:center;
+  cursor:pointer;
+  transition:background .15s;
+}
+.bilan-row:hover{background:var(--bg-soft)}
+.bilan-avatar{
+  width:44px;height:44px;border-radius:50%;
+  background:var(--accent);
+  color:#fff;
+  display:grid;place-items:center;
+  font-family:var(--f-display);
+  font-weight:700;font-size:15px;
+  letter-spacing:.05em;
+}
+.bilan-name{
+  font-family:var(--f-display);
+  font-size:16px;font-weight:600;
+  letter-spacing:.01em;
+}
+.bilan-meta{
+  font-size:12px;color:var(--ink-mute);
+  letter-spacing:.03em;
+  margin-top:2px;
+}
+.bilan-status{
+  font-size:11px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 10px;border-radius:20px;
+}
+.bilan-status.done{background:var(--sage);color:#3d5744}
+.bilan-status.draft{background:#e8dcc5;color:#7d6442}
+.bilan-date{font-size:12px;color:var(--ink-mute);font-family:var(--f-mono)}
+.bilan-actions{display:flex;gap:4px}
+.icon-btn{
+  width:30px;height:30px;
+  border:none;background:transparent;cursor:pointer;
+  border-radius:var(--radius);
+  color:var(--ink-mute);
+  display:grid;place-items:center;
+  transition:all .15s;
+}
+.icon-btn:hover{background:var(--bg);color:var(--ink)}
+.icon-btn.danger:hover{color:#a04040;background:#f4e0e0}
+.icon-btn svg{width:16px;height:16px}
+
+.empty{
+  text-align:center;padding:80px 20px;
+  background:var(--paper);
+  border:1px dashed var(--line);
+  border-radius:var(--radius-lg);
+}
+.empty-title{
+  font-family:var(--f-display);
+  font-size:18px;font-weight:600;
+  letter-spacing:.02em;
+  color:var(--ink-soft);margin-bottom:8px;
+  text-transform:uppercase;
+}
+.empty-text{color:var(--ink-mute);font-size:14px;max-width:420px;margin:0 auto 20px}
+
+/* Form */
+.form-card{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:40px 44px;
+  max-width:580px;margin:0 auto;
+  box-shadow:var(--shadow-md);
+}
+.form-title{
+  font-family:var(--f-display);
+  font-size:26px;font-weight:700;
+  letter-spacing:.01em;
+  margin-bottom:6px;
+  text-transform:uppercase;
+}
+.form-lead{color:var(--ink-soft);font-size:14px;margin-bottom:28px}
+.form-row{margin-bottom:20px}
+.form-label{
+  display:block;
+  font-size:11px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-mute);margin-bottom:8px;
+}
+.form-input{
+  width:100%;
+  padding:11px 14px;
+  border:1px solid var(--line);
+  background:#FFFFFF;
+  font-family:var(--f-body);
+  font-size:15px;
+  color:var(--ink);
+  border-radius:var(--radius);
+  transition:all .15s;
+}
+.form-input:focus{
+  outline:none;
+  border-color:var(--accent);
+  background:var(--paper);
+  box-shadow:0 0 0 3px rgba(143,175,177,.2);
+}
+.radio-group{display:flex;gap:8px;flex-wrap:wrap}
+.radio-card{
+  flex:1;min-width:130px;
+  padding:14px 16px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  cursor:pointer;
+  transition:all .15s;
+  display:flex;align-items:center;gap:10px;
+  background:#FFFFFF;
+}
+.radio-card input{display:none}
+.radio-card:has(input:checked){
+  border-color:var(--accent);
+  background:var(--paper);
+  box-shadow:0 0 0 1px var(--accent);
+}
+.radio-card-icon{font-size:18px}
+.form-actions{
+  display:flex;justify-content:space-between;gap:12px;
+  margin-top:32px;padding-top:24px;
+  border-top:1px solid var(--line-soft);
+}
+
+/* Quiz QVP */
+.quiz-header{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:24px;flex-wrap:wrap;
+  padding:18px 24px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  margin:0 auto 20px;
+  box-shadow:var(--shadow-sm);
+  max-width:920px;
+}
+.quiz-breadcrumb{display:flex;align-items:center;gap:14px}
+.back-link{
+  color:var(--ink-mute);font-size:13px;
+  display:flex;align-items:center;gap:4px;
+  cursor:pointer;
+  transition:color .15s;
+  background:none;border:none;font-family:inherit;
+}
+.back-link:hover{color:var(--ink)}
+.quiz-person{
+  font-family:var(--f-display);
+  font-size:16px;font-weight:700;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+}
+.quiz-progress{
+  display:flex;align-items:center;gap:12px;
+  font-size:13px;color:var(--ink-mute);
+}
+.progress-bar{
+  width:220px;height:4px;
+  background:var(--line);border-radius:2px;overflow:hidden;
+}
+.progress-fill{
+  height:100%;background:var(--accent);
+  width:0%;transition:width .3s ease;
+  border-radius:2px;
+}
+
+.instructions{
+  background:var(--paper);
+  border-left:3px solid var(--accent);
+  padding:20px 24px;
+  margin:0 auto 24px;
+  border-radius:0 var(--radius-lg) var(--radius-lg) 0;
+  max-width:920px;
+  box-shadow:var(--shadow-sm);
+}
+.instructions h3{
+  font-family:var(--f-display);
+  font-size:16px;font-weight:700;
+  margin-bottom:8px;
+  text-transform:uppercase;
+  letter-spacing:.02em;
+}
+.instructions p{font-size:14px;color:var(--ink-soft);line-height:1.65;margin-bottom:6px}
+.instructions .hint{
+  font-size:12px;color:var(--ink-mute);
+  margin-top:10px;font-style:italic;
+}
+
+.intro-phrase{
+  font-family:var(--f-display);
+  font-size:20px;font-weight:600;
+  text-align:center;
+  margin:18px auto 20px;
+  color:var(--ink);
+  letter-spacing:.01em;
+  padding:18px 24px;
+  background:var(--paper);
+  border-radius:var(--radius-lg);
+  border:1px solid var(--line-soft);
+  box-shadow:var(--shadow-sm);
+  max-width:920px;
+}
+.intro-phrase em{
+  font-style:normal;
+  color:var(--accent);
+  font-weight:700;
+}
+
+/* Items list */
+.items-list{
+  display:flex;flex-direction:column;gap:6px;
+  max-width:920px;
+  margin:0 auto;
+  width:100%;
+}
+.item-card{
+  background:var(--paper);
+  border:1px solid var(--line-soft);
+  border-radius:var(--radius-lg);
+  padding:14px 18px;
+  display:grid;
+  grid-template-columns:36px minmax(0,1fr) auto;
+  gap:18px;align-items:center;
+  transition:all .15s;
+  max-width:920px;
+  margin:0 auto;
+  width:100%;
+}
+.item-card:hover{border-color:var(--line);box-shadow:var(--shadow-sm)}
+.item-card.answered{
+  background:linear-gradient(to right,#eaf3f3 0%,var(--paper) 60%);
+  border-color:var(--accent);
+  border-left:3px solid var(--accent);
+  padding-left:15px;
+}
+.item-card.missing{
+  background:linear-gradient(to right,#f5ebda 0%,var(--paper) 60%);
+  border-color:var(--ochre);
+  border-left:3px solid var(--ochre);
+  padding-left:15px;
+  animation:missingPulse 1.2s ease-out;
+}
+.item-card.missing .item-num{
+  background:var(--ochre);
+  color:#fff;
+}
+.item-card.missing .likert-btn{
+  border-color:var(--ochre);
+}
+@keyframes missingPulse{
+  0%   { box-shadow:0 0 0 0 rgba(184,153,104,.55); }
+  60%  { box-shadow:0 0 0 10px rgba(184,153,104,0); }
+  100% { box-shadow:0 0 0 0 rgba(184,153,104,0); }
+}
+.item-num{
+  font-family:var(--f-display);
+  font-size:13px;font-weight:700;
+  color:var(--ink-mute);
+  letter-spacing:.02em;
+  padding:5px 0;
+  background:var(--bg);
+  border-radius:var(--radius);
+  text-align:center;
+  min-width:32px;
+}
+.item-card.answered .item-num{
+  background:var(--accent);color:#fff;
+}
+.item-text{
+  font-size:14px;
+  line-height:1.5;
+  color:var(--ink);
+  padding-right:20px;
+}
+.item-text strong{font-weight:600;color:var(--accent-dark)}
+.likert-scale{
+  display:flex;
+  gap:3px;
+  flex-shrink:0;
+}
+.likert-btn{
+  width:42px;height:40px;
+  border:1px solid var(--line);
+  background:#FFFFFF;
+  cursor:pointer;
+  border-radius:var(--radius);
+  font-family:var(--f-display);
+  font-weight:600;
+  font-size:14px;
+  color:var(--ink-soft);
+  transition:all .12s;
+  display:grid;place-items:center;
+  position:relative;
+}
+.likert-btn:hover{
+  border-color:var(--accent);
+  color:var(--accent-dark);
+  transform:translateY(-1px);
+}
+.likert-btn.active{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#fff;
+  box-shadow:0 2px 6px rgba(143,175,177,.35);
+}
+/* likert-legend supprimé - remplacé par .likert-header */
+
+/* Sticky legend header */
+.likert-header{
+  position:sticky;
+  top:92px;
+  z-index:10;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(8px);
+  padding:14px 20px;
+  margin:0 auto 12px;
+  max-width:920px;
+  width:100%;
+  border:1px solid var(--line-soft);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-sm);
+}
+.likert-header-inner{
+  display:grid;
+  grid-template-columns:36px minmax(0,1fr) auto;
+  gap:18px;align-items:center;
+}
+.likert-header-inner .likert-header-spacer{grid-column:1}
+.likert-header-title{
+  font-size:11px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-mute);
+}
+.likert-header-scale{
+  display:flex;
+  gap:3px;
+  text-align:center;
+  flex-shrink:0;
+  /* Aligner le centre des labels avec le centre des boutons (42px) */
+  padding:0;
+}
+.likert-header-scale span{
+  width:42px;
+  font-size:8px;color:var(--ink-mute);
+  letter-spacing:.02em;text-transform:uppercase;
+  font-weight:600;
+  line-height:1.2;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  white-space:nowrap;
+  overflow:visible;
+  position:relative;
+}
+
+.quiz-footer{
+  margin:32px auto 0;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:16px;
+  padding:20px 24px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  max-width:920px;
+  box-shadow:var(--shadow-sm);
+}
+.quiz-footer-info{font-size:13px;color:var(--ink-mute)}
+.quiz-footer-info strong{color:var(--ink);font-weight:600}
+
+/* Results */
+.results-wrapper{max-width:1200px;margin:0 auto}
+.results-hero{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:40px 44px;
+  margin-bottom:28px;
+  position:relative;overflow:hidden;
+  box-shadow:var(--shadow-sm);
+}
+.results-hero::before{
+  content:"";position:absolute;
+  top:-40px;right:-40px;
+  width:200px;height:200px;
+  background:radial-gradient(circle,rgba(143,175,177,.15) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-tag{
+  font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--accent);font-weight:600;
+  margin-bottom:12px;
+}
+.hero-name{
+  font-family:var(--f-display);
+  font-size:clamp(26px,3.5vw,38px);
+  font-weight:700;
+  letter-spacing:.01em;line-height:1.15;
+  margin-bottom:10px;
+  text-transform:uppercase;
+}
+.hero-top3{
+  display:flex;gap:10px;flex-wrap:wrap;
+  margin:18px 0 8px;
+}
+.top-value-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 16px;
+  background:var(--bg-soft);
+  border:1px solid var(--line);
+  border-left:4px solid var(--accent);
+  border-radius:var(--radius);
+}
+.top-value-rank{
+  font-family:var(--f-display);
+  font-weight:700;font-size:11px;
+  color:var(--accent);
+  letter-spacing:.12em;text-transform:uppercase;
+}
+.top-value-name{
+  font-family:var(--f-display);
+  font-weight:600;font-size:14px;
+  text-transform:uppercase;
+  letter-spacing:.03em;
+}
+.top-value-level{
+  font-family:var(--f-mono);
+  font-size:11px;color:var(--ink-mute);
+  margin-left:auto;
+}
+.hero-meta{
+  display:flex;gap:20px;flex-wrap:wrap;
+  font-size:13px;color:var(--ink-mute);
+  padding-top:14px;border-top:1px solid var(--line-soft);
+  margin-top:20px;
+}
+.hero-meta span strong{color:var(--ink);font-weight:600}
+
+.section{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  margin-bottom:28px;
+  box-shadow:var(--shadow-sm);
+  overflow:hidden;
+}
+.section-head{
+  padding:28px 32px 0;
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;
+}
+.section-num{
+  font-family:var(--f-display);
+  font-size:11px;letter-spacing:.2em;
+  color:var(--accent);
+  font-weight:600;text-transform:uppercase;
+}
+.section-title{
+  font-family:var(--f-display);
+  font-size:22px;font-weight:700;
+  letter-spacing:.015em;line-height:1.2;
+  margin-top:6px;
+  text-transform:uppercase;
+}
+.section-body{padding:24px 32px 32px}
+.section-lead{
+  color:var(--ink-soft);
+  font-size:14.5px;line-height:1.7;
+  max-width:720px;
+  margin-bottom:24px;
+}
+
+/* Values grid - 2 columns layout radar + list */
+.values-layout{
+  display:grid;
+  grid-template-columns:minmax(320px,1fr) 1.1fr;
+  gap:36px;align-items:flex-start;
+}
+.radar-wrap{
+  position:relative;
+  aspect-ratio:1;
+  max-width:500px;
+  margin:0 auto;
+}
+
+/* Histogram / domains chart */
+.values-chart{
+  display:flex;flex-direction:column;gap:8px;
+  margin-top:8px;
+}
+.value-bar{
+  display:grid;
+  grid-template-columns:200px 1fr 90px;
+  gap:14px;align-items:center;
+  padding:4px 0;
+}
+.value-label{
+  font-size:13.5px;font-weight:500;
+  color:var(--ink);
+  display:flex;align-items:center;gap:8px;
+}
+.value-code{
+  font-family:var(--f-mono);
+  font-size:10px;font-weight:500;
+  padding:2px 6px;
+  background:var(--bg);
+  border:1px solid var(--line-soft);
+  border-radius:2px;
+  color:var(--ink-mute);
+  min-width:28px;
+  text-align:center;
+}
+.bar-track{
+  position:relative;
+  height:24px;
+  background:var(--bg);
+  border:1px solid var(--line-soft);
+  border-radius:2px;
+  overflow:hidden;
+}
+.bar-fill{
+  position:absolute;left:0;top:0;height:100%;
+  background:linear-gradient(90deg,var(--bar-color,var(--accent)),var(--bar-color-light,var(--accent)));
+  border-radius:1px;
+  transition:width .8s cubic-bezier(.4,0,.2,1);
+}
+.bar-scale{
+  position:absolute;inset:0;
+  display:grid;
+  grid-template-columns:8fr 24fr 38fr 4fr 26fr;
+  pointer-events:none;
+}
+.bar-scale span{border-right:1px dashed rgba(0,0,0,.06)}
+.bar-scale span:last-child{border-right:none}
+.value-value{
+  font-family:var(--f-mono);
+  font-size:12px;color:var(--ink-mute);
+  text-align:right;
+  display:flex;flex-direction:column;align-items:flex-end;gap:2px;
+}
+.value-value strong{
+  font-size:13px;color:var(--ink);font-weight:700;
+  font-family:var(--f-display);
+}
+.legend{
+  display:flex;gap:16px;flex-wrap:wrap;
+  font-size:10.5px;color:var(--ink-mute);
+  margin-top:18px;padding-top:16px;
+  border-top:1px dashed var(--line-soft);
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  font-weight:500;
+}
+.legend-item{display:flex;align-items:center;gap:6px}
+.legend-swatch{
+  width:12px;height:12px;border-radius:2px;
+}
+
+/* Detail cards */
+.detail-grid{display:grid;gap:14px;margin-top:24px}
+.detail-card{
+  padding:20px 24px;
+  background:var(--bg);
+  border:1px solid var(--line-soft);
+  border-left:3px solid var(--detail-color,var(--accent));
+  border-radius:0 var(--radius) var(--radius) 0;
+}
+.detail-head{
+  display:flex;justify-content:space-between;align-items:baseline;
+  gap:12px;margin-bottom:10px;flex-wrap:wrap;
+}
+.detail-title{
+  font-family:var(--f-display);
+  font-size:15px;font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.02em;
+  display:flex;align-items:center;gap:10px;
+}
+.detail-code{
+  font-family:var(--f-mono);
+  font-size:10px;font-weight:500;
+  padding:3px 8px;
+  background:var(--paper);
+  border:1px solid var(--line-soft);
+  border-radius:2px;
+  color:var(--ink-mute);
+  letter-spacing:.08em;
+}
+.detail-meta{
+  display:flex;gap:8px;align-items:center;
+  font-size:12px;color:var(--ink-mute);
+}
+.level-badge{
+  font-size:10px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:3px 10px;border-radius:20px;
+  background:var(--paper);
+  border:1px solid var(--line);
+}
+.level-badge.lvl-very-high{background:var(--accent);color:#fff;border-color:var(--accent)}
+.level-badge.lvl-high{background:#cde0e1;color:var(--accent-dark);border-color:#cde0e1}
+.level-badge.lvl-medium{background:#e8dcc5;color:#7d6442;border-color:#e8dcc5}
+.level-badge.lvl-low{background:var(--line-soft);color:var(--ink-mute);border-color:var(--line)}
+.level-badge.lvl-very-low{background:var(--line-soft);color:var(--ink-mute);border-color:var(--line);opacity:.7}
+.detail-text{font-size:14px;line-height:1.65;color:var(--ink-soft)}
+
+/* Notes */
+.notes-textarea{
+  width:100%;
+  min-height:180px;
+  padding:14px 16px;
+  border:1px solid var(--line);
+  background:#FFFFFF;
+  font-family:var(--f-body);
+  font-size:14px;line-height:1.6;
+  color:var(--ink);
+  border-radius:var(--radius);
+  resize:vertical;
+  transition:all .15s;
+}
+.notes-textarea:focus{
+  outline:none;
+  border-color:var(--accent);
+  background:var(--paper);
+  box-shadow:0 0 0 3px rgba(143,175,177,.15);
+}
+
+.action-bar{
+  display:flex;gap:10px;flex-wrap:wrap;
+  justify-content:flex-end;
+  margin-top:32px;
+  padding-top:24px;
+  border-top:1px solid var(--line);
+}
+
+/* Modal */
+.modal-backdrop{
+  position:fixed;inset:0;
+  background:rgba(26,26,26,.6);
+  backdrop-filter:blur(4px);
+  z-index:200;
+  display:none;
+  align-items:center;justify-content:center;
+  padding:20px;
+  animation:fadeIn .2s;
+}
+.modal-backdrop.active{display:flex}
+.modal{
+  background:var(--paper);
+  border-radius:var(--radius-lg);
+  padding:32px 36px;
+  max-width:440px;width:100%;
+  box-shadow:var(--shadow-lg);
+  animation:modalIn .25s cubic-bezier(.2,.8,.3,1);
+}
+@keyframes modalIn{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-title{
+  font-family:var(--f-display);
+  font-size:18px;font-weight:700;
+  margin-bottom:10px;
+  text-transform:uppercase;
+  letter-spacing:.02em;
+}
+.modal-text{font-size:14px;color:var(--ink-soft);margin-bottom:22px;line-height:1.6}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:24px;right:24px;
+  background:var(--ink);color:var(--paper);
+  padding:12px 20px;border-radius:var(--radius);
+  font-size:13px;
+  box-shadow:var(--shadow-lg);
+  z-index:300;
+  opacity:0;transform:translateY(10px);
+  pointer-events:none;
+  transition:all .25s;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* Tabs */
+.tabs{
+  display:flex;gap:2px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:24px;padding:0 32px;
+}
+.tab{
+  padding:12px 20px;
+  font-size:13px;font-weight:500;
+  color:var(--ink-mute);
+  background:none;border:none;
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  margin-bottom:-1px;
+  transition:all .15s;
+  font-family:var(--f-body);
+  letter-spacing:.02em;
+}
+.tab:hover{color:var(--ink)}
+.tab.active{
+  color:var(--accent);
+  border-bottom-color:var(--accent);
+  font-weight:600;
+}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* Responsive */
+@media (max-width:900px){
+  .values-layout{grid-template-columns:1fr}
+  .value-bar{grid-template-columns:140px 1fr 70px;gap:10px}
+  .main{padding:24px 16px 40px}
+  .topbar{padding:14px 18px}
+  .brand-logo{width:48px;height:48px}
+  .brand-mark{font-size:18px}
+  .form-card{padding:28px 22px}
+  .section-head,.section-body{padding-left:20px;padding-right:20px}
+  .hero-name{font-size:30px}
+  .results-hero{padding:28px 24px}
+  .item-card{grid-template-columns:32px 1fr;gap:12px;padding:14px 14px}
+  .item-text{padding-right:0}
+  .likert-scale{grid-column:1 / -1;justify-content:space-around;margin-top:6px;padding-top:10px;border-top:1px dashed var(--line-soft)}
+  .likert-btn{flex:1;max-width:58px;height:40px}
+  .likert-header{display:none}
+  .bilan-row{grid-template-columns:auto 1fr;gap:14px}
+  .bilan-status,.bilan-date,.bilan-actions{grid-column:2;justify-self:start}
+}
+@media (max-width:600px){
+  .dash-title{font-size:28px}
+  .value-bar{grid-template-columns:110px 1fr 58px}
+  .tabs{overflow-x:auto;padding:0 16px;scrollbar-width:thin}
+  .section-head,.section-body{padding-left:16px;padding-right:16px}
+  .intro-phrase{font-size:18px;padding:14px 16px}
+  .likert-btn{width:40px;height:38px;font-size:13px}
+}
+
+@media print{
+  body{background:#fff}
+  .topbar,.action-bar,.quiz-header,.quiz-footer,.likert-header{display:none}
+  .section,.results-hero{break-inside:avoid;box-shadow:none;border:1px solid #ccc}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <img class="brand-logo" src="data:image/jpeg;base64,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" alt="Institut Tarnais">
+      <div class="brand-text">
+        <div class="brand-mark">QVP</div>
+        <div class="brand-sub">Questionnaire des Valeurs · Institut Tarnais</div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn ghost sm" id="btnExportAll" title="Sauvegarder toutes les données">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Sauvegarder
+      </button>
+      <button class="btn ghost sm" id="btnImportAll">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Importer
+      </button>
+      <input type="file" id="importFile" accept=".json" style="display:none">
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- DASHBOARD -->
+    <section class="view" id="view-dashboard">
+      <div class="dash-header">
+        <div>
+          <h1 class="dash-title">Les bilans <em>QVP</em></h1>
+          <p class="dash-subtitle">Questionnaire des Valeurs Professionnelles de Donald E. Super — 45 items répartis sur 15 valeurs fondamentales du rapport au travail. Tous les bilans sont stockés localement.</p>
+        </div>
+        <button class="btn primary" id="btnNewBilan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nouveau bilan
+        </button>
+      </div>
+      <div id="bilansList"></div>
+    </section>
+
+    <!-- NEW FORM -->
+    <section class="view active" id="view-new">
+      <div class="form-card">
+        <h2 class="form-title">Nouveau bilan QVP</h2>
+        <p class="form-lead">Informations sur la personne qui passe le questionnaire</p>
+        <div class="form-row">
+          <label class="form-label">Nom</label>
+          <input type="text" class="form-input" id="newNom" placeholder="NOM">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Prénom</label>
+          <input type="text" class="form-input" id="newPrenom" placeholder="Prénom">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Sexe</label>
+          <div class="radio-group">
+            <label class="radio-card">
+              <input type="radio" name="sex" value="F" checked>
+              <span class="radio-card-icon">♀</span><span>Femme</span>
+            </label>
+            <label class="radio-card">
+              <input type="radio" name="sex" value="H">
+              <span class="radio-card-icon">♂</span><span>Homme</span>
+            </label>
+          </div>
+          <p style="font-size:11px;color:var(--ink-mute);margin-top:8px;font-style:italic">L'étalonnage utilise des barèmes distincts selon le sexe (normes Fabienne Roux 2009 – N=654 femmes, N=336 hommes).</p>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Âge (optionnel)</label>
+          <input type="number" class="form-input" id="newAge" placeholder="Ex: 35" min="14" max="99">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Profession (optionnel)</label>
+          <input type="text" class="form-input" id="newProf" placeholder="Ex: Technicien de maintenance">
+        </div>
+        <div class="form-actions">
+          <button class="btn ghost" id="btnCancelNew">← Bilans enregistrés</button>
+          <button class="btn primary" id="btnStartQuiz">Démarrer la passation →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section class="view" id="view-quiz">
+      <div class="quiz-header">
+        <div class="quiz-breadcrumb">
+          <button class="back-link" id="btnBackQuiz">← Retour</button>
+          <div>
+            <div class="quiz-person" id="quizPerson">—</div>
+            <div style="font-size:11px;color:var(--ink-mute);letter-spacing:.05em">Passation QVP en cours</div>
+          </div>
+        </div>
+        <div class="quiz-progress">
+          <span id="progressText">0 / 45 items</span>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+      </div>
+
+      <div class="instructions">
+        <h3>Consigne de passation</h3>
+        <p>Ce questionnaire présente 45 phrases qui illustrent les valeurs que les gens considèrent comme importantes dans leur travail. Ces valeurs correspondent à des satisfactions cherchées dans les activités professionnelles.</p>
+        <p>Lisez attentivement chaque phrase et indiquez l'importance que vous lui accordez sur l'échelle : <strong>1</strong> = pas importante, <strong>2</strong> = peu importante, <strong>3</strong> = moyennement importante, <strong>4</strong> = importante, <strong>5</strong> = très importante.</p>
+        <p class="hint">💡 Toutes vos réponses sont sauvegardées automatiquement. Vous pouvez reprendre plus tard si besoin.</p>
+      </div>
+
+      <div class="intro-phrase">
+        Un travail dans lequel <em>…</em>
+      </div>
+
+      <div class="likert-header">
+        <div class="likert-header-inner">
+          <span class="likert-header-spacer"></span>
+          <div class="likert-header-title">Importance accordée à chaque affirmation</div>
+          <div class="likert-header-scale">
+            <span>Pas<br>imp.</span>
+            <span>Peu<br>imp.</span>
+            <span>Moyen.<br>imp.</span>
+            <span>Imp.</span>
+            <span>Très<br>imp.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="items-list" id="itemsList"></div>
+
+      <div class="quiz-footer">
+        <div class="quiz-footer-info">
+          <strong id="quizStatusLabel">En cours</strong> — <span id="quizStatusDetail">Répondez aux 45 items pour générer le profil.</span>
+        </div>
+        <button class="btn primary" id="btnFinishQuiz">
+          Générer le profil →
+        </button>
+      </div>
+    </section>
+
+    <!-- RESULTS -->
+    <section class="view" id="view-results">
+      <div class="results-wrapper" id="resultsContent"></div>
+    </section>
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="modal-backdrop" id="modalConfirm">
+  <div class="modal">
+    <h3 class="modal-title" id="modalTitle">Confirmer</h3>
+    <p class="modal-text" id="modalText">—</p>
+    <div class="modal-actions">
+      <button class="btn ghost" id="modalCancel">Annuler</button>
+      <button class="btn primary" id="modalOk">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   QVP — Questionnaire des Valeurs Professionnelles de D.E. Super
+   ============================================================ */
+
+// Les 45 items dans l'ordre de passation
+const ITEMS = [
+  "vous avez à résoudre de nouveaux problèmes.",
+  "vous aidez les autres.",
+  "vous pouvez être augmenté.",
+  "vous envisagez avec plaisir des changements.",
+  "vous avez des libertés dans votre champ d'intervention.",
+  "vous pouvez acquérir du prestige dans votre domaine.",
+  "vous faites appel à vos capacités artistiques.",
+  "vous faites partie d'une équipe.",
+  "vous savez que votre poste sera maintenu.",
+  "vous pouvez être vous-même.",
+  "vous avez un patron qui agit loyalement envers vous.",
+  "vous appréciez les conditions dans lesquelles il est fait.",
+  "vous avez le sentiment d'avoir eu une journée bien remplie.",
+  "vous avez de l'autorité sur les autres.",
+  "vous pouvez mettre en application de nouvelles idées et suggestions.",
+  "vous créez quelque chose de nouveau.",
+  "vous savez par les résultats si vous avez fait du bon travail.",
+  "vous avez un patron juste et équitable.",
+  "vous êtes sûr d'avoir toujours un emploi.",
+  "vous pouvez rendre plus beau le monde qui vous entoure.",
+  "vous prenez vos décisions vous-même.",
+  "vous avez un salaire qui suit le coût de la vie.",
+  "vous avez des problèmes intellectuels, complexes et pointus, à résoudre.",
+  "vous exercez vos capacités à diriger.",
+  "vous avez un environnement confortable et agréable.",
+  "vous avez un mode de vie qui vous plaît, en dehors du travail.",
+  "vous entretenez des relations amicales.",
+  "vous savez que les autres considèrent votre travail comme important.",
+  "vous ne faites pas tout le temps la même chose.",
+  "vous sentez que vous avez aidé quelqu'un d'autre.",
+  "vous améliorez le bien-être des autres.",
+  "vous pouvez faire beaucoup de choses variées.",
+  "vous êtes respecté par les autres.",
+  "vous avez de bonnes relations avec vos collègues.",
+  "vous menez le genre de vie qui vous plaît le plus.",
+  "vous avez de bonnes conditions de travail (bon éclairage, calme, propreté, espace, etc.).",
+  "vous planifiez et organisez le travail des autres.",
+  "vous avez besoin d'avoir de fortes sollicitations intellectuelles.",
+  "vous êtes suffisamment payé pour vivre correctement.",
+  "vous êtes votre propre patron.",
+  "vous créez des produits bien présentés et attirants.",
+  "vous êtes assuré de retrouver un autre emploi dans la même société si le vôtre disparaît.",
+  "vous avez un patron attentif et compréhensif.",
+  "vous voyez les résultats de vos efforts.",
+  "vous apportez des idées nouvelles."
+];
+
+// Mapping valeur → indices d'items (0-based), dérivé exactement des formules Excel
+const VALUES = [
+  { code:"Cr", name:"Créativité", items:[14,15,44], color:"#9B8468",
+    desc:"Travail qui permet d'inventer de nouvelles choses, de concevoir de nouveaux produits ou de développer des idées nouvelles. Liée aux intérêts artistiques et scientifiques, c'est une valeur associée aux aspects non matériels de la culture." },
+  { code:"Ma", name:"Management", items:[13,23,36], color:"#5A7577",
+    desc:"Travail qui permet de planifier et d'organiser le travail des autres et/ou ses propres activités." },
+  { code:"Ac", name:"Réalisation", items:[12,16,43], color:"#6E8A74",
+    desc:"Travail qui donne le sentiment de se réaliser en accomplissant bien sa tâche. Évalue l'orientation vers un but, un goût pour le travail donnant des résultats visibles et tangibles." },
+  { code:"Su", name:"Environnement", items:[11,24,35], color:"#B89968",
+    desc:"Travail effectué dans un cadre agréable et confortable (température, propreté, calme). Cette valeur représente l'environnement matériel dans lequel le travail est fait, et tend à être importante pour les personnes ne privilégiant pas le travail en lui-même mais les conditions annexes." },
+  { code:"SR", name:"Relations avec la hiérarchie", items:[10,17,42], color:"#8FAFB1",
+    desc:"Travail effectué sous les ordres d'un supérieur juste et équitable et avec qui on peut s'entendre. Cette valeur souligne un attachement à entretenir une bonne relation avec son supérieur." },
+  { code:"WL", name:"Style de vie", items:[9,25,34], color:"#8A7A8E",
+    desc:"Travail permettant de mener un style de vie que l'on a choisi et d'être en accord avec soi-même." },
+  { code:"Se", name:"Sécurité", items:[8,18,41], color:"#6E7F85",
+    desc:"Travail qui garantit la stabilité de l'emploi même en cas de crise économique. En tant que valeur matérielle, la sécurité est souvent liée aux avantages économiques." },
+  { code:"As", name:"Relations avec les collègues", items:[7,26,33], color:"#7A9488",
+    desc:"Travail permettant d'avoir des contacts et de bonnes relations avec ses collègues. Valeur présente chez les personnes qui considèrent la vie sociale dans le travail comme plus importante que la nature du travail elle-même." },
+  { code:"Es", name:"Sens esthétique", items:[6,19,40], color:"#A08468",
+    desc:"Travail qui permet de réaliser de belles choses et de rendre plus beau le monde qui nous entoure." },
+  { code:"Pr", name:"Prestige", items:[5,27,32], color:"#5A6770",
+    desc:"Travail permettant d'avoir une image socialement élevée aux yeux des autres et de susciter le respect. Le prestige reflète plus un désir d'être respecté par les autres qu'une envie d'acquérir un statut de pouvoir." },
+  { code:"In", name:"Indépendance", items:[4,20,39], color:"#4A6B7A",
+    desc:"Travail qui permet de travailler de la façon dont le sujet le désire, aussi lentement ou rapidement qu'il le désire. La désirabilité sociale tend à diminuer les résultats à cette échelle." },
+  { code:"Va", name:"Variété", items:[3,28,31], color:"#7A6B5E",
+    desc:"Travail permettant de faire des choses variées." },
+  { code:"ER", name:"Avantages économiques", items:[2,21,38], color:"#8A7560",
+    desc:"Travail bien rémunéré et qui permet d'acquérir des choses. Valeur souvent considérée comme matérialiste, sous-entendant un attachement aux choses tangibles et aux gains." },
+  { code:"AI", name:"Altruisme", items:[1,29,30], color:"#C8A870",
+    desc:"Travail qui permet de contribuer au bien-être des autres. Évalue les intérêts ou les valeurs pour les emplois à caractère social. La désirabilité sociale semble augmenter les notes à cette échelle." },
+  { code:"IS", name:"Stimulation intellectuelle", items:[0,22,37], color:"#5A7577",
+    desc:"Travail qui permet d'avoir la possibilité de penser de manière indépendante et d'appréhender le pourquoi et le comment des choses. Évalue une qualité caractérisant les personnes qui ont des intérêts professionnels scientifiques de type abstrait, qui privilégient l'aspect intellectuel des choses." }
+];
+
+// Tables d'étalonnage (note brute 3-15 → percentile)
+// Source: Fabienne Roux 2009, Centre de Bilan de l'Education Nationale - Nîmes
+// Ordre des colonnes: Cr, Ma, Ac, Su, SR, WL, Se, As, Es, Pr, In, Va, ER, AI, IS
+// Clé = note brute, valeur = tableau de 15 percentiles dans l'ordre VALUES
+
+const ETAL_F = {
+  15: [96,100, 92, 93, 76, 88, 82, 96, 99, 98, 98, 94, 90, 96, 99],
+  14: [88, 99, 71, 77, 42, 65, 55, 85, 95, 92, 92, 81, 72, 88, 95],
+  13: [77, 96, 50, 57, 26, 45, 39, 70, 89, 82, 82, 63, 57, 75, 87],
+  12: [58, 90, 31, 37, 15, 27, 25, 49, 78, 65, 66, 43, 38, 55, 72],
+  11: [39, 82, 16, 24,  8, 16, 16, 29, 62, 46, 47, 25, 21, 35, 53],
+  10: [27, 71,  9, 15,  6, 10, 10, 16, 46, 31, 32, 14, 13, 23, 35],
+  9:  [17, 54,  6,  9,  5,  7,  7,  9, 31, 19, 21,  8,  8, 14, 21],
+  8:  [10, 37,  5,  6,  4,  5,  5,  5, 18, 10, 12,  5,  5,  8, 11],
+  7:  [ 6, 25,  4,  4,  4,  4,  4,  4, 10,  6,  6,  4,  4,  5,  6],
+  6:  [ 4, 16,  3,  3,  3,  3,  3,  2,  5,  3,  4,  3,  2,  3,  2],
+  5:  [ 2,  9,  2,  2,  3,  3,  2,  1,  2,  2,  2,  2,  1,  2,  1],
+  4:  [ 1,  5,  1,  1,  2,  2,  2,  1,  1,  1,  1,  1,  0,  1,  0],
+  3:  [ 1,  2,  1,  0,  1,  1,  1,  0,  0,  0,  0,  0,  0,  0,  0]
+};
+
+const ETAL_H = {
+  15: [92, 98, 93, 97, 83, 92, 89, 95, 99, 98, 94, 97, 91, 97, 97],
+  14: [79, 95, 78, 89, 57, 75, 71, 84, 98, 93, 83, 86, 77, 90, 91],
+  13: [65, 90, 60, 76, 42, 57, 60, 73, 93, 85, 69, 71, 65, 80, 81],
+  12: [45, 80, 39, 59, 28, 39, 48, 51, 84, 72, 54, 54, 45, 61, 64],
+  11: [27, 65, 22, 41, 17, 24, 35, 30, 73, 56, 39, 34, 28, 43, 46],
+  10: [18, 51, 13, 27, 11, 13, 26, 18, 58, 40, 25, 20, 18, 30, 29],
+  9:  [12, 35,  7, 16,  8,  7, 18, 10, 41, 26, 14, 11, 10, 17, 16],
+  8:  [ 8, 25,  5,  9,  6,  4, 12,  5, 28, 15,  7,  7,  5,  8, 10],
+  7:  [ 6, 17,  4,  5,  4,  3,  9,  3, 17,  9,  5,  5,  4,  3,  6],
+  6:  [ 4, 11,  3,  3,  3,  1,  5,  2,  9,  5,  3,  3,  3,  1,  4],
+  5:  [ 2,  6,  1,  2,  3,  1,  2,  1,  5,  2,  2,  1,  2,  1,  2],
+  4:  [ 1,  3,  1,  1,  2,  0,  1,  0,  2,  1,  1,  1,  1,  0,  1],
+  3:  [ 0,  1,  0,  0,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0]
+};
+
+// Niveaux qualitatifs (selon les normes du test)
+function getLevel(score){
+  if(score >= 74) return {label:"Très élevé", key:"very-high", pct:92};
+  if(score >= 70) return {label:"Élevé",      key:"high",      pct:75};
+  if(score >= 32) return {label:"Moyen",      key:"medium",    pct:50};
+  if(score >= 8)  return {label:"Faible",     key:"low",       pct:22};
+  return             {label:"Très faible",    key:"very-low",  pct:8};
+}
+function levelBadgeClass(score){
+  return "lvl-" + getLevel(score).key;
+}
+
+// Pour l'échelle de la barre (0-100 = percentile), on marque les 4 seuils:
+// 8, 32, 70, 74
+
+/* ============================================================
+   PERSISTENCE
+   ============================================================ */
+const STORAGE_KEY = "qvp_bilans_v1";
+
+function loadAll(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}"); }
+  catch(e){ return {}; }
+}
+function saveAll(data){ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+function saveBilan(b){ const all = loadAll(); all[b.id] = b; saveAll(all); }
+function deleteBilan(id){ const all = loadAll(); delete all[id]; saveAll(all); }
+function genId(){ return "q_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7); }
+
+/* ============================================================
+   SCORING
+   ============================================================ */
+function computeValueScores(answers, sex){
+  // answers = [1-5 ou null, ×45]
+  const etal = sex === "H" ? ETAL_H : ETAL_F;
+  return VALUES.map((v, idx) => {
+    const raw = v.items.reduce((s,i) => s + (answers[i]||0), 0);
+    let percentile = null;
+    if(raw >= 3 && raw <= 15){
+      percentile = etal[raw][idx];
+    }
+    return {
+      code: v.code,
+      name: v.name,
+      color: v.color,
+      raw,
+      percentile: percentile !== null ? percentile : 0,
+      level: getLevel(percentile || 0),
+      desc: v.desc
+    };
+  });
+}
+
+/* ============================================================
+   UI HELPERS
+   ============================================================ */
+function $(sel,root=document){return root.querySelector(sel);}
+function $$(sel,root=document){return [...root.querySelectorAll(sel)];}
+
+function showView(id){
+  $$(".view").forEach(v=>v.classList.remove("active"));
+  $("#view-"+id).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function toast(msg, duration=2500){
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._tmr);
+  t._tmr = setTimeout(()=>t.classList.remove("show"), duration);
+}
+
+function confirmModal(title, text, onOk){
+  const m = $("#modalConfirm");
+  $("#modalTitle").textContent = title;
+  $("#modalText").textContent = text;
+  m.classList.add("active");
+  const okBtn = $("#modalOk");
+  const newBtn = okBtn.cloneNode(true);
+  okBtn.parentNode.replaceChild(newBtn, okBtn);
+  newBtn.addEventListener("click", ()=>{
+    m.classList.remove("active");
+    onOk();
+  });
+}
+
+function fmtDate(ts){
+  const d = new Date(ts);
+  return d.toLocaleDateString("fr-FR",{day:"2-digit",month:"short",year:"numeric"}) +
+    " · " + d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+}
+
+function initials(nom,prenom){
+  const a = (prenom||"").charAt(0).toUpperCase();
+  const b = (nom||"").charAt(0).toUpperCase();
+  return (a+b)||"??";
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+function renderDashboard(){
+  const all = loadAll();
+  const list = Object.values(all).sort((a,b)=>b.updatedAt-a.updatedAt);
+  const container = $("#bilansList");
+  if(list.length===0){
+    container.innerHTML = `
+      <div class="empty">
+        <div class="empty-title">Aucun bilan pour l'instant</div>
+        <div class="empty-text">Créez votre premier bilan QVP en cliquant sur « Nouveau bilan » ci-dessus. Chaque bilan est stocké localement dans ce navigateur.</div>
+      </div>`;
+    return;
+  }
+  container.innerHTML = `<div class="bilans-list">` +
+    list.map(b=>{
+      const done = b.status === "completed";
+      const answered = (b.answers||[]).filter(a=>a!==null).length;
+      const progress = Math.round((answered/45)*100);
+      return `<div class="bilan-row" data-id="${b.id}">
+        <div class="bilan-avatar">${initials(b.nom,b.prenom)}</div>
+        <div>
+          <div class="bilan-name">${escapeHtml(b.prenom||"")} ${escapeHtml(b.nom||"")}</div>
+          <div class="bilan-meta">${b.sex==="H"?"Homme":"Femme"}${b.age?" · "+b.age+" ans":""}${b.profession?" · "+escapeHtml(b.profession):""} · créé le ${fmtDate(b.createdAt)}</div>
+        </div>
+        <div class="bilan-status ${done?"done":"draft"}">${done?"Complet":progress+"%"}</div>
+        <div class="bilan-date">${fmtDate(b.updatedAt)}</div>
+        <div class="bilan-actions">
+          ${done?`<button class="icon-btn" data-act="view" title="Voir les résultats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>`:""}
+          <button class="icon-btn" data-act="edit" title="${done?"Modifier":"Continuer"}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="icon-btn danger" data-act="delete" title="Supprimer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+        </div>
+      </div>`;
+    }).join("") +
+    `</div>`;
+  container.addEventListener("click", onBilanRowClick);
+}
+
+function onBilanRowClick(e){
+  const btn = e.target.closest("[data-act]");
+  const row = e.target.closest(".bilan-row");
+  if(!row) return;
+  const id = row.dataset.id;
+  const all = loadAll();
+  const b = all[id];
+  if(!b) return;
+
+  if(btn){
+    e.stopPropagation();
+    const act = btn.dataset.act;
+    if(act==="delete"){
+      confirmModal(
+        "Supprimer ce bilan ?",
+        `Le bilan de ${b.prenom} ${b.nom} sera définitivement supprimé. Cette action est irréversible.`,
+        ()=>{ deleteBilan(id); renderDashboard(); toast("Bilan supprimé"); }
+      );
+    } else if(act==="edit"){
+      openQuiz(id);
+    } else if(act==="view"){
+      openResults(id);
+    }
+  } else {
+    if(b.status==="completed") openResults(id); else openQuiz(id);
+  }
+}
+
+/* ============================================================
+   NEW FORM
+   ============================================================ */
+function openNewForm(){
+  $("#newNom").value = "";
+  $("#newPrenom").value = "";
+  $("#newAge").value = "";
+  $("#newProf").value = "";
+  document.querySelector("input[name='sex'][value='F']").checked = true;
+  showView("new");
+}
+
+function createBilanFromForm(){
+  const nom = $("#newNom").value.trim();
+  const prenom = $("#newPrenom").value.trim();
+  const sex = document.querySelector("input[name='sex']:checked").value;
+  const age = $("#newAge").value.trim();
+  const prof = $("#newProf").value.trim();
+  if(!nom || !prenom){ toast("Nom et prénom obligatoires"); return; }
+  const now = Date.now();
+  const bilan = {
+    id: genId(),
+    nom, prenom, sex,
+    age: age || null,
+    profession: prof || null,
+    createdAt: now,
+    updatedAt: now,
+    status: "draft",
+    answers: new Array(45).fill(null),
+    notes: ""
+  };
+  saveBilan(bilan);
+  openQuiz(bilan.id);
+}
+
+/* ============================================================
+   QUIZ
+   ============================================================ */
+let currentBilanId = null;
+
+function openQuiz(id){
+  currentBilanId = id;
+  const b = loadAll()[id];
+  if(!b){ toast("Bilan introuvable"); showView("dashboard"); return; }
+  $("#quizPerson").textContent = `${b.prenom} ${b.nom}`;
+  if(!b.answers || b.answers.length !== 45){
+    b.answers = new Array(45).fill(null);
+    saveBilan(b);
+  }
+  renderItems(b);
+  updateQuizProgress();
+  showView("quiz");
+}
+
+function renderItems(b){
+  const list = $("#itemsList");
+  list.innerHTML = ITEMS.map((text, idx)=>{
+    const v = b.answers[idx];
+    return `
+      <div class="item-card ${v!==null?"answered":""}" data-idx="${idx}">
+        <div class="item-num">${idx+1}</div>
+        <div class="item-text">…${escapeHtml(text)}</div>
+        <div class="likert-scale">
+          ${[1,2,3,4,5].map(n=>`
+            <button class="likert-btn ${v===n?"active":""}" data-val="${n}" title="${likertLabel(n)}">${n}</button>
+          `).join("")}
+        </div>
+      </div>`;
+  }).join("");
+  list.addEventListener("click", onItemClick);
+}
+
+function likertLabel(n){
+  return ["","Pas importante","Peu importante","Moyennement importante","Importante","Très importante"][n];
+}
+
+function onItemClick(e){
+  const btn = e.target.closest(".likert-btn");
+  if(!btn) return;
+  const card = btn.closest(".item-card");
+  const idx = parseInt(card.dataset.idx);
+  const val = parseInt(btn.dataset.val);
+  const all = loadAll();
+  const b = all[currentBilanId];
+  if(!b) return;
+  b.answers[idx] = val;
+  b.updatedAt = Date.now();
+  saveAll(all);
+  // Update UI
+  card.querySelectorAll(".likert-btn").forEach(x=>x.classList.remove("active"));
+  btn.classList.add("active");
+  card.classList.add("answered");
+  card.classList.remove("missing");
+  updateQuizProgress();
+}
+
+function updateQuizProgress(){
+  const b = loadAll()[currentBilanId];
+  if(!b) return;
+  const answered = (b.answers||[]).filter(a=>a!==null).length;
+  $("#progressText").textContent = `${answered} / 45 items`;
+  $("#progressFill").style.width = (answered/45*100)+"%";
+  if(answered===45){
+    $("#quizStatusLabel").textContent = "Prêt";
+    $("#quizStatusDetail").textContent = "Les 45 items sont renseignés. Vous pouvez générer le profil.";
+  } else {
+    $("#quizStatusLabel").textContent = "En cours";
+    $("#quizStatusDetail").textContent = `Encore ${45-answered} item${45-answered>1?"s":""} à renseigner pour générer le profil.`;
+  }
+}
+
+function finishQuiz(){
+  const all = loadAll();
+  const b = all[currentBilanId];
+  if(!b) return;
+  const missing = [];
+  (b.answers||[]).forEach((v,i)=>{ if(v===null || v===undefined) missing.push(i); });
+  if(missing.length > 0){
+    // Mettre en évidence les items manquants
+    $$(".item-card").forEach(c=>c.classList.remove("missing"));
+    missing.forEach(idx=>{
+      const card = document.querySelector(`.item-card[data-idx="${idx}"]`);
+      if(card){ card.classList.add("missing"); }
+    });
+    // Scroller vers le premier item manquant
+    const firstCard = document.querySelector(`.item-card[data-idx="${missing[0]}"]`);
+    if(firstCard){
+      firstCard.scrollIntoView({behavior:"smooth", block:"center"});
+    }
+    toast(`${missing.length} item${missing.length>1?"s":""} non renseigné${missing.length>1?"s":""} (en ocre ci-dessous)`, 3500);
+    return;
+  }
+  b.status = "completed";
+  b.completedAt = Date.now();
+  b.updatedAt = Date.now();
+  saveAll(all);
+  openResults(currentBilanId);
+}
+
+/* ============================================================
+   RESULTS
+   ============================================================ */
+function openResults(id){
+  currentBilanId = id;
+  const b = loadAll()[id];
+  if(!b){ toast("Bilan introuvable"); showView("dashboard"); return; }
+  if(b.status!=="completed"){ openQuiz(id); return; }
+  renderResults(b);
+  showView("results");
+}
+
+function renderResults(b){
+  const scores = computeValueScores(b.answers, b.sex);
+  const sorted = [...scores].sort((a,b)=>b.percentile-a.percentile);
+  const top3 = sorted.slice(0,3);
+
+  const container = $("#resultsContent");
+  container.innerHTML = `
+    ${renderHero(b, top3)}
+    ${renderTabs()}
+    <div class="tab-content active" data-tab="profile">
+      ${renderProfileSection(scores, sorted)}
+    </div>
+    <div class="tab-content" data-tab="details">
+      ${renderDetailsSection(sorted)}
+    </div>
+    <div class="tab-content" data-tab="notes">
+      ${renderNotesSection(b)}
+    </div>
+    ${renderActionBar()}
+  `;
+
+  setTimeout(()=>drawRadar(scores), 50);
+
+  // Tab switching
+  $$(".tab", container).forEach(t=>{
+    t.addEventListener("click", ()=>{
+      $$(".tab", container).forEach(x=>x.classList.remove("active"));
+      t.classList.add("active");
+      const k = t.dataset.tab;
+      $$(".tab-content", container).forEach(c=>c.classList.toggle("active", c.dataset.tab===k));
+      if(k==="profile") setTimeout(()=>drawRadar(scores), 50);
+    });
+  });
+
+  $("#btnBackResults")?.addEventListener("click", ()=>{ showView("dashboard"); renderDashboard(); });
+  $("#btnEditResults")?.addEventListener("click", ()=>openQuiz(currentBilanId));
+  $("#btnPrintResults")?.addEventListener("click", ()=>window.print());
+  $("#btnPdfResults")?.addEventListener("click", exportPdf);
+  $("#btnJsonResults")?.addEventListener("click", exportJson);
+  $("#notesTA")?.addEventListener("input", e=>{
+    const all = loadAll();
+    const bb = all[currentBilanId];
+    bb.notes = e.target.value;
+    bb.updatedAt = Date.now();
+    saveAll(all);
+  });
+
+  // Animation des barres
+  setTimeout(()=>{
+    $$(".bar-fill").forEach(f=>{
+      const target = f.dataset.target;
+      f.style.width = target + "%";
+    });
+  }, 120);
+}
+
+function renderHero(b, top3){
+  return `
+    <div class="results-hero">
+      <div class="hero-tag">Questionnaire des Valeurs Professionnelles · D.E. Super</div>
+      <h1 class="hero-name">${escapeHtml(b.prenom)} ${escapeHtml(b.nom)}</h1>
+      <div class="hero-top3">
+        ${top3.map((v,i)=>`
+          <div class="top-value-chip" style="border-left-color:${v.color}">
+            <div>
+              <div class="top-value-rank">Valeur n°${i+1}</div>
+              <div class="top-value-name">${v.name}</div>
+            </div>
+            <div class="top-value-level">${v.percentile} · ${v.level.label}</div>
+          </div>
+        `).join("")}
+      </div>
+      <div class="hero-meta">
+        <span><strong>Sexe :</strong> ${b.sex==="H"?"Homme":"Femme"}${b.age?" · "+b.age+" ans":""}</span>
+        ${b.profession?`<span><strong>Profession :</strong> ${escapeHtml(b.profession)}</span>`:""}
+        <span><strong>Passation :</strong> ${fmtDate(b.completedAt||b.updatedAt)}</span>
+        <span><strong>Étalonnage :</strong> barème ${b.sex==="H"?"masculin (N=336)":"féminin (N=654)"}</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderTabs(){
+  return `
+    <div class="section" style="padding:0;margin-bottom:20px">
+      <div class="tabs">
+        <button class="tab active" data-tab="profile">Profil des 15 valeurs</button>
+        <button class="tab" data-tab="details">Diagnostic détaillé</button>
+        <button class="tab" data-tab="notes">Notes</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderProfileSection(scores, sorted){
+  return `
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-num">Partie 1</div>
+        <h2 class="section-title">Profil des valeurs professionnelles</h2>
+      </div>
+    </div>
+    <div class="section-body">
+      <p class="section-lead">Chacune des 15 valeurs du QVP de Super est évaluée par 3 items (note brute de 3 à 15), puis étalonnée en percentile selon le barème ${scores[0]?.percentile!==undefined?"":"."} de référence. Le profil ci-dessous ordonne vos valeurs par importance décroissante pour vous.</p>
+      
+      <div class="values-layout">
+        <div class="radar-wrap" id="radarChart"></div>
+        <div>
+          <div class="values-chart">
+            ${sorted.map(v=>{
+              const lvl = v.level;
+              return `
+              <div class="value-bar">
+                <div class="value-label">
+                  <span class="value-code" style="color:${v.color};border-color:${v.color}40">${v.code}</span>
+                  ${v.name}
+                </div>
+                <div class="bar-track">
+                  <div class="bar-scale"><span></span><span></span><span></span><span></span><span></span></div>
+                  <div class="bar-fill" style="width:0%;--bar-color:${v.color};--bar-color-light:${v.color}dd" data-target="${v.percentile}"></div>
+                </div>
+                <div class="value-value">
+                  <strong>${v.percentile}</strong>
+                  <span>brut ${v.raw}/15</span>
+                </div>
+              </div>`;
+            }).join("")}
+          </div>
+          <div class="legend">
+            <div class="legend-item">1-7 · Très faible</div>
+            <div class="legend-item">8-31 · Faible</div>
+            <div class="legend-item">32-69 · Moyen</div>
+            <div class="legend-item">70-73 · Élevé</div>
+            <div class="legend-item">74-99 · Très élevé</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderDetailsSection(sorted){
+  return `
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-num">Partie 2</div>
+        <h2 class="section-title">Diagnostic détaillé par valeur</h2>
+      </div>
+    </div>
+    <div class="section-body">
+      <p class="section-lead">Définition de chaque valeur et positionnement de la personne. Les valeurs sont classées par niveau d'importance décroissant.</p>
+      <div class="detail-grid">
+        ${sorted.map(v=>`
+          <div class="detail-card" style="--detail-color:${v.color}">
+            <div class="detail-head">
+              <div class="detail-title">
+                <span class="detail-code">${v.code}</span>
+                ${v.name}
+              </div>
+              <div class="detail-meta">
+                <span>Note brute ${v.raw}/15 · Percentile ${v.percentile}</span>
+                <span class="level-badge ${levelBadgeClass(v.percentile)}">${v.level.label}</span>
+              </div>
+            </div>
+            <div class="detail-text">${v.desc}</div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderNotesSection(b){
+  return `
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-num">Suivi</div>
+        <h2 class="section-title">Notes</h2>
+      </div>
+    </div>
+    <div class="section-body">
+      <p class="section-lead">Espace libre pour vos observations, les valeurs à approfondir en entretien de restitution, et les prochaines étapes du bilan.</p>
+      <textarea class="notes-textarea" id="notesTA" placeholder="Ex : Altruisme très élevé (94) à articuler avec une Indépendance faible → piste de métier social en équipe constituée, cadré. Creuser l'écart Créativité / Réalisation. Proposer un test IRMR complémentaire ?">${escapeHtml(b.notes||"")}</textarea>
+      <p style="font-size:12px;color:var(--ink-mute);margin-top:10px">Sauvegarde automatique à chaque modification.</p>
+    </div>
+  </div>`;
+}
+
+function renderActionBar(){
+  return `
+    <div class="action-bar">
+      <button class="btn ghost" id="btnBackResults">← Tableau de bord</button>
+      <button class="btn" id="btnEditResults">Modifier les réponses</button>
+      <button class="btn" id="btnJsonResults">Exporter JSON</button>
+      <button class="btn" id="btnPrintResults">Imprimer</button>
+      <button class="btn primary" id="btnPdfResults">Exporter en PDF</button>
+    </div>`;
+}
+
+/* ============================================================
+   RADAR (SVG)
+   ============================================================ */
+function drawRadar(scores){
+  const wrap = $("#radarChart");
+  if(!wrap) return;
+  const n = 15;
+  const size = 500;
+  const cx = size/2, cy = size/2;
+  const R = size * 0.36;
+
+  const angleFor = i => (-Math.PI/2) + i * (Math.PI*2/n);
+
+  // Points: percentile 0-100 -> R
+  const pts = scores.map((v,i)=>{
+    const val = Math.min(100, Math.max(0, v.percentile))/100;
+    const a = angleFor(i);
+    return {
+      x: cx + Math.cos(a)*R*val,
+      y: cy + Math.sin(a)*R*val,
+      label: v.code,
+      name: v.name,
+      percentile: v.percentile,
+      color: v.color,
+      lx: cx + Math.cos(a)*(R+28),
+      ly: cy + Math.sin(a)*(R+28),
+      fx: cx + Math.cos(a)*R,
+      fy: cy + Math.sin(a)*R
+    };
+  });
+  const path = pts.map((p,i)=>(i?"L":"M")+p.x.toFixed(1)+","+p.y.toFixed(1)).join(" ")+" Z";
+
+  // Rings: 20, 40, 60, 80, 100 percentile
+  const rings = [];
+  for(let r=1; r<=5; r++){
+    const ringPts = pts.map((_,i)=>{
+      const a = angleFor(i);
+      return (cx+Math.cos(a)*R*(r/5)).toFixed(1)+","+(cy+Math.sin(a)*R*(r/5)).toFixed(1);
+    });
+    rings.push(`<polygon points="${ringPts.join(" ")}" fill="none" stroke="var(--line)" stroke-width="${r===5?1.2:0.5}" opacity="${r===5?1:0.7}"/>`);
+  }
+
+  // Radii
+  const radii = pts.map(p=>`<line x1="${cx}" y1="${cy}" x2="${p.fx.toFixed(1)}" y2="${p.fy.toFixed(1)}" stroke="var(--line-soft)" stroke-width="0.6"/>`).join("");
+
+  // Labels (petits car 15 points)
+  const labels = pts.map(p=>{
+    const anchor = p.lx < cx-5 ? "end" : p.lx > cx+5 ? "start" : "middle";
+    return `
+      <text x="${p.lx.toFixed(1)}" y="${p.ly.toFixed(1)}" text-anchor="${anchor}" font-family="Montserrat,sans-serif" font-size="11" font-weight="700" fill="${p.color}">${p.label}</text>
+      <text x="${p.lx.toFixed(1)}" y="${(p.ly+12).toFixed(1)}" text-anchor="${anchor}" font-family="JetBrains Mono,monospace" font-size="9" fill="var(--ink-mute)">${p.percentile}</text>`;
+  }).join("");
+
+  const dots = pts.map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" fill="${p.color}" stroke="var(--paper)" stroke-width="1.5"/>`).join("");
+
+  wrap.innerHTML = `
+    <svg viewBox="0 0 ${size} ${size}" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="polyFillQ" cx="50%" cy="50%">
+          <stop offset="0%" stop-color="#8FAFB1" stop-opacity="0.32"/>
+          <stop offset="100%" stop-color="#8FAFB1" stop-opacity="0.08"/>
+        </radialGradient>
+      </defs>
+      ${rings.join("")}
+      ${radii}
+      <path d="${path}" fill="url(#polyFillQ)" stroke="#8FAFB1" stroke-width="2" stroke-linejoin="round"/>
+      ${dots}
+      ${labels}
+      <text x="${cx}" y="${cy+R+60}" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="9" fill="var(--ink-mute)" letter-spacing="2" font-weight="500">PERCENTILE 0 · 100</text>
+    </svg>`;
+}
+
+/* ============================================================
+   EXPORTS
+   ============================================================ */
+function slugify(s){
+  return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zA-Z0-9]+/g,"_").replace(/^_+|_+$/g,"").toLowerCase();
+}
+function downloadBlob(blob, name){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function exportJson(){
+  const b = loadAll()[currentBilanId]; if(!b) return;
+  const blob = new Blob([JSON.stringify(b,null,2)], {type:"application/json"});
+  downloadBlob(blob, `QVP_${slugify(b.prenom+"_"+b.nom)}_${new Date().toISOString().slice(0,10)}.json`);
+  toast("Export JSON téléchargé");
+}
+function exportAllJson(){
+  const all = loadAll();
+  const blob = new Blob([JSON.stringify(all,null,2)], {type:"application/json"});
+  downloadBlob(blob, `QVP_sauvegarde_${new Date().toISOString().slice(0,10)}.json`);
+  toast("Sauvegarde exportée");
+}
+function importAllJson(file){
+  const reader = new FileReader();
+  reader.onload = e=>{
+    try{
+      const data = JSON.parse(e.target.result);
+      const all = loadAll();
+      if(data.id && data.nom){ all[data.id] = data; }
+      else { Object.assign(all, data); }
+      saveAll(all);
+      renderDashboard();
+      toast("Données importées");
+    }catch(err){ toast("Fichier invalide"); }
+  };
+  reader.readAsText(file);
+}
+async function exportPdf(){
+  toast("Génération du PDF en cours...", 4000);
+  const target = $("#resultsContent");
+  const actionBar = target.querySelector(".action-bar");
+  if(actionBar) actionBar.style.display = "none";
+  const tabContents = $$(".tab-content", target);
+  const original = tabContents.map(tc=>tc.classList.contains("active"));
+  tabContents.forEach(tc=>tc.classList.add("active"));
+  const tabsBar = target.querySelector(".tabs");
+  if(tabsBar) tabsBar.parentElement.style.display = "none";
+  await new Promise(r=>setTimeout(r,200));
+  try{
+    const canvas = await html2canvas(target, {scale:2, backgroundColor:"#FFFFFF", useCORS:true, windowWidth: target.scrollWidth});
+    const { jsPDF } = window.jspdf;
+    const imgW = 210, pageH = 297;
+    const imgH = canvas.height * imgW / canvas.width;
+    const pdf = new jsPDF("p","mm","a4");
+    let heightLeft = imgH, position = 0;
+    pdf.addImage(canvas.toDataURL("image/jpeg",0.94), "JPEG", 0, position, imgW, imgH);
+    heightLeft -= pageH;
+    while(heightLeft > 0){
+      position = heightLeft - imgH;
+      pdf.addPage();
+      pdf.addImage(canvas.toDataURL("image/jpeg",0.94), "JPEG", 0, position, imgW, imgH);
+      heightLeft -= pageH;
+    }
+    const b = loadAll()[currentBilanId];
+    pdf.save(`QVP_${slugify(b.prenom+"_"+b.nom)}_${new Date().toISOString().slice(0,10)}.pdf`);
+    toast("PDF téléchargé");
+  }catch(err){ console.error(err); toast("Erreur lors de la génération du PDF"); }
+  finally{
+    if(actionBar) actionBar.style.display = "";
+    tabContents.forEach((tc,i)=>{ if(!original[i]) tc.classList.remove("active"); });
+    if(tabsBar) tabsBar.parentElement.style.display = "";
+  }
+}
+
+/* ============================================================
+   BOOTSTRAP
+   ============================================================ */
+document.addEventListener("DOMContentLoaded", ()=>{
+  renderDashboard();
+  openNewForm();
+
+  $("#btnNewBilan").addEventListener("click", openNewForm);
+  $("#btnCancelNew").addEventListener("click", ()=>{ showView("dashboard"); renderDashboard(); });
+  $("#btnStartQuiz").addEventListener("click", createBilanFromForm);
+  $("#btnBackQuiz").addEventListener("click", ()=>{ showView("dashboard"); renderDashboard(); });
+  $("#btnFinishQuiz").addEventListener("click", finishQuiz);
+  $("#btnExportAll").addEventListener("click", exportAllJson);
+  $("#btnImportAll").addEventListener("click", ()=>$("#importFile").click());
+  $("#importFile").addEventListener("change", e=>{
+    if(e.target.files[0]) importAllJson(e.target.files[0]);
+    e.target.value = "";
+  });
+  $("#modalCancel").addEventListener("click", ()=>$("#modalConfirm").classList.remove("active"));
+  $("#modalConfirm").addEventListener("click", e=>{
+    if(e.target === $("#modalConfirm")) $("#modalConfirm").classList.remove("active");
+  });
+});
+</script>
+</body>
+</html>
