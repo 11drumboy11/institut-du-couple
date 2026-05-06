@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "3.0-beast-ultra",
-    "last_update": "2025-12-06T14:26:10.055050Z",
+    "last_update": "2026-05-06T14:25:20.429058Z",
     "generator": "MegaSearch Generator - Beast Mode ULTRA",
     "description": "Base de connaissances GPT - Expert Thérapie de Couple",
     "capabilities": [
@@ -12,7 +12,7 @@
       "exercices_adaptes",
       "parcours_pedagogiques"
     ],
-    "total_documents": 7,
+    "total_documents": 8,
     "total_chapitres": 124,
     "total_sections": 503,
     "total_chunks": 1174,
@@ -213,6 +213,34 @@
       "format_source": "lightbook",
       "path": "Base de connaissances/Livres/Le secret des couples heureux.l'égoïsme partagé.Sylvain Mimoun copie",
       "json_path": "Base de connaissances/Livres/Le secret des couples heureux.l'égoïsme partagé.Sylvain Mimoun copie/knowledge_index.json",
+      "stats": {
+        "chapitres": 0,
+        "sections": 0,
+        "concepts": 0,
+        "frameworks": 0,
+        "outils": 0,
+        "exercices": 0,
+        "cas_cliniques": 0,
+        "citations": 0,
+        "chunks": 0
+      }
+    },
+    {
+      "id": "le-secret-des-couples-heureux-l-go-sme-partag-sylvain-mimoun-copie",
+      "titre": "Sans titre",
+      "auteurs": [],
+      "collaborateurs": [],
+      "prefacier": null,
+      "editeur": null,
+      "annee_publication": null,
+      "approches_therapeutiques": [],
+      "domaine_expertise": null,
+      "langue": "fr",
+      "niveau_expertise": null,
+      "pages_total": 0,
+      "format_source": "lightbook",
+      "path": "Base de connaissances/Livres/Le secret des couples heureux.l'égoïsme partagé.Sylvain Mimoun copie",
+      "json_path": "Base de connaissances/Livres/Le secret des couples heureux.l'égoïsme partagé.Sylvain Mimoun copie/knowledge_index.json",
       "stats": {
         "chapitres": 0,
         "sections": 0,
