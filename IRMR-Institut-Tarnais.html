@@ -1,0 +1,2267 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRMR — Inventaire d'intérêts professionnels de Rothwell-Miller</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+/* ========== RESET & BASE ========== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+:root{
+  --bg:#E6D7C3;                  /* Sable - fond général */
+  --bg-soft:#D8CDBB;             /* Beige Sable - zones secondaires */
+  --ink:#1a1a1a;
+  --ink-soft:#3d4543;
+  --ink-mute:#6d7472;
+  --paper:#FFFFFF;               /* Blanc pur - cartes et zones actives */
+  --line:#C8D0C3;                /* Vert Sauge clair - bordures */
+  --line-soft:#D8CDBB;
+  --accent:#8FAFB1;              /* Mer (Bleu-Vert Doux) - couleur principale */
+  --accent-dark:#6E8F91;
+  --ochre:#B89968;               /* Sable foncé */
+  --forest:#6E8A74;              /* Vert sauge plus soutenu */
+  --indigo:#5A7577;              /* Mer foncé pour variantes */
+  --plum:#8FAFB1;                /* Unifié sur accent */
+  --sage:#C8D0C3;                /* Vert Sauge */
+  --shadow-sm:0 1px 2px rgba(26,26,26,.06),0 2px 4px rgba(26,26,26,.04);
+  --shadow-md:0 4px 16px rgba(26,26,26,.08),0 2px 6px rgba(26,26,26,.04);
+  --shadow-lg:0 12px 40px rgba(26,26,26,.12),0 4px 12px rgba(26,26,26,.06);
+  --radius:2px;
+  --radius-lg:4px;
+  --f-display:'Montserrat',-apple-system,BlinkMacSystemFont,sans-serif;
+  --f-body:'Montserrat',-apple-system,BlinkMacSystemFont,sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,monospace;
+}
+body{
+  font-family:var(--f-body);
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.55;
+  font-size:15px;
+  font-feature-settings:"ss01","cv02","cv11";
+  min-height:100vh;
+  background-image:
+    radial-gradient(circle at 15% 10%,rgba(143,175,177,.08) 0%,transparent 45%),
+    radial-gradient(circle at 85% 90%,rgba(200,208,195,.12) 0%,transparent 45%);
+}
+
+/* Paper grain texture */
+body::before{
+  content:"";
+  position:fixed;inset:0;
+  pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .04 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity:.55;mix-blend-mode:multiply;
+}
+
+/* ========== LAYOUT ========== */
+.app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+
+/* Header */
+.topbar{
+  background:var(--paper);
+  border-bottom:1px solid var(--line);
+  padding:18px 28px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:18px;
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(8px);
+  background:rgba(251,249,244,.92);
+}
+.brand{display:flex;align-items:center;gap:14px}
+.brand-logo{
+  width:58px;height:58px;
+  object-fit:contain;
+  flex-shrink:0;
+  filter:contrast(1.08);
+}
+.brand-text{display:flex;flex-direction:column;line-height:1.1}
+.brand-mark{
+  font-family:var(--f-display);
+  font-weight:800;
+  font-size:22px;letter-spacing:.08em;
+  color:var(--ink);
+  text-transform:uppercase;
+}
+.brand-sub{
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-mute);font-weight:500;
+  margin-top:3px;
+}
+.topbar-actions{display:flex;gap:8px;align-items:center}
+
+/* Buttons */
+.btn{
+  font-family:var(--f-body);
+  font-size:13px;font-weight:500;
+  padding:8px 14px;
+  border:1px solid var(--line);
+  background:var(--paper);
+  color:var(--ink);
+  cursor:pointer;
+  border-radius:var(--radius);
+  transition:all .15s ease;
+  display:inline-flex;align-items:center;gap:6px;
+  letter-spacing:.01em;
+}
+.btn:hover{border-color:var(--ink);background:var(--bg-soft)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.primary:hover{background:var(--accent-dark);border-color:var(--accent-dark)}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.ghost:hover{background:var(--bg-soft)}
+.btn.sm{padding:5px 10px;font-size:12px}
+.btn.danger:hover{border-color:#a04040;color:#a04040}
+.btn svg{width:14px;height:14px}
+
+/* Main container */
+.main{flex:1;padding:32px 28px 60px;max-width:1400px;margin:0 auto;width:100%}
+
+/* View switching */
+.view{display:none;animation:fadeIn .35s ease}
+.view.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ========== DASHBOARD ========== */
+.dash-header{
+  margin-bottom:40px;
+  display:flex;justify-content:space-between;align-items:flex-end;
+  gap:24px;flex-wrap:wrap;
+}
+.dash-title{
+  font-family:var(--f-display);
+  font-size:clamp(32px,4.5vw,48px);
+  font-weight:700;
+  line-height:1.05;letter-spacing:-.02em;
+  color:var(--ink);
+  text-transform:uppercase;
+}
+.dash-title em{color:var(--accent);font-style:normal;font-weight:700}
+.dash-subtitle{
+  font-size:14px;color:var(--ink-soft);
+  max-width:620px;margin-top:12px;
+  line-height:1.6;
+}
+
+/* Bilans grid */
+.bilans-list{
+  display:grid;gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  box-shadow:var(--shadow-sm);
+}
+.bilan-row{
+  background:var(--paper);
+  padding:18px 22px;
+  display:grid;
+  grid-template-columns:auto 1fr auto auto auto;
+  gap:20px;align-items:center;
+  cursor:pointer;
+  transition:background .15s;
+}
+.bilan-row:hover{background:var(--bg-soft)}
+.bilan-avatar{
+  width:44px;height:44px;border-radius:50%;
+  background:var(--accent);
+  color:#fff;
+  display:grid;place-items:center;
+  font-family:var(--f-display);
+  font-weight:700;font-size:15px;
+  letter-spacing:.05em;
+}
+.bilan-name{
+  font-family:var(--f-display);
+  font-size:16px;font-weight:600;
+  letter-spacing:.01em;
+}
+.bilan-meta{
+  font-size:12px;color:var(--ink-mute);
+  letter-spacing:.03em;
+  margin-top:2px;
+}
+.bilan-status{
+  font-size:11px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 10px;border-radius:20px;
+}
+.bilan-status.done{background:var(--sage);color:#3d5744}
+.bilan-status.draft{background:#e8dcc5;color:#7d6442}
+.bilan-date{font-size:12px;color:var(--ink-mute);font-family:var(--f-mono)}
+.bilan-actions{display:flex;gap:4px}
+.icon-btn{
+  width:30px;height:30px;
+  border:none;background:transparent;cursor:pointer;
+  border-radius:var(--radius);
+  color:var(--ink-mute);
+  display:grid;place-items:center;
+  transition:all .15s;
+}
+.icon-btn:hover{background:var(--bg);color:var(--ink)}
+.icon-btn.danger:hover{color:#a04040;background:#f4e0e0}
+.icon-btn svg{width:16px;height:16px}
+
+.empty{
+  text-align:center;padding:80px 20px;
+  background:var(--paper);
+  border:1px dashed var(--line);
+  border-radius:var(--radius-lg);
+}
+.empty-title{
+  font-family:var(--f-display);
+  font-size:18px;font-weight:600;
+  letter-spacing:.02em;
+  color:var(--ink-soft);margin-bottom:8px;
+  text-transform:uppercase;
+}
+.empty-text{color:var(--ink-mute);font-size:14px;max-width:420px;margin:0 auto 20px}
+
+/* ========== NEW BILAN FORM ========== */
+.form-card{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:40px 44px;
+  max-width:580px;margin:0 auto;
+  box-shadow:var(--shadow-md);
+}
+.form-title{
+  font-family:var(--f-display);
+  font-size:26px;font-weight:700;
+  letter-spacing:.01em;
+  margin-bottom:6px;
+  text-transform:uppercase;
+}
+.form-lead{color:var(--ink-soft);font-size:14px;margin-bottom:28px}
+.form-row{margin-bottom:20px}
+.form-label{
+  display:block;
+  font-size:11px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-mute);margin-bottom:8px;
+}
+.form-input{
+  width:100%;
+  padding:11px 14px;
+  border:1px solid var(--line);
+  background:#FFFFFF;
+  font-family:var(--f-body);
+  font-size:15px;
+  color:var(--ink);
+  border-radius:var(--radius);
+  transition:all .15s;
+}
+.form-input:focus{
+  outline:none;
+  border-color:var(--accent);
+  background:var(--paper);
+  box-shadow:0 0 0 3px rgba(143,175,177,.2);
+}
+.radio-group{display:flex;gap:8px;flex-wrap:wrap}
+.radio-card{
+  flex:1;min-width:130px;
+  padding:14px 16px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  cursor:pointer;
+  transition:all .15s;
+  display:flex;align-items:center;gap:10px;
+  background:#FFFFFF;
+}
+.radio-card input{display:none}
+.radio-card:has(input:checked){
+  border-color:var(--accent);
+  background:var(--paper);
+  box-shadow:0 0 0 1px var(--accent);
+}
+.radio-card-icon{font-size:18px}
+.form-actions{
+  display:flex;justify-content:space-between;gap:12px;
+  margin-top:32px;padding-top:24px;
+  border-top:1px solid var(--line-soft);
+}
+
+/* ========== QUESTIONNAIRE ========== */
+.quiz-header{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:24px;flex-wrap:wrap;
+  padding:20px 24px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  margin-bottom:24px;
+  box-shadow:var(--shadow-sm);
+}
+.quiz-breadcrumb{display:flex;align-items:center;gap:14px}
+.back-link{
+  color:var(--ink-mute);font-size:13px;
+  display:flex;align-items:center;gap:4px;
+  cursor:pointer;
+  transition:color .15s;
+  background:none;border:none;font-family:inherit;
+}
+.back-link:hover{color:var(--ink)}
+.quiz-person{
+  font-family:var(--f-display);
+  font-size:16px;font-weight:700;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+}
+.quiz-progress{
+  display:flex;align-items:center;gap:12px;
+  font-size:13px;
+  color:var(--ink-mute);
+}
+.progress-bar{
+  width:180px;height:4px;
+  background:var(--line);border-radius:2px;overflow:hidden;
+}
+.progress-fill{
+  height:100%;background:var(--accent);
+  width:0%;transition:width .3s ease;
+  border-radius:2px;
+}
+
+.instructions{
+  background:var(--paper);
+  border-left:3px solid var(--accent);
+  padding:20px 24px;
+  margin-bottom:28px;
+  border-radius:0 var(--radius-lg) var(--radius-lg) 0;
+}
+.instructions h3{
+  font-family:var(--f-display);
+  font-size:18px;font-weight:500;
+  margin-bottom:8px;
+}
+.instructions p{font-size:14px;color:var(--ink-soft);line-height:1.65;margin-bottom:6px}
+.instructions .hint{
+  font-size:12px;color:var(--ink-mute);
+  margin-top:10px;font-style:italic;
+}
+
+/* Groups grid */
+.groups-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:18px;
+}
+.group-card{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:20px 20px 14px;
+  box-shadow:var(--shadow-sm);
+  transition:box-shadow .2s;
+}
+.group-card.complete{
+  border-color:var(--forest);
+  background:linear-gradient(to bottom,var(--paper) 0%,#f6f3e9 100%);
+}
+.group-card:hover{box-shadow:var(--shadow-md)}
+.group-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;padding-bottom:12px;
+  border-bottom:1px solid var(--line-soft);
+}
+.group-letter{
+  font-family:var(--f-display);
+  font-size:26px;font-weight:800;
+  color:var(--accent);
+  line-height:1;
+  letter-spacing:.02em;
+}
+.group-letter small{
+  font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--ink-mute);font-weight:500;
+  display:block;margin-bottom:4px;
+}
+.group-status{
+  font-size:11px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-mute);
+}
+.group-card.complete .group-status{color:var(--forest)}
+
+.sortable-list{list-style:none;display:flex;flex-direction:column;gap:3px}
+.sortable-item{
+  display:grid;
+  grid-template-columns:28px 1fr 14px;
+  gap:10px;align-items:center;
+  padding:9px 12px;
+  background:#FFFFFF;
+  border:1px solid var(--line-soft);
+  border-radius:var(--radius);
+  cursor:grab;
+  font-size:13.5px;
+  transition:all .15s;
+  user-select:none;
+}
+.sortable-item:hover{border-color:var(--accent);background:#f8fafa}
+.sortable-item:active{cursor:grabbing}
+.sortable-item.sortable-ghost{opacity:.4;background:var(--line-soft)}
+.sortable-item.sortable-chosen{box-shadow:var(--shadow-md);border-color:var(--accent);background:var(--paper)}
+.rank-badge{
+  font-family:var(--f-mono);
+  font-size:11px;font-weight:500;
+  color:var(--ink-mute);
+  background:var(--paper);
+  padding:3px 6px;
+  border-radius:var(--radius);
+  text-align:center;
+  border:1px solid var(--line-soft);
+}
+.sortable-item:first-child .rank-badge{
+  background:var(--accent);color:#fff;border-color:var(--accent);
+}
+.sortable-item:nth-child(2) .rank-badge,
+.sortable-item:nth-child(3) .rank-badge{
+  background:var(--ochre);color:#fff;border-color:var(--ochre);
+}
+.drag-handle{
+  color:var(--ink-mute);opacity:.5;font-size:11px;
+  display:flex;flex-direction:column;gap:1px;
+}
+.drag-handle::before{content:"⋮⋮";letter-spacing:-2px}
+
+/* Wishes section */
+.wishes-card{
+  margin-top:28px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:24px 28px;
+  box-shadow:var(--shadow-sm);
+}
+.wishes-title{
+  font-family:var(--f-display);
+  font-size:17px;font-weight:700;
+  margin-bottom:6px;
+  text-transform:uppercase;
+  letter-spacing:.02em;
+}
+.wishes-lead{font-size:13px;color:var(--ink-mute);margin-bottom:18px}
+.wishes-inputs{display:grid;gap:12px}
+.wish-input-row{display:flex;align-items:center;gap:10px}
+.wish-num{
+  font-family:var(--f-display);
+  font-size:18px;font-weight:700;
+  color:var(--accent);
+  width:28px;
+}
+
+.quiz-footer{
+  margin-top:32px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:16px;
+  padding:20px 24px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+}
+.quiz-footer-info{font-size:13px;color:var(--ink-mute)}
+.quiz-footer-info strong{color:var(--ink);font-weight:600}
+
+/* ========== RESULTS ========== */
+.results-wrapper{max-width:1200px;margin:0 auto}
+.results-hero{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:40px 44px;
+  margin-bottom:28px;
+  position:relative;overflow:hidden;
+  box-shadow:var(--shadow-sm);
+}
+.results-hero::before{
+  content:"";position:absolute;
+  top:-40px;right:-40px;
+  width:200px;height:200px;
+  background:radial-gradient(circle,rgba(143,175,177,.15) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-tag{
+  font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--accent);font-weight:600;
+  margin-bottom:12px;
+}
+.hero-name{
+  font-family:var(--f-display);
+  font-size:clamp(26px,3.5vw,38px);
+  font-weight:700;
+  letter-spacing:.01em;line-height:1.15;
+  margin-bottom:10px;
+  text-transform:uppercase;
+}
+.hero-meta{
+  display:flex;gap:20px;flex-wrap:wrap;
+  font-size:13px;color:var(--ink-mute);
+  padding-top:14px;border-top:1px solid var(--line-soft);
+  margin-top:20px;
+}
+.hero-meta span strong{color:var(--ink);font-weight:600}
+
+/* Section blocks */
+.section{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  margin-bottom:28px;
+  box-shadow:var(--shadow-sm);
+  overflow:hidden;
+}
+.section-head{
+  padding:28px 32px 0;
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;
+}
+.section-num{
+  font-family:var(--f-display);
+  font-size:11px;letter-spacing:.2em;
+  color:var(--accent);
+  font-weight:600;text-transform:uppercase;
+}
+.section-title{
+  font-family:var(--f-display);
+  font-size:22px;font-weight:700;
+  letter-spacing:.015em;line-height:1.2;
+  margin-top:6px;
+  text-transform:uppercase;
+}
+.section-body{padding:24px 32px 32px}
+.section-lead{
+  color:var(--ink-soft);
+  font-size:14.5px;line-height:1.7;
+  max-width:720px;
+  margin-bottom:24px;
+}
+
+/* Holland RIASEC radar */
+.holland-grid{
+  display:grid;
+  grid-template-columns:minmax(300px,1fr) 1.3fr;
+  gap:32px;align-items:center;
+}
+.riasec-chart-wrap{
+  position:relative;
+  aspect-ratio:1;
+  max-width:420px;
+  margin:0 auto;
+}
+.riasec-list{display:flex;flex-direction:column;gap:8px}
+.riasec-item{
+  display:grid;
+  grid-template-columns:32px 1fr auto;
+  gap:14px;align-items:center;
+  padding:10px 14px;
+  border:1px solid var(--line-soft);
+  border-radius:var(--radius);
+  background:var(--bg);
+  cursor:pointer;
+  transition:all .15s;
+}
+.riasec-item:hover{border-color:var(--line);background:var(--paper)}
+.riasec-item.top{
+  background:linear-gradient(to right,rgba(183,50,37,.05),transparent);
+  border-left:3px solid var(--accent);
+}
+.riasec-letter{
+  font-family:var(--f-display);
+  font-size:22px;font-weight:800;
+  text-align:center;
+  color:var(--ink-mute);
+  letter-spacing:.01em;
+}
+.riasec-item.top .riasec-letter{color:var(--accent)}
+.riasec-name{
+  font-family:var(--f-display);
+  font-size:14px;font-weight:600;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+}
+.riasec-score{
+  font-family:var(--f-mono);
+  font-size:12px;color:var(--ink-mute);
+  display:flex;flex-direction:column;align-items:flex-end;
+  gap:2px;
+}
+.riasec-score strong{color:var(--ink);font-weight:500;font-size:14px}
+.riasec-item.top .riasec-score strong{color:var(--accent)}
+
+/* Profile code */
+.profile-code{
+  display:inline-flex;align-items:baseline;gap:4px;
+  font-family:var(--f-display);
+  font-size:72px;font-weight:800;
+  line-height:1;letter-spacing:.02em;
+  background:linear-gradient(180deg,var(--accent) 0%,var(--accent-dark) 100%);
+  -webkit-background-clip:text;background-clip:text;
+  color:transparent;
+  margin:14px 0 8px;
+}
+.profile-code small{
+  font-size:11px;color:var(--ink-mute);font-weight:500;
+  letter-spacing:.15em;text-transform:uppercase;
+  -webkit-text-fill-color:var(--ink-mute);
+  margin-left:14px;
+  align-self:center;
+}
+
+/* Domains chart */
+.domains-chart{
+  display:flex;flex-direction:column;gap:10px;
+  margin-top:8px;
+}
+.domain-bar{
+  display:grid;
+  grid-template-columns:160px 1fr 80px;
+  gap:16px;align-items:center;
+  padding:6px 0;
+}
+.domain-label{
+  font-size:13.5px;font-weight:500;
+  color:var(--ink);
+  display:flex;align-items:center;gap:8px;
+}
+.domain-icon{
+  width:18px;height:18px;
+  display:grid;place-items:center;
+  border-radius:3px;
+  font-size:11px;
+  flex-shrink:0;
+}
+.bar-track{
+  position:relative;
+  height:24px;
+  background:var(--bg);
+  border:1px solid var(--line-soft);
+  border-radius:2px;
+  overflow:hidden;
+}
+.bar-fill{
+  position:absolute;left:0;top:0;height:100%;
+  background:linear-gradient(90deg,var(--bar-color,var(--accent)),var(--bar-color-light,var(--accent)));
+  border-radius:1px;
+  transition:width .8s cubic-bezier(.4,0,.2,1);
+  display:flex;align-items:center;justify-content:flex-end;
+  padding-right:8px;
+}
+.bar-scale{
+  position:absolute;inset:0;
+  display:grid;grid-template-columns:repeat(9,1fr);
+  pointer-events:none;
+}
+.bar-scale span{
+  border-right:1px solid rgba(0,0,0,.04);
+}
+.bar-scale span:last-child{border-right:none}
+.domain-value{
+  font-family:var(--f-mono);
+  font-size:12px;color:var(--ink-mute);
+  text-align:right;
+  display:flex;flex-direction:column;align-items:flex-end;gap:2px;
+}
+.domain-value strong{
+  font-size:14px;color:var(--ink);font-weight:700;
+  font-family:var(--f-display);
+}
+.legend{
+  display:flex;gap:24px;flex-wrap:wrap;
+  font-size:11px;color:var(--ink-mute);
+  margin-top:16px;padding-top:16px;
+  border-top:1px dashed var(--line-soft);
+  letter-spacing:.05em;
+}
+.legend-item{display:flex;align-items:center;gap:6px}
+.legend-swatch{
+  width:12px;height:12px;border-radius:2px;
+}
+
+/* Detail cards */
+.detail-grid{display:grid;gap:16px;margin-top:24px}
+.detail-card{
+  padding:20px 24px;
+  background:var(--bg);
+  border:1px solid var(--line-soft);
+  border-left:3px solid var(--detail-color,var(--accent));
+  border-radius:0 var(--radius) var(--radius) 0;
+}
+.detail-head{
+  display:flex;justify-content:space-between;align-items:baseline;
+  gap:12px;margin-bottom:10px;flex-wrap:wrap;
+}
+.detail-title{
+  font-family:var(--f-display);
+  font-size:15px;font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.02em;
+}
+.detail-meta{
+  display:flex;gap:8px;align-items:center;
+  font-size:12px;color:var(--ink-mute);
+}
+.level-badge{
+  font-size:10px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:3px 8px;border-radius:20px;
+  background:var(--paper);
+  border:1px solid var(--line);
+}
+.level-badge.lvl-very-high{background:var(--accent);color:#fff;border-color:var(--accent)}
+.level-badge.lvl-high{background:#cde0e1;color:var(--accent-dark);border-color:#cde0e1}
+.level-badge.lvl-medium{background:#e8dcc5;color:#7d6442;border-color:#e8dcc5}
+.level-badge.lvl-low{background:var(--line-soft);color:var(--ink-mute);border-color:var(--line)}
+.detail-text{font-size:14px;line-height:1.65;color:var(--ink-soft)}
+.detail-pros{margin-top:10px;font-size:13px;color:var(--ink-soft)}
+.detail-pros strong{
+  font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-mute);display:block;margin-bottom:4px;font-weight:600;
+}
+.pro-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.pro-chip{
+  font-size:12px;padding:3px 9px;
+  background:#FFFFFF;border:1px solid var(--line-soft);
+  border-radius:20px;color:var(--ink-soft);
+}
+
+/* Wishes display */
+.wishes-display{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+}
+.wish-card{
+  padding:16px 20px;
+  background:var(--bg);
+  border:1px solid var(--line-soft);
+  border-top:3px solid var(--accent);
+  border-radius:var(--radius);
+}
+.wish-rank{
+  font-family:var(--f-display);
+  font-size:11px;
+  color:var(--accent);font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:6px;
+}
+.wish-text{font-size:15px;font-weight:500}
+
+/* Correlations */
+.correlations{display:grid;gap:16px;margin-top:8px}
+.correlation-card{
+  padding:20px 24px;
+  background:linear-gradient(135deg,var(--bg) 0%,var(--paper) 100%);
+  border:1px solid var(--line-soft);
+  border-radius:var(--radius);
+}
+.correlation-title{
+  font-family:var(--f-display);
+  font-size:14px;font-weight:700;
+  margin-bottom:8px;
+  display:flex;align-items:center;gap:10px;
+  text-transform:uppercase;
+  letter-spacing:.02em;
+}
+.correlation-arrow{color:var(--accent);font-size:20px}
+.correlation-text{font-size:13.5px;line-height:1.6;color:var(--ink-soft)}
+
+/* Notes section */
+.notes-textarea{
+  width:100%;
+  min-height:180px;
+  padding:14px 16px;
+  border:1px solid var(--line);
+  background:#FFFFFF;
+  font-family:var(--f-body);
+  font-size:14px;line-height:1.6;
+  color:var(--ink);
+  border-radius:var(--radius);
+  resize:vertical;
+  transition:all .15s;
+}
+.notes-textarea:focus{
+  outline:none;
+  border-color:var(--accent);
+  background:var(--paper);
+  box-shadow:0 0 0 3px rgba(143,175,177,.15);
+}
+
+/* Action bar */
+.action-bar{
+  display:flex;gap:10px;flex-wrap:wrap;
+  justify-content:flex-end;
+  margin-top:32px;
+  padding-top:24px;
+  border-top:1px solid var(--line);
+}
+
+/* Modal */
+.modal-backdrop{
+  position:fixed;inset:0;
+  background:rgba(26,26,26,.6);
+  backdrop-filter:blur(4px);
+  z-index:200;
+  display:none;
+  align-items:center;justify-content:center;
+  padding:20px;
+  animation:fadeIn .2s;
+}
+.modal-backdrop.active{display:flex}
+.modal{
+  background:var(--paper);
+  border-radius:var(--radius-lg);
+  padding:32px 36px;
+  max-width:440px;width:100%;
+  box-shadow:var(--shadow-lg);
+  animation:modalIn .25s cubic-bezier(.2,.8,.3,1);
+}
+@keyframes modalIn{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-title{
+  font-family:var(--f-display);
+  font-size:18px;font-weight:700;
+  margin-bottom:10px;
+  text-transform:uppercase;
+  letter-spacing:.02em;
+}
+.modal-text{font-size:14px;color:var(--ink-soft);margin-bottom:22px;line-height:1.6}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:24px;right:24px;
+  background:var(--ink);color:var(--paper);
+  padding:12px 20px;border-radius:var(--radius);
+  font-size:13px;
+  box-shadow:var(--shadow-lg);
+  z-index:300;
+  opacity:0;transform:translateY(10px);
+  pointer-events:none;
+  transition:all .25s;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ========== TABS ========== */
+.tabs{
+  display:flex;gap:2px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:24px;padding:0 32px;
+}
+.tab{
+  padding:12px 20px;
+  font-size:13px;font-weight:500;
+  color:var(--ink-mute);
+  background:none;border:none;
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  margin-bottom:-1px;
+  transition:all .15s;
+  font-family:var(--f-body);
+  letter-spacing:.02em;
+}
+.tab:hover{color:var(--ink)}
+.tab.active{
+  color:var(--accent);
+  border-bottom-color:var(--accent);
+  font-weight:600;
+}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width:900px){
+  .holland-grid{grid-template-columns:1fr}
+  .domain-bar{grid-template-columns:130px 1fr 70px;gap:10px}
+  .main{padding:24px 16px 40px}
+  .topbar{padding:12px 16px}
+  .form-card{padding:28px 22px}
+  .section-head,.section-body{padding-left:20px;padding-right:20px}
+  .hero-name{font-size:30px}
+  .results-hero{padding:28px 24px}
+  .bilan-row{
+    grid-template-columns:auto 1fr;
+    gap:14px;
+  }
+  .bilan-status,.bilan-date,.bilan-actions{grid-column:2;justify-self:start}
+}
+@media (max-width:600px){
+  .dash-title{font-size:32px}
+  .domain-bar{grid-template-columns:110px 1fr 55px}
+  .domain-label{font-size:12px}
+  .riasec-score{font-size:11px}
+  .tabs{overflow-x:auto;padding:0 16px;scrollbar-width:thin}
+  .section-head,.section-body{padding-left:16px;padding-right:16px}
+}
+
+/* Print */
+@media print{
+  body{background:#fff}
+  .topbar,.action-bar,.quiz-header,.quiz-footer{display:none}
+  .section,.results-hero{break-inside:avoid;box-shadow:none;border:1px solid #ccc}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="brand">
+      <img class="brand-logo" src="data:image/jpeg;base64,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" alt="Institut Tarnais">
+      <div class="brand-text">
+        <div class="brand-mark">IRMR</div>
+        <div class="brand-sub">Inventaire Rothwell-Miller · Institut Tarnais</div>
+      </div>
+    </div>
+    <div class="topbar-actions" id="topbarActions">
+      <button class="btn ghost sm" id="btnExportAll" title="Exporter toutes les données">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Sauvegarder
+      </button>
+      <button class="btn ghost sm" id="btnImportAll" title="Importer des données">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Importer
+      </button>
+      <input type="file" id="importFile" accept=".json" style="display:none">
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- DASHBOARD VIEW -->
+    <section class="view active" id="view-dashboard">
+      <div class="dash-header">
+        <div>
+          <h1 class="dash-title">Les bilans <em>en cours</em></h1>
+          <p class="dash-subtitle">Gérez, reprenez et consultez les passations de l'Inventaire d'intérêts professionnels Rothwell-Miller. Tout est stocké localement dans votre navigateur.</p>
+        </div>
+        <button class="btn primary" id="btnNewBilan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nouveau bilan
+        </button>
+      </div>
+      <div id="bilansList"></div>
+    </section>
+
+    <!-- NEW BILAN FORM -->
+    <section class="view" id="view-new">
+      <div class="form-card">
+        <h2 class="form-title">Nouveau bilan</h2>
+        <p class="form-lead">Informations sur la personne qui passe le questionnaire</p>
+        <div class="form-row">
+          <label class="form-label">Nom</label>
+          <input type="text" class="form-input" id="newNom" placeholder="TUQUET">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Prénom</label>
+          <input type="text" class="form-input" id="newPrenom" placeholder="Patricia">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Sexe</label>
+          <div class="radio-group">
+            <label class="radio-card">
+              <input type="radio" name="sex" value="F" checked>
+              <span class="radio-card-icon">♀</span><span>Femme</span>
+            </label>
+            <label class="radio-card">
+              <input type="radio" name="sex" value="H">
+              <span class="radio-card-icon">♂</span><span>Homme</span>
+            </label>
+          </div>
+          <p style="font-size:11px;color:var(--ink-mute);margin-top:8px;font-style:italic">L'étalonnage des scores utilise des abaques différenciés selon le sexe (convention de référence du test).</p>
+        </div>
+        <div class="form-row">
+          <label class="form-label">Âge (optionnel)</label>
+          <input type="number" class="form-input" id="newAge" placeholder="Ex: 35" min="14" max="99">
+        </div>
+        <div class="form-actions">
+          <button class="btn ghost" id="btnCancelNew">← Bilans enregistrés</button>
+          <button class="btn primary" id="btnStartQuiz">Démarrer la passation →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUESTIONNAIRE VIEW -->
+    <section class="view" id="view-quiz">
+      <div class="quiz-header">
+        <div class="quiz-breadcrumb">
+          <button class="back-link" id="btnBackQuiz">← Retour</button>
+          <div>
+            <div class="quiz-person" id="quizPerson">—</div>
+            <div style="font-size:11px;color:var(--ink-mute);letter-spacing:.05em">Passation en cours</div>
+          </div>
+        </div>
+        <div class="quiz-progress">
+          <span id="progressText">0 / 9 groupes</span>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+      </div>
+
+      <div class="instructions">
+        <h3>Consigne de passation</h3>
+        <p>Chaque groupe présente 12 métiers. Classez-les du <strong>plus attirant</strong> (en haut) au <strong>moins attirant</strong> (en bas) en les glissant-déposant.</p>
+        <p>Ne tenez pas compte du niveau d'études, du salaire, ou de votre capacité à exercer le métier : pensez uniquement à vos goûts et à votre intérêt intrinsèque.</p>
+        <p class="hint">💡 Vous pouvez travailler groupe par groupe à votre rythme. Vos choix sont sauvegardés automatiquement.</p>
+      </div>
+
+      <div class="groups-grid" id="groupsGrid"></div>
+
+      <div class="wishes-card">
+        <h3 class="wishes-title">Vos trois métiers préférés</h3>
+        <p class="wishes-lead">Indiquez les trois métiers que vous préféreriez exercer entre tous, <strong>hors de ces listes</strong> si vous le souhaitez.</p>
+        <div class="wishes-inputs">
+          <div class="wish-input-row"><span class="wish-num">1.</span><input type="text" class="form-input" id="wish1" placeholder="Premier métier"></div>
+          <div class="wish-input-row"><span class="wish-num">2.</span><input type="text" class="form-input" id="wish2" placeholder="Deuxième métier"></div>
+          <div class="wish-input-row"><span class="wish-num">3.</span><input type="text" class="form-input" id="wish3" placeholder="Troisième métier"></div>
+        </div>
+      </div>
+
+      <div class="quiz-footer">
+        <div class="quiz-footer-info">
+          <strong id="quizStatusLabel">En cours</strong> — <span id="quizStatusDetail">Complétez les 9 groupes pour générer le diagnostic.</span>
+        </div>
+        <button class="btn primary" id="btnFinishQuiz" disabled>
+          Générer le diagnostic →
+        </button>
+      </div>
+    </section>
+
+    <!-- RESULTS VIEW -->
+    <section class="view" id="view-results">
+      <div class="results-wrapper" id="resultsContent">
+        <!-- Rempli par JS -->
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Modal confirmation -->
+<div class="modal-backdrop" id="modalConfirm">
+  <div class="modal">
+    <h3 class="modal-title" id="modalTitle">Confirmer</h3>
+    <p class="modal-text" id="modalText">—</p>
+    <div class="modal-actions">
+      <button class="btn ghost" id="modalCancel">Annuler</button>
+      <button class="btn primary" id="modalOk">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   IRMR — Logique applicative
+   ============================================================ */
+
+// ----- DONNÉES STATIQUES -----
+const METIERS = {
+  A:["Cultivateur","Ingénieur","Comptable","Chercheur scientifique","Directeur commercial","Artiste peintre","Journaliste","Pianiste de concert","Instituteur","Directeur administratif","Tisserand","Médecin"],
+  B:["Ingénieur mécanicien","Statisticien","Chimiste","Animateur de radio","Dessinateur publicitaire","Romancier","Chef d'orchestre","Psychologue scolaire","Secrétaire","Menuisier","Chirurgien","Professeur d'éducation physique"],
+  C:["Agent de change","Météorologue","Vendeur","Architecte","Auteur dramatique","Compositeur de musique","Professeur","Opérateur de saisie","Coiffeur","Vétérinaire","Géomètre","Technicien"],
+  D:["Biologiste","Publicitaire","Illustrateur d'ouvrages","Historien","Critique musical","Travailleur social","Employé de banque","Relieur","Pharmacien","Explorateur","Outilleur","Expert-comptable"],
+  E:["Enquêteur","Créateur de bijoux","Bibliothécaire","Professeur de musique","Éducateur","Archiviste","Maçon","Dentiste","Entraîneur sportif","Ingénieur électricien","Inspecteur des impôts","Physicien"],
+  F:["Photographe","Rédacteur dans un périodique","Violoniste","Gestionnaire du personnel","Employé d'assurances","Horloger","Opticien","Horticulteur","Technicien télécommunication","Professeur de mathématiques","Botaniste","Représentant de commerce"],
+  G:["Critique littéraire","Disquaire","Animateur de centre aéré","Employé de bureau","Plombier","Radiologue","Jardinier","Mécanicien garagiste","Programmeur","Astronome","Commissaire-priseur","Créateur de décors de théâtre"],
+  H:["Guitariste","Conseiller d'orientation","Employé des postes","Réparateur de bijoux","Kinésithérapeute","Guide touristique","Technicien hifi / vidéo","Commissaire aux comptes","Géologue","Agent de télé-marketing","Décorateur de vitrines","Scénariste"],
+  I:["Prêtre","Commis de bureau","Boulanger","Infirmier","Maraîcher","Ajusteur","Caissier de banque","Technicien de laboratoire","Vendeur démonstrateur","Couturier","Poète","Vendeur instruments musique"]
+};
+const GROUP_ORDER = ["A","B","C","D","E","F","G","H","I"];
+
+// Ordre officiel des 12 domaines (aligné avec fichier Excel et cahier diagnostic)
+const DOMAINS = [
+  {key:"pleinair",    name:"Plein air",             color:"#6E8A74", icon:"🌿"},
+  {key:"technique",   name:"Technique",             color:"#5A6770", icon:"⚙"},
+  {key:"calcul",      name:"Calcul",                color:"#4A6B7A", icon:"∑"},
+  {key:"scientifique",name:"Scientifique",          color:"#5A7577", icon:"⌬"},
+  {key:"contacts",    name:"Contacts personnels",   color:"#8FAFB1", icon:"◈"},
+  {key:"esthetique",  name:"Esthétique",            color:"#9B8468", icon:"◉"},
+  {key:"litteraire",  name:"Littéraire",            color:"#7A6B5E", icon:"✦"},
+  {key:"musical",     name:"Musical",               color:"#8A7A8E", icon:"♪"},
+  {key:"social",      name:"Service social",        color:"#B89968", icon:"♡"},
+  {key:"bureau",      name:"Travail de bureau",     color:"#6E7F85", icon:"▤"},
+  {key:"pratique",    name:"Pratique",              color:"#8A7560", icon:"✚"},
+  {key:"medical",     name:"Médical",               color:"#A08468", icon:"+"}
+];
+
+// Mapping domaine -> pour chaque groupe (A..I) quelle position (1..12)
+// Dérivé exactement des formules de la feuille "Résultats" du fichier Excel d'origine.
+// position = indice (1-based) du métier dans le groupe qui "compte" pour ce domaine.
+const DOMAIN_POS = {
+  pleinair:     {A:1,  B:12, C:11, D:10, E:9,  F:8,  G:7,  H:6,  I:5 },
+  technique:    {A:2,  B:1,  C:12, D:11, E:10, F:9,  G:8,  H:7,  I:6 },
+  calcul:       {A:3,  B:2,  C:1,  D:12, E:11, F:10, G:9,  H:8,  I:7 },
+  scientifique: {A:4,  B:3,  C:2,  D:1,  E:12, F:11, G:10, H:9,  I:8 },
+  contacts:     {A:5,  B:4,  C:3,  D:2,  E:1,  F:12, G:11, H:10, I:9 },
+  esthetique:   {A:6,  B:5,  C:4,  D:3,  E:2,  F:1,  G:12, H:11, I:10},
+  litteraire:   {A:7,  B:6,  C:5,  D:4,  E:3,  F:2,  G:1,  H:12, I:11},
+  musical:      {A:8,  B:7,  C:6,  D:5,  E:4,  F:3,  G:2,  H:1,  I:12},
+  social:       {A:9,  B:8,  C:7,  D:6,  E:5,  F:4,  G:3,  H:2,  I:1 },
+  bureau:       {A:10, B:9,  C:8,  D:7,  E:6,  F:5,  G:4,  H:3,  I:2 },
+  pratique:     {A:11, B:10, C:9,  D:8,  E:7,  F:6,  G:5,  H:4,  I:3 },
+  medical:      {A:12, B:11, C:10, D:9,  E:8,  F:7,  G:6,  H:5,  I:4 }
+};
+
+// Abaques d'étalonnage (seuils). Structure: pour chaque domaine, tableau [seuil_classe1, seuil_classe2, ... seuil_classe8].
+// La classe attribuée est 1 si score >= seuil_classe1, 2 si score >= seuil_classe2, ..., 9 si score < seuil_classe8.
+// ATTENTION: classe 1 correspond à un SCORE ÉLEVÉ (rangs hauts) = intérêt FAIBLE.
+//            classe 9 correspond à un SCORE BAS (rangs bas) = intérêt TRÈS ÉLEVÉ.
+const ABAQUES = {
+  F: {
+    pleinair:     [81, 75, 68, 62, 55, 50, 43, 31],
+    pratique:     [95, 92, 86, 80, 73, 64, 56, 50],
+    technique:    [97, 93, 89, 85, 79, 69, 60, 49],
+    scientifique: [80, 73, 61, 52, 45, 38, 32, 24],
+    medical:      [83, 74, 67, 60, 52, 43, 35, 28],
+    musical:      [85, 77, 65, 56, 46, 37, 29, 23],
+    esthetique:   [69, 60, 50, 40, 34, 28, 23, 17],
+    litteraire:   [78, 68, 51, 41, 31, 24, 18, 16],
+    social:       [78, 71, 65, 58, 48, 39, 31, 22],
+    contacts:     [84, 80, 74, 66, 57, 46, 39, 34],
+    calcul:       [99, 96, 90, 81, 72, 61, 48, 33],
+    bureau:       [97, 94, 88, 82, 73, 64, 50, 35],
+    // Holland (calculés à partir des sommes de domaines)
+    realiste:     [256, 242, 231, 220, 207, 195, 178, 155],
+    investigateur:[224, 206, 182, 161, 144, 127, 104, 94],
+    artistique:   [211, 186, 161, 136, 112, 94,  80,  73],
+    social_H:     [78,  71,  65,  58,  48,  39,  31,  22],
+    entreprenant: [84,  80,  74,  66,  57,  46,  39,  34],
+    conventionnel:[188, 183, 174, 162, 146, 126, 104, 81]
+  },
+  H: {
+    pleinair:     [80, 76, 68, 61, 53, 46, 39, 31],
+    pratique:     [96, 90, 86, 77, 70, 63, 52, 42],
+    technique:    [94, 86, 77, 68, 58, 46, 36, 25],
+    scientifique: [69, 65, 56, 47, 39, 32, 27, 21],
+    medical:      [84, 76, 69, 58, 48, 41, 31, 27],
+    musical:      [99, 88, 76, 65, 50, 40, 31, 24],
+    esthetique:   [73, 68, 62, 55, 45, 36, 27, 21],
+    litteraire:   [83, 73, 64, 53, 42, 34, 26, 20],
+    social:       [85, 78, 71, 52, 55, 47, 41, 35],
+    contacts:     [87, 80, 72, 63, 52, 43, 36, 29],
+    calcul:       [94, 90, 84, 71, 59, 49, 39, 30],
+    bureau:       [101, 98, 94, 87, 77, 69, 54, 45],
+    realiste:     [251, 228, 215, 201, 186, 167, 150, 119],
+    investigateur:[213, 192, 171, 151, 127, 109, 95,  81],
+    artistique:   [248, 222, 201, 169, 137, 114, 98,  81],
+    social_H:     [85,  78,  71,  62,  55,  47,  41,  35],
+    entreprenant: [87,  80,  72,  63,  52,  43,  36,  29],
+    conventionnel:[190, 182, 170, 156, 139, 120, 101, 88]
+  }
+};
+
+// Textes diagnostiques pour chaque domaine
+const DOMAIN_INFO = {
+  pleinair: {
+    caract:"Attirance pour les activités professionnelles se déroulant à l'extérieur, en contact avec la nature. Préférence pour les déplacements et la dépense physique plutôt que les activités régulières, routinières, sédentaires, de bureau.",
+    voies:["Métiers de la mer : officier de la marine marchande, matelot, plongeur-scaphandrier, garde-pêche, conchyliculteur","Métiers de l'environnement : ingénieur des eaux et forêts, technicien hygiène et sécurité publique, paysagiste, garde-chasse","Métiers en contact avec les animaux : éleveur, palefrenier-soigneur, apiculteur, maître-chien, toiletteur, gardien de zoo","Métiers agricoles : cultivateur, arboriculteur, viticulteur, maraîcher","Métiers du maintien de l'ordre : militaire, gendarme, sapeur-pompier","Métiers du sport : professeur d'EPS, entraîneur, moniteur de ski, guide de haute montagne, maître-nageur","Certains métiers du bâtiment (métreur, laveur de vitres)","Certains métiers du transport (conducteur routier, chauffeur-livreur, facteur)"]
+  },
+  pratique: {
+    caract:"Attirance pour les travaux de construction, de fabrication, de réparation. Préférence pour les activités manuelles par rapport aux activités intellectuelles.",
+    voies:["Hôtellerie-restauration : cuisinier, serveur, barman, boulanger, boucher, caviste","Certains métiers de l'industrie : chaudronnier, carrossier, horloger, imprimeur, magasinier","Métiers du bâtiment : maçon, plâtrier, couvreur, charpentier, menuisier, vitrier, plombier","Métiers de l'artisanat : tapissier, serrurier, cordonnier, relieur","Métiers de déplacement : conducteur d'engins de travaux publics, cariste"]
+  },
+  technique: {
+    caract:"Attirance pour les activités professionnelles impliquant l'utilisation de machines, d'instruments et de dispositifs sophistiqués.",
+    voies:["Métiers de la mécanique et de la métallurgie : ingénieur aéronautique, microtechniques, dessinateur industriel, mécanicien garagiste","Métiers de l'électricité et de l'électronique : monteur-câbleur, mécanicien d'ascenseur, électronicien, technicien télécommunications, technicien hifi-vidéo"]
+  },
+  scientifique: {
+    caract:"Attirance pour les activités d'analyse, d'étude, d'investigation, de recherche, d'expérimentation, impliquant un travail intellectuel.",
+    voies:["Biologie et sciences de la nature : ingénieur agronome, géologue, botaniste, météorologue, zoologiste, biologiste, généticien, toxicologue","Physique et chimie : astrophysicien, ingénieur nucléaire","Sciences humaines : géographe, ethnologue, ergonome","Autres : conservateur de musée scientifique, journaliste scientifique"]
+  },
+  medical: {
+    caract:"Attirance pour le domaine de la santé, les activités de soin et de soulagement des malades.",
+    voies:["Grandes spécialités médicales : généraliste, chirurgien, cardiologue, dermatologue, radiologue, psychiatre, vétérinaire, dentiste, pharmacien","Métiers paramédicaux : infirmier, aide-soignant, kinésithérapeute, assistant dentaire, pédicure-podologue, opticien, ambulancier, manipulateur d'électroradiologie, technicien de laboratoire médical"]
+  },
+  musical: {
+    caract:"Attirance pour les activités liées au chant et à la musique, que ce soit au niveau de la composition, de l'interprétation ou de l'audition.",
+    voies:["Composition ou interprétation : compositeur, parolier, chanteur, musicien","Enseignement : professeur de musique, maître de chœurs","Technique du son : ingénieur du son, disc-jockey, réparateur d'instruments, accordeur de pianos","Autres : producteur de disques, directeur d'opéra, disquaire, critique musical, musicothérapeute"]
+  },
+  esthetique: {
+    caract:"Attirance pour les activités de création d'objets ayant une certaine beauté visuelle, avec un travail sur les formes, les couleurs, le mouvement.",
+    voies:["Métiers du spectacle : acteur, metteur en scène, cameraman, danseur, chorégraphe, photographe","Arts graphiques et design : peintre, illustrateur, dessinateur BD, dessinateur publicitaire, ameublement","Arts appliqués : bijoutier, encadreur d'art, mosaïste, vannier, restaurateur de meubles, doreur, sculpteur, graveur","Mode et habillement : esthéticien, maquilleur, styliste, couturier, tailleur, mannequin","Décoration et architecture : urbaniste, architecte, maquettiste, décorateur d'intérieur, décorateur de vitrine"]
+  },
+  litteraire: {
+    caract:"Attirance pour les activités de rédaction ou de lecture et, de façon générale, l'étude des systèmes de communication orale ou écrite.",
+    voies:["Livre, édition, journalisme : éditeur, documentaliste, libraire, bibliothécaire, professeur de français, auteur, romancier, scénariste, critique littéraire, journaliste, rédacteur en chef","Langues vivantes : traducteur, interprète, professeur de langues","Sciences humaines : philosophe, généalogiste, historien"]
+  },
+  social: {
+    caract:"Attirance pour les activités de soutien, d'assistance, d'enseignement, en particulier auprès de personnes en difficulté (handicapés, familles défavorisées, personnes âgées), avec le désir de comprendre et d'aider.",
+    voies:["Aide sociale et soutien moral : conseiller d'orientation, psychologue scolaire, éducateur, assistant maternel, conseiller professionnel, travailleur social, aide familial","Enseignement, formation, animation : instituteur, professeur, conseiller pédagogique, formateur, animateur","Paramédical : psychologue, ergothérapeute"]
+  },
+  contacts: {
+    caract:"Attirance pour les relations sociales, les activités de prise de parole en public, de discussion, de négociation, de persuasion, impliquant une certaine assurance et une capacité à influencer et diriger autrui.",
+    voies:["Commercial : acheteur, chef de produits, commerçant, vendeur, agent immobilier, représentant, agent d'assurances","Direction et management : chef d'entreprise, patron de restaurant, consultant, directeur du personnel, responsable marketing","Droit et politique : juge, avocat, notaire, huissier, commissaire-priseur, sénateur, député","Relations publiques : animateur télé, diplomate, enquêteur d'institut de sondage"]
+  },
+  calcul: {
+    caract:"Attirance pour les activités impliquant la manipulation et le traitement de données chiffrées.",
+    voies:["Comptabilité et finance : comptable, expert-comptable, analyste financier, contrôleur de gestion, commissaire aux comptes, fiscaliste, inspecteur des impôts, économiste","Banque, bourse, assurance : directeur d'agence bancaire, caissier, agent de change, rédacteur en assurance","Mathématiques et informatique : mathématicien, statisticien, démographe, ingénieur informatique, programmeur"]
+  },
+  bureau: {
+    caract:"Attirance pour les tâches administratives, présentant une certaine monotonie, impliquant précision et exactitude dans le travail.",
+    voies:["Administratif : directeur administratif, commis de bureau, secrétaire, employé de mairie, archiviste, standardiste, greffier","Gestion commerciale : administrateur de biens, employé de banque, employé de bureau d'assurance, employé des postes, agent de voyages"]
+  }
+};
+
+// Informations Holland RIASEC
+const HOLLAND = {
+  R: { key:"R", name:"Réaliste", color:"#6E8A74", formula:["pleinair","technique","pratique"],
+    desc:"Les personnes de type Réaliste sont attirées par les activités concrètes plutôt que par les problèmes abstraits, plus portées à l'action qu'à la médiation. Elles s'épanouissent dans des métiers à forte composante manuelle et technique.",
+    traits:"Vigoureux, stable émotionnellement, matérialiste, direct, tourné vers le présent",
+    activites:"Trouver des solutions techniques à des problèmes concrets. Manipuler outils, machines, instruments.",
+    qualites:"Esprit pratique et réaliste, objectivité, habileté manuelle, minutie.",
+    professions:"Mécanique, électronique, électrotechnique. Métaux, plastiques, verre. Bâtiment, travaux publics, topographie. Transports aériens, ferroviaires, maritimes, routiers. Industries du bois et agroalimentaires."
+  },
+  I: { key:"I", name:"Investigateur", color:"#5A7577", formula:["scientifique","scientifique","medical"],
+    desc:"Les personnes de type Investigateur sont attirées par la réflexion plutôt que par l'action, aiment l'observation et l'analyse, les problèmes à résoudre, et ont besoin de comprendre. Elles s'épanouissent dans la recherche et les sciences.",
+    traits:"Analytique, rationnel, indépendant, réservé, curieux, introverti",
+    activites:"Observer les phénomènes physiques, biologiques ou humains. Expérimenter pour comprendre et expliquer les lois générales.",
+    qualites:"Sens de l'observation, curiosité intellectuelle, esprit inventif et persévérant, intérêt pour la connaissance scientifique.",
+    professions:"Chercheur en sciences de la matière et de la vie (math, physique, électronique, mécanique, chimie, géologie, biologie). Chercheur en sciences humaines. Informatique : ingénieur, chef de projet."
+  },
+  A: { key:"A", name:"Artistique", color:"#9B8468", formula:["litteraire","musical","esthetique"],
+    desc:"Les personnes de type Artistique sont attirées par les activités de création et d'imagination, n'apprécient guère les milieux trop structurés et la dépense physique. Elles s'épanouissent dans les métiers liés à la création.",
+    traits:"Émotif, idéaliste, intuitif, introverti, indépendant, original",
+    activites:"Exprimer ses idées, aspirations et sentiments par le discours, l'écriture, l'art, la musique ou le théâtre.",
+    qualites:"Créativité, imagination, originalité. Les dons artistiques peuvent être indispensables, mais insuffisants.",
+    professions:"Musique, danse, spectacle. Arts appliqués (stylisme, ébénisterie, décoration, design, céramique, ferronnerie). Arts graphiques et plastiques. Audiovisuel (photo, cinéma). Restauration d'art, histoire de l'art."
+  },
+  S: { key:"S", name:"Social", color:"#B89968", formula:["social"],
+    desc:"Les personnes de type Social sont altruistes, sociables, avec des préoccupations humanistes. Elles accordent une grande place aux sentiments et sont généralement à l'aise dans les activités relationnelles. Elles s'épanouissent dans l'assistance à autrui et l'enseignement.",
+    traits:"Amabilité, compréhension, générosité, sens des responsabilités",
+    activites:"Apporter à autrui une aide : soigner, éduquer, conseiller. Communication régulière et échanges fréquents.",
+    qualites:"Grande disponibilité, compréhension, patience, écoute, intérêt pour les autres et pour la vie culturelle et sociale.",
+    professions:"Santé : médecin, sage-femme, infirmière, orthophoniste, diététicien, psychologue. Social : éducateur, assistante sociale, conseiller en économie sociale. Enseignement, formation, animation. Hôtesse d'accueil, guide interprète."
+  },
+  E: { key:"E", name:"Entreprenant", color:"#8FAFB1", formula:["contacts"],
+    desc:"Les personnes de type Entreprenant aiment occuper une place de leadership, imposer leurs idées, convaincre. Elles ont un fort besoin de réussite et aspirent à un statut élevé. Elles s'épanouissent dans la vente, la politique et le management.",
+    traits:"Ambitieux, énergique, impulsif, bavard, sociable, optimiste, extraverti",
+    activites:"Être en contact avec la clientèle, négocier, définir la demande, mettre en valeur les produits. Animer et diriger une équipe.",
+    qualites:"Dynamisme, pouvoir de conviction, goût du changement et des déplacements, facilité d'expression orale, bonne présentation.",
+    professions:"Distribution et vente : chef de rayon, représentant, commerçant. Tourisme : forfaitiste, billettiste, chef d'agence. Banque, bourse, assurances, immobilier. Hôtellerie-restauration."
+  },
+  C: { key:"C", name:"Conventionnel", color:"#6E7F85", formula:["calcul","bureau"],
+    desc:"Les personnes de type Conventionnel sont assez conformistes, aiment les milieux structurés et s'y adaptent bien. Elles se contrôlent beaucoup et se signalent par une application stricte des règlements et conventions. Elles s'épanouissent dans les métiers administratifs.",
+    traits:"Consciencieux, actif, respectueux des hiérarchies, ordonné, calme",
+    activites:"Collecter et enregistrer des informations, classer des documents, effectuer des opérations de gestion et d'organisation.",
+    qualites:"Ordre, méthode, sens de l'organisation, intégrité, honnêteté, respect de l'autorité, sens des responsabilités.",
+    professions:"Fonction publique (Poste, Budget, Trésor). Secrétariat (juridique, médical, direction). Comptabilité et gestion. Sécurité publique (gendarme, commissaire, officier, gardien). Métiers judiciaires (magistrat, notaire, greffier)."
+  }
+};
+
+const HOLLAND_ORDER = ["R","I","A","S","E","C"];
+
+// Corrélations RIASEC (texte générique extrait du cahier diagnostic)
+const CORRELATIONS = {
+  "R-A":"Domaine artistique associé à votre réalisme : une âme créative avec une approche concrète. Vous vous sentirez à l'aise dans l'artisanat, où il faut imaginer et réaliser matériellement.",
+  "R-I":"Votre réalisme se conjugue à votre côté investigateur : intéressé par le « comment » des choses, vous aimez résoudre des problèmes techniques et voir des résultats tangibles.",
+  "R-S":"Pratique et sociable : vous aimez réaliser en groupe des activités concrètes, aider les autres par l'action. Piste : enseignement de matières techniques ou manuelles.",
+  "R-E":"Réaliste et entreprenant : vous aimez les réalisations concrètes et savez mobiliser les autres. Profil de chef d'équipe technique, de responsable de chantier ou d'atelier.",
+  "R-C":"Réaliste et conventionnel : vous alliez sens du concret et rigueur d'exécution. Pistes dans la production industrielle, la maintenance organisée, la gestion technique.",
+  "I-A":"Curiosité intellectuelle et créativité : vous explorez les idées avec une sensibilité originale. Profils compatibles : recherche fondamentale, sciences humaines, philosophie, architecture, design de pointe.",
+  "I-S":"Investigateur social : vous voulez comprendre le « pourquoi du comment » des comportements humains. Psychologie, sociologie, recherche clinique, orientation, coaching.",
+  "I-E":"Savoir et influence : vous pouvez traduire des concepts complexes pour convaincre et décider. Consulting, analyse stratégique, politique scientifique.",
+  "I-C":"Recherche et méthode : goût pour l'analyse rigoureuse et structurée. Statistiques, comptabilité d'expertise, audit, data analysis, recherche documentaire.",
+  "A-S":"Création et relation : vous aimez partager des moments d'émotion. Pistes : enseignement artistique, art-thérapie, animation culturelle, médiation.",
+  "A-E":"Créativité et leadership : profil de directeur artistique, producteur, entrepreneur culturel, styliste-manager.",
+  "A-C":"Création et méthode : profil rare qui allie imagination et discipline. Graphisme éditorial, architecture, restauration d'art, conservation patrimoniale.",
+  "S-E":"Social et entreprenant : vous aimez influencer pour le bien commun. Profils : manager de proximité, RH, formation, action humanitaire, politique sociale.",
+  "S-C":"Aide et organisation : vous structurez votre action au service des autres. Profils : direction d'établissement médico-social, gestion associative, cadre de santé.",
+  "E-C":"Influence et rigueur : vous pilotez avec méthode. Profils : direction administrative, banque, droit des affaires, contrôle de gestion, chef d'entreprise méthodique."
+};
+
+// ----- PERSISTENCE -----
+const STORAGE_KEY = "irmr_bilans_v1";
+
+function loadAll(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}"); }
+  catch(e){ return {}; }
+}
+function saveAll(data){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+function saveBilan(b){
+  const all = loadAll();
+  all[b.id] = b;
+  saveAll(all);
+}
+function deleteBilan(id){
+  const all = loadAll();
+  delete all[id];
+  saveAll(all);
+}
+
+function genId(){
+  return "b_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7);
+}
+
+// ----- SCORING -----
+function computeDomainScores(ranks){
+  // ranks = { A: [rang_pos1, rang_pos2, ..., rang_pos12], B: [...], ... }
+  // Renvoie pour chaque domaine: somme des rangs + classe étalonnée
+  const res = {};
+  for(const dom of DOMAINS){
+    const positions = DOMAIN_POS[dom.key];
+    let sum = 0;
+    const detail = {};
+    for(const g of GROUP_ORDER){
+      const pos = positions[g];     // position 1..12 dans le groupe g
+      const rank = ranks[g][pos-1]; // rang donné par le sujet à ce métier
+      sum += rank;
+      detail[g] = rank;
+    }
+    res[dom.key] = { sum, detail };
+  }
+  return res;
+}
+
+function getClass(score, thresholds){
+  // thresholds = [t1, t2, ..., t8]  (décroissants)
+  // classe 1 si score >= t1, classe 2 si score >= t2, ..., classe 9 sinon
+  for(let i=0; i<thresholds.length; i++){
+    if(score >= thresholds[i]) return i+1;
+  }
+  return 9;
+}
+
+function computeHolland(domainScores){
+  // Formules Holland officielles (dérivées de l'Excel)
+  return {
+    R: domainScores.pleinair.sum + domainScores.technique.sum + domainScores.pratique.sum,
+    I: 2 * domainScores.scientifique.sum + domainScores.medical.sum,
+    A: domainScores.litteraire.sum + domainScores.musical.sum + domainScores.esthetique.sum,
+    S: domainScores.social.sum,
+    E: domainScores.contacts.sum,
+    C: domainScores.calcul.sum + domainScores.bureau.sum
+  };
+}
+
+// Conversion classe (1-9) → niveau qualitatif 5 niveaux
+function classToLevel(c){
+  // classe 1-2 = intérêt très faible (score élevé = rangs élevés = peu aimé)
+  // classe 3   = faible
+  // classe 4-6 = moyen
+  // classe 7   = élevé
+  // classe 8-9 = très élevé
+  if(c<=2) return {label:"Très faible", key:"very-low",   pct:10};
+  if(c===3) return {label:"Faible",     key:"low",        pct:28};
+  if(c<=6)  return {label:"Moyen",      key:"medium",     pct:50};
+  if(c===7) return {label:"Élevé",      key:"high",       pct:72};
+  return    {label:"Très élevé",        key:"very-high",  pct:92};
+}
+function levelBadgeClass(c){
+  if(c<=2) return "lvl-low";
+  if(c===3) return "lvl-low";
+  if(c<=6)  return "lvl-medium";
+  if(c===7) return "lvl-high";
+  return    "lvl-very-high";
+}
+
+// ----- UI HELPERS -----
+function $(sel,root=document){return root.querySelector(sel);}
+function $$(sel,root=document){return [...root.querySelectorAll(sel)];}
+
+function showView(id){
+  $$(".view").forEach(v=>v.classList.remove("active"));
+  $("#view-"+id).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function toast(msg, duration=2500){
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._tmr);
+  t._tmr = setTimeout(()=>t.classList.remove("show"), duration);
+}
+
+function confirmModal(title, text, onOk){
+  const m = $("#modalConfirm");
+  $("#modalTitle").textContent = title;
+  $("#modalText").textContent = text;
+  m.classList.add("active");
+  const okBtn = $("#modalOk");
+  const newBtn = okBtn.cloneNode(true);
+  okBtn.parentNode.replaceChild(newBtn, okBtn);
+  newBtn.addEventListener("click", ()=>{
+    m.classList.remove("active");
+    onOk();
+  });
+}
+
+function fmtDate(ts){
+  const d = new Date(ts);
+  return d.toLocaleDateString("fr-FR",{day:"2-digit",month:"short",year:"numeric"}) +
+    " · " + d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+}
+
+function initials(nom,prenom){
+  const a = (prenom||"").charAt(0).toUpperCase();
+  const b = (nom||"").charAt(0).toUpperCase();
+  return (a+b)||"??";
+}
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+function renderDashboard(){
+  const all = loadAll();
+  const list = Object.values(all).sort((a,b)=>b.updatedAt-a.updatedAt);
+  const container = $("#bilansList");
+  if(list.length===0){
+    container.innerHTML = `
+      <div class="empty">
+        <div class="empty-title">Aucun bilan pour l'instant</div>
+        <div class="empty-text">Créez votre premier bilan en cliquant sur « Nouveau bilan » ci-dessus. Chaque bilan est stocké localement dans ce navigateur.</div>
+      </div>`;
+    return;
+  }
+  container.innerHTML = `<div class="bilans-list">` +
+    list.map(b=>{
+      const done = b.status === "completed";
+      const progress = Math.round((Object.keys(b.ranks||{}).filter(k=>b.ranks[k]&&b.ranks[k].length===12).length/9)*100);
+      return `<div class="bilan-row" data-id="${b.id}">
+        <div class="bilan-avatar">${initials(b.nom,b.prenom)}</div>
+        <div>
+          <div class="bilan-name">${escapeHtml(b.prenom||"")} ${escapeHtml(b.nom||"")}</div>
+          <div class="bilan-meta">${b.sex==="H"?"Homme":"Femme"}${b.age?" · "+b.age+" ans":""} · créé le ${fmtDate(b.createdAt)}</div>
+        </div>
+        <div class="bilan-status ${done?"done":"draft"}">${done?"Complet":progress+"%"}</div>
+        <div class="bilan-date">${fmtDate(b.updatedAt)}</div>
+        <div class="bilan-actions">
+          ${done?`<button class="icon-btn" data-act="view" title="Voir les résultats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>`:""}
+          <button class="icon-btn" data-act="edit" title="${done?"Modifier":"Continuer"}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="icon-btn danger" data-act="delete" title="Supprimer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+        </div>
+      </div>`;
+    }).join("") +
+    `</div>`;
+  // Event delegation
+  container.addEventListener("click", onBilanRowClick);
+}
+
+function onBilanRowClick(e){
+  const btn = e.target.closest("[data-act]");
+  const row = e.target.closest(".bilan-row");
+  if(!row) return;
+  const id = row.dataset.id;
+  const all = loadAll();
+  const b = all[id];
+  if(!b) return;
+
+  if(btn){
+    e.stopPropagation();
+    const act = btn.dataset.act;
+    if(act==="delete"){
+      confirmModal(
+        "Supprimer ce bilan ?",
+        `Le bilan de ${b.prenom} ${b.nom} sera définitivement supprimé. Cette action est irréversible.`,
+        ()=>{ deleteBilan(id); renderDashboard(); toast("Bilan supprimé"); }
+      );
+    } else if(act==="edit"){
+      openQuiz(id);
+    } else if(act==="view"){
+      openResults(id);
+    }
+  } else {
+    // Click sur la ligne = ouvrir résultats si complet, sinon continuer
+    if(b.status==="completed") openResults(id); else openQuiz(id);
+  }
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+/* ============================================================
+   NEW BILAN FORM
+   ============================================================ */
+function openNewForm(){
+  $("#newNom").value = "";
+  $("#newPrenom").value = "";
+  $("#newAge").value = "";
+  document.querySelector("input[name='sex'][value='F']").checked = true;
+  showView("new");
+}
+
+function createBilanFromForm(){
+  const nom = $("#newNom").value.trim();
+  const prenom = $("#newPrenom").value.trim();
+  const sex = document.querySelector("input[name='sex']:checked").value;
+  const age = $("#newAge").value.trim();
+  if(!nom || !prenom){
+    toast("Nom et prénom obligatoires"); return;
+  }
+  const now = Date.now();
+  const bilan = {
+    id: genId(),
+    nom, prenom, sex,
+    age: age || null,
+    createdAt: now,
+    updatedAt: now,
+    status: "draft",
+    ranks: {},  // {A: [...], B: [...], ...}
+    wishes: ["","",""],
+    notes: ""
+  };
+  saveBilan(bilan);
+  openQuiz(bilan.id);
+}
+
+/* ============================================================
+   QUIZ
+   ============================================================ */
+let currentBilanId = null;
+let sortableInstances = [];
+
+function openQuiz(id){
+  currentBilanId = id;
+  const b = loadAll()[id];
+  if(!b){ toast("Bilan introuvable"); showView("dashboard"); return; }
+  $("#quizPerson").textContent = `${b.prenom} ${b.nom}`;
+  renderGroups(b);
+  $("#wish1").value = b.wishes[0]||"";
+  $("#wish2").value = b.wishes[1]||"";
+  $("#wish3").value = b.wishes[2]||"";
+  updateQuizProgress();
+  showView("quiz");
+}
+
+function renderGroups(b){
+  // Pour chaque groupe, créer une carte avec liste sortable
+  // On stocke dans b.ranks[g] = tableau des RANGS aux positions originales (index 0 = position 1)
+  // Mais pour l'affichage, on doit construire l'ORDRE dans lequel les métiers apparaissent
+  const grid = $("#groupsGrid");
+  sortableInstances.forEach(s=>s.destroy());
+  sortableInstances = [];
+  grid.innerHTML = "";
+
+  for(const g of GROUP_ORDER){
+    const metiers = METIERS[g];
+    // Ordre initial = order dans b.ranks si présent, sinon ordre par défaut
+    let order;
+    if(b.ranks[g] && b.ranks[g].length===12){
+      // b.ranks[g][i] = rang donné au métier de position i+1
+      // on reconstruit l'ordre: métiers triés par rang croissant
+      order = metiers.map((m,i)=>({m,i,rank:b.ranks[g][i]}))
+        .sort((a,b)=>a.rank-b.rank)
+        .map(x=>x.i);
+    } else {
+      order = metiers.map((_,i)=>i);
+    }
+    const isComplete = b.ranks[g] && b.ranks[g].length===12;
+
+    const card = document.createElement("div");
+    card.className = "group-card" + (isComplete?" complete":"");
+    card.dataset.group = g;
+    card.innerHTML = `
+      <div class="group-head">
+        <div class="group-letter"><small>Groupe</small>${g}</div>
+        <div class="group-status">${isComplete?"✓ classé":"à classer"}</div>
+      </div>
+      <ul class="sortable-list">
+        ${order.map((origIdx,k)=>`
+          <li class="sortable-item" data-orig="${origIdx}">
+            <span class="rank-badge">${k+1}</span>
+            <span class="metier-name">${escapeHtml(metiers[origIdx])}</span>
+            <span class="drag-handle" aria-hidden="true"></span>
+          </li>`).join("")}
+      </ul>
+    `;
+    grid.appendChild(card);
+    const list = card.querySelector(".sortable-list");
+    const s = Sortable.create(list, {
+      animation:180,
+      ghostClass:"sortable-ghost",
+      chosenClass:"sortable-chosen",
+      forceFallback:false,
+      onEnd: ()=>onGroupReordered(g, card)
+    });
+    sortableInstances.push(s);
+  }
+}
+
+function onGroupReordered(g, card){
+  const items = [...card.querySelectorAll(".sortable-item")];
+  // Réécrire les badges
+  items.forEach((it,k)=>{
+    it.querySelector(".rank-badge").textContent = k+1;
+  });
+  // Construire ranks[g]: position i (1..12) du métier -> rang
+  // items[k] = métier à la position k+1 dans le classement
+  // dataset.orig = index original (0..11) = position-1
+  const ranksByPos = new Array(12);
+  items.forEach((it,k)=>{
+    const origIdx = parseInt(it.dataset.orig);
+    ranksByPos[origIdx] = k+1;
+  });
+  const all = loadAll();
+  const b = all[currentBilanId];
+  if(!b) return;
+  b.ranks[g] = ranksByPos;
+  b.updatedAt = Date.now();
+  card.classList.add("complete");
+  card.querySelector(".group-status").textContent = "✓ classé";
+  saveAll(all);
+  updateQuizProgress();
+}
+
+function updateQuizProgress(){
+  const b = loadAll()[currentBilanId];
+  if(!b) return;
+  const completed = GROUP_ORDER.filter(g=>b.ranks[g]&&b.ranks[g].length===12).length;
+  $("#progressText").textContent = `${completed} / 9 groupes`;
+  $("#progressFill").style.width = (completed/9*100)+"%";
+  const btn = $("#btnFinishQuiz");
+  if(completed===9){
+    btn.disabled = false;
+    $("#quizStatusLabel").textContent = "Prêt";
+    $("#quizStatusDetail").textContent = "Les 9 groupes sont classés. Vous pouvez générer le diagnostic.";
+  } else {
+    btn.disabled = true;
+    $("#quizStatusLabel").textContent = "En cours";
+    $("#quizStatusDetail").textContent = `Encore ${9-completed} groupe${9-completed>1?"s":""} à classer pour générer le diagnostic.`;
+  }
+}
+
+function saveWishes(){
+  const all = loadAll();
+  const b = all[currentBilanId];
+  if(!b) return;
+  b.wishes = [$("#wish1").value.trim(), $("#wish2").value.trim(), $("#wish3").value.trim()];
+  b.updatedAt = Date.now();
+  saveAll(all);
+}
+
+function finishQuiz(){
+  saveWishes();
+  const all = loadAll();
+  const b = all[currentBilanId];
+  if(!b) return;
+  // Vérifier complétude
+  const completed = GROUP_ORDER.every(g=>b.ranks[g]&&b.ranks[g].length===12);
+  if(!completed){ toast("Complétez les 9 groupes"); return; }
+  b.status = "completed";
+  b.completedAt = Date.now();
+  b.updatedAt = Date.now();
+  saveAll(all);
+  openResults(currentBilanId);
+}
+
+/* ============================================================
+   RESULTS
+   ============================================================ */
+function openResults(id){
+  currentBilanId = id;
+  const b = loadAll()[id];
+  if(!b){ toast("Bilan introuvable"); showView("dashboard"); return; }
+  if(b.status!=="completed"){
+    // Si pas complété, ouvrir le quiz
+    openQuiz(id); return;
+  }
+  renderResults(b);
+  showView("results");
+}
+
+function renderResults(b){
+  const domainScores = computeDomainScores(b.ranks);
+  const holland = computeHolland(domainScores);
+  const abaques = ABAQUES[b.sex];
+
+  // Classes pour chaque domaine
+  const domainResults = DOMAINS.map(d=>{
+    const score = domainScores[d.key].sum;
+    const cls = getClass(score, abaques[d.key]);
+    const level = classToLevel(cls);
+    return { ...d, score, class:cls, level, detail:domainScores[d.key].detail };
+  });
+  // Trier par intérêt décroissant (= classe décroissante, à égalité score croissant)
+  const sortedDomains = [...domainResults].sort((a,b)=> (b.class-a.class) || (a.score-b.score));
+
+  // Holland
+  const hollandAbaquesMap = {
+    R:"realiste", I:"investigateur", A:"artistique",
+    S:"social_H", E:"entreprenant", C:"conventionnel"
+  };
+  const hollandResults = HOLLAND_ORDER.map(k=>{
+    const score = holland[k];
+    const cls = getClass(score, abaques[hollandAbaquesMap[k]]);
+    const level = classToLevel(cls);
+    return { ...HOLLAND[k], score, class:cls, level };
+  });
+  // Top 3 Holland (par intérêt décroissant = classe décroissante)
+  const sortedHolland = [...hollandResults].sort((a,b)=> (b.class-a.class) || (a.score-b.score));
+  const top3 = sortedHolland.slice(0,3);
+  const profileCode = top3.map(h=>h.key).join("");
+
+  // Construire le HTML
+  const container = $("#resultsContent");
+  container.innerHTML = `
+    ${renderHero(b, profileCode, hollandResults)}
+    ${renderTabs()}
+    <div class="tab-content active" data-tab="holland">
+      ${renderHollandSection(hollandResults, sortedHolland, profileCode, top3)}
+      ${renderCorrelations(top3)}
+    </div>
+    <div class="tab-content" data-tab="domains">
+      ${renderDomainsSection(domainResults, sortedDomains, b.sex)}
+    </div>
+    <div class="tab-content" data-tab="details">
+      ${renderDomainDetails(sortedDomains)}
+    </div>
+    <div class="tab-content" data-tab="wishes">
+      ${renderWishesSection(b)}
+    </div>
+    <div class="tab-content" data-tab="notes">
+      ${renderNotesSection(b)}
+    </div>
+    ${renderActionBar(b)}
+  `;
+
+  // Activer drawings (polygon radar) — appelé après insertion DOM
+  setTimeout(()=>drawRiasecRadar(hollandResults), 50);
+
+  // Events onglets
+  $$(".tab", container).forEach(t=>{
+    t.addEventListener("click", e=>{
+      $$(".tab", container).forEach(x=>x.classList.remove("active"));
+      t.classList.add("active");
+      const k = t.dataset.tab;
+      $$(".tab-content", container).forEach(c=>c.classList.toggle("active", c.dataset.tab===k));
+      if(k==="holland") setTimeout(()=>drawRiasecRadar(hollandResults), 50);
+    });
+  });
+
+  // Events action bar
+  $("#btnSavNotes")?.addEventListener("click", ()=>{
+    const all = loadAll();
+    const bb = all[currentBilanId];
+    bb.notes = $("#notesTA").value;
+    bb.updatedAt = Date.now();
+    saveAll(all);
+    toast("Notes enregistrées");
+  });
+  $("#btnBackResults")?.addEventListener("click", ()=>{ showView("dashboard"); renderDashboard(); });
+  $("#btnEditResults")?.addEventListener("click", ()=>openQuiz(currentBilanId));
+  $("#btnPrintResults")?.addEventListener("click", ()=>window.print());
+  $("#btnPdfResults")?.addEventListener("click", exportPdf);
+  $("#btnJsonResults")?.addEventListener("click", exportJson);
+  $("#notesTA")?.addEventListener("input", e=>{
+    const all = loadAll();
+    const bb = all[currentBilanId];
+    bb.notes = e.target.value;
+    bb.updatedAt = Date.now();
+    saveAll(all);
+  });
+}
+
+function renderHero(b, code, hollandResults){
+  const total = Object.values(hollandResults).reduce((s,h)=>s+h.score,0);
+  return `
+    <div class="results-hero">
+      <div class="hero-tag">Inventaire Rothwell-Miller · Diagnostic complet</div>
+      <h1 class="hero-name">${escapeHtml(b.prenom)} ${escapeHtml(b.nom)}</h1>
+      <div class="profile-code">${code}<small>profil RIASEC dominant</small></div>
+      <div class="hero-meta">
+        <span><strong>Sexe :</strong> ${b.sex==="H"?"Homme":"Femme"}${b.age?" · "+b.age+" ans":""}</span>
+        <span><strong>Passation :</strong> ${fmtDate(b.completedAt||b.updatedAt)}</span>
+        <span><strong>Étalonnage :</strong> barème ${b.sex==="H"?"masculin":"féminin"}</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderTabs(){
+  return `
+    <div class="section" style="padding:0;margin-bottom:20px">
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="holland">Profil RIASEC</button>
+        <button class="tab" data-tab="domains">12 domaines</button>
+        <button class="tab" data-tab="details">Diagnostic détaillé</button>
+        <button class="tab" data-tab="wishes">Vœux formulés</button>
+        <button class="tab" data-tab="notes">Notes</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderHollandSection(hollandResults, sortedHolland, code, top3){
+  return `
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-num">Partie 1</div>
+        <h2 class="section-title">Vos intérêts généraux — typologie de Holland</h2>
+      </div>
+    </div>
+    <div class="section-body">
+      <p class="section-lead">La typologie de Holland (RIASEC) regroupe les centres d'intérêt professionnels en six grands types. Votre profil dominant est <strong>${code}</strong> : il exprime, dans l'ordre, vos trois orientations préférentielles.</p>
+      <div class="holland-grid">
+        <div class="riasec-chart-wrap" id="riasecChart"></div>
+        <div class="riasec-list">
+          ${sortedHolland.map((h,i)=>`
+            <div class="riasec-item ${i<3?"top":""}" style="--hcol:${h.color}">
+              <div class="riasec-letter" style="${i<3?"color:"+h.color:""}">${h.key}</div>
+              <div>
+                <div class="riasec-name">${h.name}</div>
+                <div style="font-size:11.5px;color:var(--ink-mute);margin-top:2px">Classe ${h.class}/9 · ${h.level.label}</div>
+              </div>
+              <div class="riasec-score">
+                <strong>${h.score}</strong>
+                <span style="font-size:10px">score brut</span>
+              </div>
+            </div>`).join("")}
+        </div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-swatch" style="background:var(--accent)"></span>Top 3 — axes dominants</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:var(--ink-mute)"></span>Axes secondaires</div>
+        <div class="legend-item" style="font-style:italic;color:var(--ink-mute)">⚠ Classe élevée = intérêt fort (score étalonné)</div>
+      </div>
+
+      ${top3.map((h,i)=>`
+        <div class="detail-card" style="margin-top:${i===0?32:12}px;--detail-color:${h.color}">
+          <div class="detail-head">
+            <div class="detail-title">${h.key} — ${h.name}</div>
+            <div class="detail-meta">
+              <span>Rang ${i+1} · Score ${h.score} · Classe ${h.class}/9</span>
+              <span class="level-badge ${levelBadgeClass(h.class)}">${h.level.label}</span>
+            </div>
+          </div>
+          <div class="detail-text">${h.desc}</div>
+          <div class="detail-pros">
+            <strong>Activités caractéristiques</strong>${h.activites}
+          </div>
+          <div class="detail-pros">
+            <strong>Qualités associées</strong>${h.qualites}
+          </div>
+          <div class="detail-pros">
+            <strong>Familles professionnelles</strong>${h.professions}
+          </div>
+          <div class="detail-pros">
+            <strong>Traits dominants</strong>${h.traits}
+          </div>
+        </div>
+      `).join("")}
+    </div>
+  </div>`;
+}
+
+function renderCorrelations(top3){
+  // Associations entre les 3 dominants
+  const pairs = [];
+  for(let i=0; i<top3.length; i++){
+    for(let j=i+1; j<top3.length; j++){
+      const k1 = top3[i].key, k2 = top3[j].key;
+      const key = [k1,k2].sort().join("-");
+      const txt = CORRELATIONS[key];
+      if(txt) pairs.push({k1,k2, text:txt, name1:top3[i].name, name2:top3[j].name});
+    }
+  }
+  if(pairs.length===0) return "";
+  return `
+    <div class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-num">Corrélations</div>
+          <h2 class="section-title">Combinaisons entre vos axes dominants</h2>
+        </div>
+      </div>
+      <div class="section-body">
+        <p class="section-lead">Les trois axes dominants de votre profil interagissent. Ces combinaisons ouvrent des pistes d'orientation au croisement des types.</p>
+        <div class="correlations">
+          ${pairs.map(p=>`
+            <div class="correlation-card">
+              <div class="correlation-title">
+                <span>${p.name1}</span>
+                <span class="correlation-arrow">✕</span>
+                <span>${p.name2}</span>
+              </div>
+              <div class="correlation-text">${p.text}</div>
+            </div>`).join("")}
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderDomainsSection(domainResults, sortedDomains, sex){
+  return `
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-num">Partie 2</div>
+        <h2 class="section-title">Vos intérêts spécifiques — 12 domaines</h2>
+      </div>
+    </div>
+    <div class="section-body">
+      <p class="section-lead">Décomposition fine de votre profil sur les douze domaines d'intérêt du test, étalonnés sur l'abaque ${sex==="H"?"masculin":"féminin"} en 9 classes. Plus la barre est longue, plus votre intérêt est prononcé par rapport à la population de référence.</p>
+      <div class="domains-chart">
+        ${sortedDomains.map(d=>{
+          const widthPct = d.level.pct;
+          const colorL = d.color+"cc";
+          return `
+          <div class="domain-bar">
+            <div class="domain-label">
+              <span class="domain-icon" style="background:${d.color}22;color:${d.color}">${d.icon}</span>
+              ${d.name}
+            </div>
+            <div class="bar-track">
+              <div class="bar-scale">${"<span></span>".repeat(9)}</div>
+              <div class="bar-fill" style="width:0%;--bar-color:${d.color};--bar-color-light:${colorL}" data-target="${widthPct}"></div>
+            </div>
+            <div class="domain-value">
+              <strong>${d.class}<span style="font-weight:300;color:var(--ink-mute)">/9</span></strong>
+              <span>Σ ${d.score}</span>
+            </div>
+          </div>`;
+        }).join("")}
+      </div>
+      <div class="legend">
+        <div class="legend-item">Classe 1–2 : très faible</div>
+        <div class="legend-item">Classe 3 : faible</div>
+        <div class="legend-item">Classe 4–6 : moyen</div>
+        <div class="legend-item">Classe 7 : élevé</div>
+        <div class="legend-item">Classe 8–9 : très élevé</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderDomainDetails(sortedDomains){
+  // Ne montrer que les domaines de classe 4+ (intérêt moyen à très élevé) par défaut
+  return `
+    <div class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-num">Partie 3</div>
+          <h2 class="section-title">Diagnostic détaillé par domaine</h2>
+        </div>
+      </div>
+      <div class="section-body">
+        <p class="section-lead">Pour chaque domaine, les caractéristiques générales associées à un score élevé, et les familles de métiers à explorer. Les domaines sont classés de l'intérêt le plus fort au plus faible.</p>
+        <div class="detail-grid">
+          ${sortedDomains.map(d=>{
+            const info = DOMAIN_INFO[d.key];
+            return `
+            <div class="detail-card" style="--detail-color:${d.color}">
+              <div class="detail-head">
+                <div class="detail-title">
+                  <span class="domain-icon" style="background:${d.color}22;color:${d.color};margin-right:8px">${d.icon}</span>
+                  ${d.name}
+                </div>
+                <div class="detail-meta">
+                  <span>Score ${d.score} · Classe ${d.class}/9</span>
+                  <span class="level-badge ${levelBadgeClass(d.class)}">${d.level.label}</span>
+                </div>
+              </div>
+              <div class="detail-text">${info.caract}</div>
+              <div class="detail-pros">
+                <strong>Familles de métiers à explorer</strong>
+                <div class="pro-chips">
+                  ${info.voies.map(v=>`<span class="pro-chip">${v.split(" : ")[0]}</span>`).join("")}
+                </div>
+                <div style="margin-top:10px;font-size:13px;line-height:1.6">
+                  ${info.voies.map(v=>`• ${v}`).join("<br>")}
+                </div>
+              </div>
+            </div>`;
+          }).join("")}
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderWishesSection(b){
+  const wishes = b.wishes.filter(w=>w.trim());
+  return `
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-num">Partie 4</div>
+        <h2 class="section-title">Trois métiers préférés formulés librement</h2>
+      </div>
+    </div>
+    <div class="section-body">
+      <p class="section-lead">Métiers cités spontanément hors liste — à confronter avec le profil RIASEC et les domaines dominants ci-dessus pour lecture clinique.</p>
+      ${wishes.length? `
+        <div class="wishes-display">
+          ${wishes.map((w,i)=>`
+            <div class="wish-card">
+              <div class="wish-rank">Vœu n°${i+1}</div>
+              <div class="wish-text">${escapeHtml(w)}</div>
+            </div>`).join("")}
+        </div>` : `<p style="color:var(--ink-mute);font-style:italic">Aucun vœu n'a été formulé.</p>`
+      }
+    </div>
+  </div>`;
+}
+
+function renderNotesSection(b){
+  return `
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-num">Suivi</div>
+        <h2 class="section-title">Notes</h2>
+      </div>
+    </div>
+    <div class="section-body">
+      <p class="section-lead">Espace libre pour vos observations d'accompagnement, les axes à approfondir lors de l'entretien de restitution, et les prochaines étapes du bilan.</p>
+      <textarea class="notes-textarea" id="notesTA" placeholder="Ex : à explorer en entretien — articulation entre le profil Investigateur fort et le vœu formulé de devenir photographe. Vérifier la cohérence avec le parcours. Proposer un test complémentaire ?">${escapeHtml(b.notes||"")}</textarea>
+      <div style="margin-top:12px;display:flex;gap:10px;align-items:center">
+        <button class="btn" id="btnSavNotes">Enregistrer les notes</button>
+        <span style="font-size:12px;color:var(--ink-mute)">Sauvegarde automatique à chaque modification.</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderActionBar(){
+  return `
+    <div class="action-bar">
+      <button class="btn ghost" id="btnBackResults">← Tableau de bord</button>
+      <button class="btn" id="btnEditResults">Modifier les réponses</button>
+      <button class="btn" id="btnJsonResults">Exporter JSON</button>
+      <button class="btn" id="btnPrintResults">Imprimer</button>
+      <button class="btn primary" id="btnPdfResults">Exporter en PDF</button>
+    </div>`;
+}
+
+/* ============================================================
+   RIASEC Radar (SVG hexagone)
+   ============================================================ */
+function drawRiasecRadar(hollandResults){
+  const wrap = $("#riasecChart");
+  if(!wrap) return;
+  const byKey = {};
+  hollandResults.forEach(h=>{ byKey[h.key] = h; });
+  // L'ordre hexagonal canonique RIASEC: R-I-A-S-E-C
+  const order = ["R","I","A","S","E","C"];
+  const size = 420;
+  const cx = size/2, cy = size/2;
+  const R = size * 0.36;
+
+  // Points hexagonaux (angles: top=R, puis horaire)
+  const angleFor = i => (-Math.PI/2) + i * (Math.PI*2/6);
+
+  // Max théorique: on normalise sur la classe 1-9
+  // La position du point = classe/9 * R
+  const pts = order.map((k,i)=>{
+    const cls = byKey[k].class;
+    const val = cls/9;  // 0..1
+    const a = angleFor(i);
+    return {
+      x: cx + Math.cos(a)*R*val,
+      y: cy + Math.sin(a)*R*val,
+      label:k,
+      name:byKey[k].name,
+      class:cls,
+      color:byKey[k].color,
+      lx: cx + Math.cos(a)*(R+32),
+      ly: cy + Math.sin(a)*(R+32),
+      fx: cx + Math.cos(a)*R,
+      fy: cy + Math.sin(a)*R
+    };
+  });
+  const path = pts.map((p,i)=>(i?"L":"M")+p.x.toFixed(1)+","+p.y.toFixed(1)).join(" ")+" Z";
+
+  // Axes grid (6 rings)
+  const rings = [];
+  for(let r=1; r<=5; r++){
+    const ringPts = order.map((_,i)=>{
+      const a = angleFor(i);
+      return (cx+Math.cos(a)*R*(r/5)).toFixed(1)+","+(cy+Math.sin(a)*R*(r/5)).toFixed(1);
+    });
+    rings.push(`<polygon points="${ringPts.join(" ")}" fill="none" stroke="var(--line)" stroke-width="${r===5?1.2:0.5}" opacity="${r===5?1:0.7}"/>`);
+  }
+
+  // Radii lines
+  const radii = pts.map(p=>`<line x1="${cx}" y1="${cy}" x2="${p.fx.toFixed(1)}" y2="${p.fy.toFixed(1)}" stroke="var(--line-soft)" stroke-width="0.8"/>`).join("");
+
+  // Labels
+  const labels = pts.map(p=>{
+    const anchor = p.lx < cx-5 ? "end" : p.lx > cx+5 ? "start" : "middle";
+    return `
+      <text x="${p.lx.toFixed(1)}" y="${(p.ly-2).toFixed(1)}" text-anchor="${anchor}" font-family="Fraunces,serif" font-style="italic" font-size="22" font-weight="500" fill="${p.color}">${p.label}</text>
+      <text x="${p.lx.toFixed(1)}" y="${(p.ly+12).toFixed(1)}" text-anchor="${anchor}" font-family="Inter Tight,sans-serif" font-size="10" fill="var(--ink-mute)" letter-spacing="1">${p.name.toUpperCase()}</text>
+      <text x="${p.lx.toFixed(1)}" y="${(p.ly+24).toFixed(1)}" text-anchor="${anchor}" font-family="JetBrains Mono,monospace" font-size="9" fill="var(--ink-mute)">${p.class}/9</text>`;
+  }).join("");
+
+  // Data points
+  const dots = pts.map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5" fill="${p.color}" stroke="var(--paper)" stroke-width="2"/>`).join("");
+
+  wrap.innerHTML = `
+    <svg viewBox="0 0 ${size} ${size}" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="polyFill" cx="50%" cy="50%">
+          <stop offset="0%" stop-color="#8FAFB1" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#8FAFB1" stop-opacity="0.08"/>
+        </radialGradient>
+      </defs>
+      ${rings.join("")}
+      ${radii}
+      <path d="${path}" fill="url(#polyFill)" stroke="#8FAFB1" stroke-width="2.2" stroke-linejoin="round"/>
+      ${dots}
+      ${labels}
+      <text x="${cx}" y="${cy+R+60}" text-anchor="middle" font-family="Inter Tight,sans-serif" font-size="10" fill="var(--ink-mute)" letter-spacing="2">CLASSE 1 · 9 (intérêt : faible → élevé)</text>
+    </svg>`;
+}
+
+/* ============================================================
+   EXPORTS
+   ============================================================ */
+function exportJson(){
+  const all = loadAll();
+  const b = all[currentBilanId];
+  if(!b) return;
+  const blob = new Blob([JSON.stringify(b,null,2)], {type:"application/json"});
+  downloadBlob(blob, `IRMR_${slugify(b.prenom+"_"+b.nom)}_${new Date().toISOString().slice(0,10)}.json`);
+  toast("Export JSON téléchargé");
+}
+
+function exportAllJson(){
+  const all = loadAll();
+  const blob = new Blob([JSON.stringify(all,null,2)], {type:"application/json"});
+  downloadBlob(blob, `IRMR_sauvegarde_${new Date().toISOString().slice(0,10)}.json`);
+  toast("Sauvegarde exportée");
+}
+
+function importAllJson(file){
+  const reader = new FileReader();
+  reader.onload = e=>{
+    try{
+      const data = JSON.parse(e.target.result);
+      // Accepte soit {id: bilan} soit un seul bilan
+      const all = loadAll();
+      if(data.id && data.nom){
+        all[data.id] = data;
+      } else {
+        Object.assign(all, data);
+      }
+      saveAll(all);
+      renderDashboard();
+      toast("Données importées");
+    }catch(err){
+      toast("Fichier invalide");
+    }
+  };
+  reader.readAsText(file);
+}
+
+function slugify(s){
+  return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zA-Z0-9]+/g,"_").replace(/^_+|_+$/g,"").toLowerCase();
+}
+
+function downloadBlob(blob, name){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+async function exportPdf(){
+  toast("Génération du PDF en cours...", 4000);
+  const target = $("#resultsContent");
+  const actionBar = target.querySelector(".action-bar");
+  if(actionBar) actionBar.style.display = "none";
+
+  // Activer tous les onglets pour le capture
+  const tabContents = $$(".tab-content", target);
+  const originalStates = tabContents.map(tc=>tc.classList.contains("active"));
+  tabContents.forEach(tc=>tc.classList.add("active"));
+  const tabsBar = target.querySelector(".tabs");
+  if(tabsBar) tabsBar.parentElement.style.display = "none";
+
+  await new Promise(r=>setTimeout(r,200));
+
+  try{
+    const canvas = await html2canvas(target, {
+      scale:2,
+      backgroundColor:"#fbf9f4",
+      useCORS:true,
+      windowWidth: target.scrollWidth
+    });
+    const { jsPDF } = window.jspdf;
+    const imgWidth = 210; // A4
+    const pageHeight = 297;
+    const imgHeight = canvas.height * imgWidth / canvas.width;
+    const pdf = new jsPDF("p","mm","a4");
+    let heightLeft = imgHeight;
+    let position = 0;
+    pdf.addImage(canvas.toDataURL("image/jpeg",0.94), "JPEG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+    while(heightLeft > 0){
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(canvas.toDataURL("image/jpeg",0.94), "JPEG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+    const b = loadAll()[currentBilanId];
+    pdf.save(`IRMR_${slugify(b.prenom+"_"+b.nom)}_${new Date().toISOString().slice(0,10)}.pdf`);
+    toast("PDF téléchargé");
+  } catch(err){
+    console.error(err);
+    toast("Erreur lors de la génération du PDF");
+  } finally {
+    if(actionBar) actionBar.style.display = "";
+    tabContents.forEach((tc,i)=>{ if(!originalStates[i]) tc.classList.remove("active"); });
+    if(tabsBar) tabsBar.parentElement.style.display = "";
+  }
+}
+
+/* ============================================================
+   WIRE UP
+   ============================================================ */
+document.addEventListener("DOMContentLoaded", ()=>{
+  renderDashboard();
+  // Démarrage: toujours sur le formulaire "Nouveau bilan"
+  openNewForm();
+
+  $("#btnNewBilan").addEventListener("click", openNewForm);
+  $("#btnCancelNew").addEventListener("click", ()=>showView("dashboard"));
+  $("#btnStartQuiz").addEventListener("click", createBilanFromForm);
+  $("#btnBackQuiz").addEventListener("click", ()=>{
+    saveWishes();
+    showView("dashboard");
+    renderDashboard();
+  });
+  $("#btnFinishQuiz").addEventListener("click", finishQuiz);
+  ["wish1","wish2","wish3"].forEach(id=>{
+    $("#"+id).addEventListener("blur", saveWishes);
+  });
+  $("#btnExportAll").addEventListener("click", exportAllJson);
+  $("#btnImportAll").addEventListener("click", ()=>$("#importFile").click());
+  $("#importFile").addEventListener("change", e=>{
+    if(e.target.files[0]) importAllJson(e.target.files[0]);
+    e.target.value = "";
+  });
+  $("#modalCancel").addEventListener("click", ()=>$("#modalConfirm").classList.remove("active"));
+  $("#modalConfirm").addEventListener("click", e=>{
+    if(e.target === $("#modalConfirm")) $("#modalConfirm").classList.remove("active");
+  });
+
+  // Animation barres à l'affichage des résultats
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const fill = entry.target;
+        const target = fill.dataset.target;
+        requestAnimationFrame(()=>{ fill.style.width = target+"%"; });
+      }
+    });
+  });
+  // Re-watch after render
+  const mo = new MutationObserver(()=>{
+    $$(".bar-fill").forEach(f=>observer.observe(f));
+  });
+  mo.observe(document.body, {childList:true,subtree:true});
+});
+</script>
+</body>
+</html>
