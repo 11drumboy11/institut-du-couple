@@ -217,6 +217,59 @@ h1, h2, h3, h4, h5, h6,
   font-weight: 500;
 }
 
+/* Lignes de parcours dynamiques */
+.parcours-line {
+  display: grid;
+  grid-template-columns: 1fr 1fr 130px 130px auto;
+  gap: 8px;
+  align-items: center;
+  background: var(--gris-bg);
+  border: 1px solid #e0ddd8;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+.parcours-line input,
+.parcours-line select {
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: var(--blanc);
+  font-family: inherit;
+}
+.parcours-line input:focus,
+.parcours-line select:focus {
+  outline: none;
+  border-color: var(--mer);
+}
+.btn-remove-parcours {
+  background: transparent;
+  border: 1px solid #ccc;
+  color: var(--gris-light);
+  cursor: pointer;
+  font-size: 1.1rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.btn-remove-parcours:hover {
+  background: var(--accent-n);
+  color: var(--blanc);
+  border-color: var(--accent-n);
+}
+@media (max-width: 700px) {
+  .parcours-line {
+    grid-template-columns: 1fr 1fr;
+  }
+  .parcours-line .col-full { grid-column: 1 / -1; }
+  .btn-remove-parcours { grid-column: 2; justify-self: end; }
+}
+
 .disclaimer-box {
   background: var(--sable);
   border-left: 4px solid var(--mer);
@@ -646,16 +699,64 @@ h1, h2, h3, h4, h5, h6,
       </select>
     </div>
     <div class="field-group">
-      <label>Années d'expérience professionnelle totale</label>
-      <select id="sExperience">
+      <label>Années d'expérience dans le métier actuel</label>
+      <select id="sExperienceActuel">
         <option value="">— Sélectionner —</option>
-        <option value="0">Aucune</option>
+        <option value="0">Moins d'un an</option>
         <option value="1-3">1 à 3 ans</option>
         <option value="4-7">4 à 7 ans</option>
         <option value="8-15">8 à 15 ans</option>
         <option value="16-25">16 à 25 ans</option>
         <option value="25+">Plus de 25 ans</option>
       </select>
+    </div>
+
+    <!-- PARCOURS DÉTAILLÉ MULTI-ENTRÉES -->
+    <div class="field-group">
+      <label>Parcours professionnel précédent (optionnel — jusqu'à 5 expériences passées)</label>
+      <div style="font-size:0.82rem;color:var(--gris-light);margin-bottom:10px;line-height:1.5">
+        Détaillez vos expériences <em>antérieures</em> au métier actuel. Cela permet à l'IA d'identifier vos compétences transférables et les passerelles possibles. À ne PAS remplir si vous n'avez fait que votre métier actuel.
+      </div>
+      <div id="parcoursContainer"></div>
+      <button type="button" class="btn btn-secondary" id="btnAddParcours" onclick="addParcoursLine()" style="margin-top:8px;font-size:0.88rem;padding:10px 18px">
+        + Ajouter une expérience passée
+      </button>
+    </div>
+
+    <!-- ASPECTS APPRÉCIÉS / FUIS -->
+    <div class="field-group">
+      <label>Dans vos expériences passées, ce que vous avez <strong>apprécié</strong> (optionnel)</label>
+      <div class="checkbox-group" id="aspectsApprecies">
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="relation_client"> Relation client/usager</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="relation_aide"> Relation d'aide</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="management"> Management / encadrer</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="autonomie"> Autonomie / travailler seul(e)</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="equipe"> Travail en équipe</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="creativite"> Créativité / innovation</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="technique"> Technique / expertise</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="analyse"> Analyse / réflexion</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="terrain"> Terrain / mouvement</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="transmission"> Transmission / formation</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="organisation"> Organisation / structurer</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="negociation"> Négociation / conviction</div>
+      </div>
+    </div>
+    <div class="field-group">
+      <label>Ce que vous souhaitez <strong>éviter</strong> dans la suite de votre parcours (optionnel)</label>
+      <div class="checkbox-group" id="aspectsFuis">
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="pression"> Pression / urgence chronique</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="routine"> Routine / répétition</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="conflit"> Conflits / confrontation</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="hierarchie"> Hiérarchie pesante</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="solitude"> Solitude prolongée</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="bruit"> Bruit / open-space</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="exposition"> Exposition publique</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="commercial"> Posture commerciale</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="admin"> Charge administrative lourde</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="rythme"> Rythme imposé / cadences</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="reponsabilite"> Responsabilité hiérarchique</div>
+        <div class="checkbox-pill" onclick="togglePill(this)"><input type="checkbox" value="deplacement"> Déplacements fréquents</div>
+      </div>
     </div>
   </div>
 
@@ -1117,7 +1218,135 @@ function getCheckedValues(groupId) {
   return Array.from(pills).map(c => c.value);
 }
 
+// ═══════════════════════════════════════
+// PARCOURS DYNAMIQUE — jusqu'à 5 expériences passées
+// ═══════════════════════════════════════
+const SECTEURS_OPTIONS = [
+  ["", "— Secteur —"],
+  ["sante", "Santé / Médico-social"],
+  ["education", "Éducation / Formation"],
+  ["tech", "Informatique / Tech"],
+  ["commerce", "Commerce / Vente"],
+  ["industrie", "Industrie / Production"],
+  ["btp", "BTP / Construction"],
+  ["finance", "Finance / Banque / Assurance"],
+  ["juridique", "Juridique / Droit"],
+  ["communication", "Communication / Marketing"],
+  ["art", "Art / Culture / Spectacle"],
+  ["social", "Social / Associatif"],
+  ["admin", "Administration publique"],
+  ["transport", "Transport / Logistique"],
+  ["hotellerie", "Hôtellerie / Restauration"],
+  ["agriculture", "Agriculture / Environnement"],
+  ["rh", "Ressources humaines"],
+  ["autre", "Autre"]
+];
+
+const STATUTS_OPTIONS = [
+  ["", "— Statut —"],
+  ["salarie", "Salarié(e)"],
+  ["independant", "Indépendant(e)"],
+  ["dirigeant", "Dirigeant(e)"],
+  ["fonctionnaire", "Fonctionnaire"],
+  ["interim", "Intérim / CDD"],
+  ["benevolat", "Bénévolat"],
+  ["autre", "Autre"]
+];
+
+function addParcoursLine() {
+  const container = document.getElementById('parcoursContainer');
+  const count = container.querySelectorAll('.parcours-line').length;
+  if (count >= 5) {
+    alert('Maximum 5 expériences passées.');
+    return;
+  }
+  const idx = Date.now();
+  const line = document.createElement('div');
+  line.className = 'parcours-line';
+  line.dataset.idx = idx;
+
+  // Secteur
+  const selSecteur = document.createElement('select');
+  selSecteur.className = 'p-secteur';
+  SECTEURS_OPTIONS.forEach(opt => {
+    const o = document.createElement('option');
+    o.value = opt[0]; o.textContent = opt[1];
+    selSecteur.appendChild(o);
+  });
+
+  // Métier
+  const inpMetier = document.createElement('input');
+  inpMetier.type = 'text';
+  inpMetier.placeholder = 'Métier exercé';
+  inpMetier.className = 'p-metier';
+
+  // Années
+  const inpAnnees = document.createElement('input');
+  inpAnnees.type = 'number';
+  inpAnnees.min = '0'; inpAnnees.max = '60';
+  inpAnnees.placeholder = 'Années';
+  inpAnnees.className = 'p-annees';
+
+  // Statut
+  const selStatut = document.createElement('select');
+  selStatut.className = 'p-statut';
+  STATUTS_OPTIONS.forEach(opt => {
+    const o = document.createElement('option');
+    o.value = opt[0]; o.textContent = opt[1];
+    selStatut.appendChild(o);
+  });
+
+  // Bouton suppression
+  const btnDel = document.createElement('button');
+  btnDel.type = 'button';
+  btnDel.className = 'btn-remove-parcours';
+  btnDel.textContent = '×';
+  btnDel.title = 'Supprimer cette ligne';
+  btnDel.onclick = function() { line.remove(); };
+
+  line.appendChild(selSecteur);
+  line.appendChild(inpMetier);
+  line.appendChild(inpAnnees);
+  line.appendChild(selStatut);
+  line.appendChild(btnDel);
+  container.appendChild(line);
+}
+
+function collectParcours() {
+  const lines = document.querySelectorAll('#parcoursContainer .parcours-line');
+  const result = [];
+  lines.forEach(line => {
+    const secteur = line.querySelector('.p-secteur').value;
+    const metier = line.querySelector('.p-metier').value.trim();
+    const annees_raw = line.querySelector('.p-annees').value;
+    const statut = line.querySelector('.p-statut').value;
+    const annees = parseInt(annees_raw);
+    // Au moins métier ou secteur + années pour valider la ligne
+    if ((metier || secteur) && !isNaN(annees) && annees > 0) {
+      result.push({
+        secteur: secteur || null,
+        metier: metier || null,
+        annees: annees,
+        statut: statut || null
+      });
+    }
+  });
+  return result;
+}
+
 function collectProfile() {
+  const parcours = collectParcours();
+  const exp_actuel_str = document.getElementById('sExperienceActuel').value;
+  // Calcul total années (si parcours rempli, on additionne)
+  let total_annees = 0;
+  if (parcours.length > 0) {
+    parcours.forEach(p => total_annees += p.annees);
+  }
+  // Ajouter années métier actuel (estimation moyenne par tranche)
+  const tranchesEstim = {"0":0.5, "1-3":2, "4-7":5.5, "8-15":11.5, "16-25":20, "25+":27};
+  const exp_actuel_estim = tranchesEstim[exp_actuel_str] || 0;
+  total_annees += exp_actuel_estim;
+
   profile = {
     prenom: document.getElementById('sPrenom').value.trim(),
     nom: document.getElementById('sNom').value.trim(),
@@ -1127,7 +1356,11 @@ function collectProfile() {
     situation: document.getElementById('sSituation').value,
     metier: document.getElementById('sMetier').value.trim(),
     secteur: document.getElementById('sSecteur').value,
-    experience: document.getElementById('sExperience').value,
+    experience_actuel: exp_actuel_str,
+    parcours_passe: parcours,
+    annees_total_estim: total_annees > 0 ? total_annees : null,
+    aspects_apprecies: getCheckedValues('aspectsApprecies'),
+    aspects_fuis: getCheckedValues('aspectsFuis'),
     formation_duree: document.getElementById('sFormation').value,
     contraintes: getCheckedValues('contraintes'),
     financements: getCheckedValues('financements'),
@@ -1578,17 +1811,93 @@ function downloadAnalysisFile() {
   var contradictions = detectContradictions(sc);
   var escalation = detectEscalationFlags(sc, rq);
 
+  // ─── Traductions lisibles pour le contexte humain ───
+  var ETUDES_LABEL = {
+    "sans":"Sans diplôme","brevet":"Brevet des collèges","cap-bep":"CAP / BEP",
+    "bac":"Baccalauréat","bac2":"Bac+2","bac3":"Bac+3","bac5":"Bac+5","bac8":"Doctorat / Bac+8"
+  };
+  var SITUATION_LABEL = {
+    "poste":"En poste","independant":"Indépendant(e)","recherche":"En recherche d'emploi",
+    "reconversion":"En reconversion","formation":"En formation","etudiant":"Étudiant(e)",
+    "arret":"En arrêt maladie / invalidité","conge":"En congé","retraite":"Retraité(e)","autre":"Autre"
+  };
+  var SECTEUR_LABEL = {
+    "sante":"Santé / Médico-social","education":"Éducation / Formation","tech":"Informatique / Tech",
+    "commerce":"Commerce / Vente","industrie":"Industrie / Production","btp":"BTP / Construction",
+    "finance":"Finance / Banque / Assurance","juridique":"Juridique / Droit",
+    "communication":"Communication / Marketing","art":"Art / Culture / Spectacle",
+    "social":"Social / Associatif","admin":"Administration publique",
+    "transport":"Transport / Logistique","hotellerie":"Hôtellerie / Restauration",
+    "agriculture":"Agriculture / Environnement","rh":"Ressources humaines","autre":"Autre"
+  };
+  var STATUT_LABEL = {
+    "salarie":"Salarié(e)","independant":"Indépendant(e)","dirigeant":"Dirigeant(e)",
+    "fonctionnaire":"Fonctionnaire","interim":"Intérim/CDD","benevolat":"Bénévolat","autre":"Autre"
+  };
+  var CONTRAINTES_LABEL = {
+    "debout":"Station debout prolongée impossible","charges":"Port de charges limité",
+    "nuit":"Travail de nuit impossible","mobilite":"Mobilité réduite",
+    "ecran":"Temps d'écran limité","stress":"Environnement à faible stress requis","aucune":"Aucune"
+  };
+  var FORMATION_LABEL = {
+    "court":"Courte (< 6 mois)","moyen":"Moyenne (6 à 12 mois)","long1":"Longue (1 à 2 ans)",
+    "long2":"Très longue (3 à 5 ans)","illimite":"Pas de limite"
+  };
+
+  // ─── Enrichir le parcours avec les libellés lisibles ───
+  var parcoursEnrichi = (profile.parcours_passe || []).map(function(p) {
+    return {
+      secteur_code: p.secteur,
+      secteur_libelle: SECTEUR_LABEL[p.secteur] || p.secteur,
+      metier: p.metier,
+      annees: p.annees,
+      statut_code: p.statut,
+      statut_libelle: STATUT_LABEL[p.statut] || p.statut
+    };
+  });
+
+  // ─── Calcul de l'expérience effective dans le métier actuel (estimation centrale) ───
+  var expActuelEstim = ({"0":0.5,"1-3":2,"4-7":5.5,"8-15":11.5,"16-25":20,"25+":27})[profile.experience_actuel] || null;
+
+  // ─── Tranche d'âge pour règles adaptatives ───
+  var trancheAge =
+    profile.age < 25 ? "20-25_debut_carriere" :
+    profile.age < 35 ? "25-35_construction" :
+    profile.age < 45 ? "35-45_consolidation" :
+    profile.age < 55 ? "45-55_reorientation" :
+    profile.age < 65 ? "55-65_seconde_partie" :
+    "65plus_post_carriere";
+
+  // ─── Type de profil professionnel (mono / bi / multi) ───
+  var typeProfil =
+    parcoursEnrichi.length === 0 ? "mono_metier" :
+    parcoursEnrichi.length <= 1 ? "bi_metier" :
+    parcoursEnrichi.length <= 2 ? "multi_metier_modere" : "multi_metier_riche";
+
   var exportJSON = {
 
-    // ═══ COUCHE 1: MÉTADONNÉES ═══
+    // ═══════════════════════════════════════════════════════════════
+    //  COUCHE 1 — MÉTADONNÉES
+    // ═══════════════════════════════════════════════════════════════
     meta: {
       outil: "NEO PI-R (Costa & McCrae, 1992)",
       traduction: "Rolland & Petot — Université Paris X Nanterre",
-      version_schema: "2.0.0",
-      version_contrat: "neo-bdc-v2.0",
+      version_schema: "3.0.0",
+      version_contrat: "neo-bdc-v3.0",
       compatibilite: ["claude", "chatgpt", "gemini"],
       date_passation: profile.date,
-      generateur: "C Concept&Dev"
+      generateur: "C Concept&Dev",
+      changelog_v3: [
+        "Parcours professionnel multi-entrées (jusqu'à 5 expériences passées)",
+        "Distinction expérience métier actuel vs expérience totale",
+        "Aspects appréciés / aspects fuis (mots-clés)",
+        "Règles d'interprétation enrichies et adaptatives",
+        "Référentiel d'interprétation par tranche de score embarqué",
+        "Règles conditionnelles selon âge, type de profil, fiabilité",
+        "Phrases jugeantes interdites listées explicitement",
+        "Spécifications PDF détaillées (mise en page, charte, lisibilité A4)",
+        "Diagnostic d'entrée obligatoire avant génération du rapport"
+      ]
     },
 
     session: {
@@ -1598,24 +1907,38 @@ function downloadAnalysisFile() {
       completion_status: rq.completion_rate >= 0.95 ? "complete" : rq.completion_rate >= 0.80 ? "partiel" : "incomplet"
     },
 
-    // ═══ COUCHE 2: DONNÉES D'ENTRÉE ═══
+    // ═══════════════════════════════════════════════════════════════
+    //  COUCHE 2 — DONNÉES D'ENTRÉE
+    // ═══════════════════════════════════════════════════════════════
     input_data: {
       identity: {
         prenom: profile.prenom,
         nom: profile.nom || null,
         age: profile.age,
-        genre: profile.genre
+        genre: profile.genre,
+        tranche_age_categorie: trancheAge
       },
       career_context: {
-        niveau_etudes: profile.etudes,
-        situation: profile.situation,
+        niveau_etudes_code: profile.etudes,
+        niveau_etudes_libelle: ETUDES_LABEL[profile.etudes] || profile.etudes,
+        situation_code: profile.situation,
+        situation_libelle: SITUATION_LABEL[profile.situation] || profile.situation,
         metier_actuel: profile.metier || null,
-        secteur: profile.secteur || null,
-        experience_annees: profile.experience || null
+        secteur_actuel_code: profile.secteur || null,
+        secteur_actuel_libelle: SECTEUR_LABEL[profile.secteur] || null,
+        experience_metier_actuel: profile.experience_actuel || null,
+        experience_metier_actuel_estim_annees: expActuelEstim,
+        parcours_passe: parcoursEnrichi,
+        annees_total_estim: profile.annees_total_estim,
+        type_profil_carriere: typeProfil,
+        aspects_apprecies: profile.aspects_apprecies || [],
+        aspects_fuis: profile.aspects_fuis || []
       },
       constraints: {
-        formation_duree_max: profile.formation_duree || null,
-        contraintes_sante: profile.contraintes || [],
+        formation_duree_max_code: profile.formation_duree || null,
+        formation_duree_max_libelle: FORMATION_LABEL[profile.formation_duree] || null,
+        contraintes_sante_codes: profile.contraintes || [],
+        contraintes_sante_libelles: (profile.contraintes || []).map(function(c){return CONTRAINTES_LABEL[c]||c;}),
         financements_envisages: profile.financements || []
       },
       interests_and_goals: {
@@ -1624,7 +1947,9 @@ function downloadAnalysisFile() {
       }
     },
 
-    // ═══ COUCHE 3: DONNÉES DÉRIVÉES ═══
+    // ═══════════════════════════════════════════════════════════════
+    //  COUCHE 3 — DONNÉES DÉRIVÉES (calculées par l'outil de passation)
+    // ═══════════════════════════════════════════════════════════════
     derived_data: {
       scores: {
         domaines: sc.domainPct,
@@ -1635,16 +1960,67 @@ function downloadAnalysisFile() {
       profile_summary: {
         dominant_domains: ['N','E','O','A','C'].filter(function(d) { return sc.domainPct[d] >= 60; }),
         low_domains: ['N','E','O','A','C'].filter(function(d) { return sc.domainPct[d] < 40; }),
-        notable_facets_high: Object.keys(sc.facetPct).filter(function(k) { return sc.facetPct[k] >= 75; }),
-        notable_facets_low: Object.keys(sc.facetPct).filter(function(k) { return sc.facetPct[k] <= 25; })
+        notable_facets_high: Object.keys(sc.facetPct).filter(function(k) { return sc.facetPct[k] >= 70; }),
+        notable_facets_low: Object.keys(sc.facetPct).filter(function(k) { return sc.facetPct[k] <= 30; })
       },
       contradiction_analysis: contradictions,
       escalation_flags: escalation
     },
 
-    // ═══ COUCHE 4A: CONTRAT D'ANALYSE ═══
+    // ═══════════════════════════════════════════════════════════════
+    //  COUCHE 4 — RÉFÉRENTIEL D'INTERPRÉTATION (universel et embarqué)
+    // ═══════════════════════════════════════════════════════════════
+    interpretation_reference: {
+      score_bands: {
+        tres_bas:  { min:  0, max: 34, label: "Très bas",  guidance: "Tendance opposée nettement marquée. À explorer comme ressource ou contrainte selon contexte." },
+        bas:       { min: 35, max: 44, label: "Bas",       guidance: "Tendance modérément opposée à la moyenne. Nuancer dans l'interprétation." },
+        moyen:     { min: 45, max: 54, label: "Moyen",     guidance: "Zone moyenne — pas de tendance marquée. Éviter les sur-interprétations." },
+        eleve:     { min: 55, max: 64, label: "Élevé",     guidance: "Tendance modérément marquée. Ressource mobilisable selon contexte." },
+        tres_eleve:{ min: 65, max:100, label: "Très élevé",guidance: "Tendance nettement marquée. À considérer comme un trait saillant du profil." }
+      },
+      domaines_definition: {
+        N: { nom: "Névrosisme", versant_haut: "Réactivité émotionnelle, sensibilité au stress", versant_bas: "Stabilité émotionnelle, calme face au stress" },
+        E: { nom: "Extraversion", versant_haut: "Énergie sociale, recherche d'interaction et de stimulation", versant_bas: "Réserve, préférence pour la solitude ou les petits groupes" },
+        O: { nom: "Ouverture", versant_haut: "Curiosité intellectuelle, goût pour la nouveauté et l'imagination", versant_bas: "Pragmatisme, attachement aux conventions et aux routines" },
+        A: { nom: "Agréabilité", versant_haut: "Coopération, altruisme, confiance", versant_bas: "Compétitivité, indépendance, scepticisme" },
+        C: { nom: "Conscience", versant_haut: "Organisation, rigueur, persévérance, fiabilité", versant_bas: "Spontanéité, flexibilité, moindre structuration" }
+      },
+      facettes_definition: {
+        N1:{nom:"Anxiété", domaine:"N"}, N2:{nom:"Hostilité/colère", domaine:"N"}, N3:{nom:"Dépression", domaine:"N"},
+        N4:{nom:"Conscience de soi (timidité sociale)", domaine:"N"}, N5:{nom:"Impulsivité", domaine:"N"}, N6:{nom:"Vulnérabilité au stress", domaine:"N"},
+        E1:{nom:"Chaleur", domaine:"E"}, E2:{nom:"Grégarité", domaine:"E"}, E3:{nom:"Assertivité", domaine:"E"},
+        E4:{nom:"Activité", domaine:"E"}, E5:{nom:"Recherche de sensations", domaine:"E"}, E6:{nom:"Émotions positives", domaine:"E"},
+        O1:{nom:"Ouverture aux rêveries", domaine:"O"}, O2:{nom:"Ouverture à l'esthétique", domaine:"O"}, O3:{nom:"Ouverture aux sentiments", domaine:"O"},
+        O4:{nom:"Ouverture aux actions", domaine:"O"}, O5:{nom:"Ouverture aux idées", domaine:"O"}, O6:{nom:"Ouverture aux valeurs", domaine:"O"},
+        A1:{nom:"Confiance en autrui", domaine:"A"}, A2:{nom:"Droiture", domaine:"A"}, A3:{nom:"Altruisme", domaine:"A"},
+        A4:{nom:"Compliance/soumission", domaine:"A"}, A5:{nom:"Modestie", domaine:"A"}, A6:{nom:"Sensibilité aux autres", domaine:"A"},
+        C1:{nom:"Compétence", domaine:"C"}, C2:{nom:"Ordre", domaine:"C"}, C3:{nom:"Sens du devoir", domaine:"C"},
+        C4:{nom:"Recherche de la réussite", domaine:"C"}, C5:{nom:"Auto-discipline", domaine:"C"}, C6:{nom:"Délibération", domaine:"C"}
+      },
+      interaction_patterns: [
+        { id:"chaleur_vs_gregarite", facets:["E1","E2"], rule:"Si E1 élevé et E2 bas : profil chaleureux mais sélectif, plus à l'aise en relation duelle/petit groupe qu'en foule." },
+        { id:"altruisme_vs_modestie", facets:["A3","A5"], rule:"Si A3 très élevé et A5 bas : altruisme assumé, expertise reconnue de soi — protection contre l'épuisement altruiste." },
+        { id:"deliberation_vs_impulsivite", facets:["C6","N5"], rule:"Si C6 très élevé et N5 moyen-élevé : décideur réflexif mais sujet à des moments d'urgence interne — anticiper les contextes émotionnellement chargés." },
+        { id:"ouverture_idees_vs_actions", facets:["O5","O4"], rule:"Si O5 très élevé et O4 modéré : exploration intellectuelle dominante, préférence pour le changement de fond plus que pour le changement d'activités au quotidien." },
+        { id:"conscience_haute_vulnerabilite_basse", facets:["C","N6"], rule:"Si C élevé et N6 bas : robustesse exécutive — capacité à tenir des projets longs sous pression sans s'effondrer." },
+        { id:"agreabilite_haute_assertivite_basse", facets:["A","E3"], rule:"Si A élevé et E3 bas : risque de difficulté à poser des limites face aux demandes excessives." },
+        { id:"ouverture_haute_conscience_haute", facets:["O","C"], rule:"Combinaison rare et précieuse : créativité structurée, capable d'innover ET de mener à terme." }
+      ]
+    },
+
+    // ═══════════════════════════════════════════════════════════════
+    //  COUCHE 5 — CONTRAT D'ANALYSE (rôle, règles, garde-fous)
+    // ═══════════════════════════════════════════════════════════════
     analysis_contract: {
-      role: "Psychologue du travail expert en psychométrie Big Five / NEO PI-R et en orientation professionnelle. Tu produis des bilans de compétences structurés et rigoureux.",
+      role: "Psychologue du travail expert en psychométrie Big Five / NEO PI-R et en orientation professionnelle. Tu produis des bilans de compétences structurés, rigoureux, adaptatifs et bienveillants.",
+
+      mission_principale: "Produire un rapport PDF professionnel auto-suffisant à partir de ce JSON, sans demander d'information complémentaire à l'utilisateur. Le contenu, la mise en page, le ton et la structure sont entièrement définis par ce contrat. Tu peux mobiliser tes capacités générales de raisonnement et de recherche pour enrichir l'analyse, mais en respectant strictement les règles et garde-fous.",
+
+      diagnostic_dentree_obligatoire: {
+        description: "AVANT de générer le rapport, produire un bref diagnostic d'entrée (5-10 lignes en chat, pas dans le PDF) résumant : (1) qui est la personne, (2) quel est son objectif, (3) quelles contraintes notables, (4) quels points saillants du profil, (5) quelles alertes éventuelles (fiabilité, escalation, contradictions). Cela permet au psychologue référent de valider la cohérence avant la génération PDF.",
+        format: "Texte libre court, en chat avant le PDF.",
+        but: "Détecter une mauvaise passation ou un dossier mal renseigné avant de générer 30 pages."
+      },
 
       allowed_tasks: [
         "Interpréter les scores NEO PI-R en termes de tendances comportementales",
@@ -1653,22 +2029,53 @@ function downloadAnalysisFile() {
         "Décrire des environnements de travail adaptés au profil",
         "Suggérer des pistes de développement personnel",
         "Analyser les contradictions internes du profil",
-        "Formuler des questions de validation pour un entretien"
+        "Formuler des questions de validation pour un entretien",
+        "Identifier les compétences transférables issues du parcours passé",
+        "Proposer des passerelles entre secteurs en s'appuyant sur le parcours",
+        "Mobiliser ses connaissances générales (formations, métiers, dispositifs de financement) avec mention de l'incertitude quand elle existe"
       ],
 
       forbidden_tasks: [
         "Ne JAMAIS poser de diagnostic psychologique ou psychiatrique",
         "Ne JAMAIS pathologiser un score élevé ou bas",
         "Ne JAMAIS présenter l'analyse comme vérité définitive sur la personne",
-        "Ne JAMAIS inventer de données de formation (coût, durée, lieu) sans base factuelle",
-        "Ne JAMAIS affirmer un salaire précis — donner des fourchettes avec source si possible",
-        "Ne JAMAIS attribuer un type MBTI à partir du Big Five — utiliser un portrait fonctionnel dérivé"
+        "Ne JAMAIS inventer de données précises de formation (coût exact, dates de session, lieu) sans base factuelle ; utiliser des fourchettes et signaler l'incertitude",
+        "Ne JAMAIS affirmer un salaire précis — donner des fourchettes avec source si possible (INSEE, France Travail, conventions collectives)",
+        "Ne JAMAIS attribuer un type MBTI à partir du Big Five — utiliser un portrait fonctionnel dérivé",
+        "Ne JAMAIS écrire 'usage exclusivement professionnel'",
+        "Ne JAMAIS afficher de statut juridique de l'éditeur (pas de 'auto-entrepreneur')",
+        "Ne JAMAIS mentionner de nom personnel du psychologue référent",
+        "Ne JAMAIS présenter la personne comme un cas clinique ou un type fixe"
       ],
 
+      forbidden_phrases_and_patterns: {
+        principe: "Le rapport doit décrire des TENDANCES, pas asséner des vérités. Les formulations suivantes sont interdites.",
+        mots_interdits_absolus: [
+          "toujours", "jamais (sauf dans les règles déontologiques)", "certainement", "définitivement",
+          "vous êtes [trait]", "vous n'êtes pas [trait]", "votre nature est", "votre essence",
+          "il est évident que", "indubitablement", "à coup sûr", "vous devez impérativement"
+        ],
+        formulations_attendues: [
+          "vous avez tendance à", "votre profil suggère", "cela peut indiquer", "vraisemblablement",
+          "il est probable que", "votre score signale", "ce résultat oriente vers",
+          "dans la plupart des contextes, vous", "selon votre profil", "une hypothèse possible est"
+        ],
+        verifications_avant_envoi: [
+          "Aucune phrase ne diagnostique ni ne pathologise",
+          "Aucun jugement de valeur ('bon' / 'mauvais' profil)",
+          "Aucune affirmation absolue déguisée en interprétation"
+        ]
+      },
+
       interpretation_rules: {
-        tone: "Parler de TENDANCES, pas de certitudes. Utiliser 'vous avez tendance à', 'votre profil suggère', 'cela peut indiquer'",
-        nuance: "Distinguer clairement : personnalité (traits stables), préférences (contextuelles), compétences (acquises), et contraintes (situationnelles)",
-        confidence_policy: "Si la fiabilité de passation est 'faible', le signaler explicitement et réduire le niveau d'affirmation des conclusions"
+        tone: "Professionnel, accessible, bienveillant, constructif. Vouvoiement obligatoire. Parler de TENDANCES, pas de certitudes.",
+        nuance: "Distinguer clairement : personnalité (traits stables), préférences (contextuelles), compétences (acquises), contraintes (situationnelles), expérience (cumulée).",
+        confidence_policy: {
+          fiabilite_elevee: "Interprétation normale, formulations standard.",
+          fiabilite_moderee: "Réduire légèrement les affirmations, ajouter 'sous réserve d'une fiabilité de passation modérée'.",
+          fiabilite_faible: "Signaler explicitement en début de synthèse. Réduire l'affirmation à des hypothèses prudentes. Recommander une nouvelle passation ou un entretien clinique."
+        },
+        cross_reference_obligatoire: "Toujours croiser personnalité × parcours × contraintes × objectif déclaré. Une recommandation qui ne tient pas compte de l'un de ces 4 axes est invalide."
       },
 
       clinical_guardrails: {
@@ -1677,82 +2084,221 @@ function downloadAnalysisFile() {
           "Souligner que les résultats reflètent l'état actuel et peuvent évoluer",
           "Préciser qu'un score n'est ni bon ni mauvais — chaque profil a ses forces dans certains contextes"
         ],
-        escalation_protocol: "Si des drapeaux d'escalation sont présents dans derived_data.escalation_flags, les mentionner avec tact et recommander une consultation avec un professionnel qualifié"
+        escalation_protocol: "Si des drapeaux d'escalation sont présents dans derived_data.escalation_flags, les mentionner avec tact (sans alarmer) et recommander une consultation avec un professionnel qualifié. Ne pas générer un rapport optimiste si N3 (dépression) > 70 ou si vulnerabilite_au_stress (N6) > 75 sans poser le sujet d'un soutien.",
+        zones_sensibles: ["Surdité ou handicap mentionnés en objectif", "Burn-out signalé", "Reconversion contrainte par la santé"]
+      },
+
+      // ─── RÈGLES ADAPTATIVES SELON LE CONTEXTE ───
+      adaptive_rules: {
+        par_tranche_age: {
+          "20-25_debut_carriere": "Orienter vers exploration, premières expériences, formations diplômantes, ouverture des possibles. Éviter le vocabulaire de seconde partie de carrière.",
+          "25-35_construction": "Construction d'expertise, choix structurants, équilibre vie pro/vie perso. Reconversions possibles mais coûteuses si études longues à reprendre.",
+          "35-45_consolidation": "Consolidation d'expertise, premières reconversions matures, accent sur les compétences transférables.",
+          "45-55_reorientation": "Reconversion fréquente, capitalisation de l'expérience, préparation seconde partie de carrière, attention aux études longues.",
+          "55-65_seconde_partie": "Transmission, expertise, supervision, écriture, conseil, format souple. Évoquer la transition vers la retraite quand pertinent. Pas de formations très longues (>3 ans) en règle générale.",
+          "65plus_post_carriere": "Engagement choisi, bénévolat valorisé, mentorat, activités-passions. Pas de reconversion classique."
+        },
+        par_type_profil: {
+          mono_metier: "La personne n'a fait qu'un métier : capitaliser sur sa profondeur, mais explorer la variété des évolutions possibles dans et autour de ce métier.",
+          bi_metier: "Une expérience passée + métier actuel : identifier la passerelle entre les deux et ce qu'elle révèle des préférences.",
+          multi_metier_modere: "2 expériences passées : analyser le fil rouge entre les expériences, identifier les compétences transférables.",
+          multi_metier_riche: "3+ expériences passées : profil de slasher / multipotentiel. Recommandations qui valorisent la pluralité plutôt que de la réduire."
+        },
+        par_objectif: {
+          reconversion_totale: "Privilégier les pistes en rupture, calibrer la prise de risque selon l'âge et la situation financière.",
+          evolution: "Privilégier les pistes dans le prolongement du métier actuel : spécialisation, supervision, formation, conseil.",
+          confirmation: "Confirmer la pertinence du métier actuel et identifier les axes d'optimisation/spécialisation.",
+          exploration: "Si objectif flou : ne pas forcer une direction, proposer une carte des possibles avec pondération."
+        },
+        ponderation_experience: {
+          principe: "Une recommandation métier doit tenir compte de l'expérience effective dans le métier d'origine, pas seulement de l'âge.",
+          regle_supervision: "Recommander la supervision clinique uniquement si experience_metier_actuel >= 8 ans dans une pratique d'accompagnement.",
+          regle_expertise: "Recommander un poste d'expertise/référent uniquement si l'expérience cumulée dans le domaine concerné est >= 7 ans.",
+          regle_formation: "Recommander un rôle de formateur dès 5 ans d'expérience pertinente.",
+          regle_creation_activite: "La création d'activité indépendante demande des bases (réseau, image, financement) — la mentionner réaliste à 1-3 ans après une décision claire."
+        }
       },
 
       career_reasoning_framework: {
         hard_constraints: [
-          "Le métier doit être accessible avec le niveau d'études indiqué OU via une formation réaliste",
-          "La durée de formation ne doit pas dépasser celle indiquée par la personne",
-          "Les contraintes santé doivent être respectées strictement",
-          "L'âge doit être pris en compte pour la faisabilité (pas de médecine à 55 ans)"
+          "Le métier doit être accessible avec le niveau d'études indiqué OU via une formation réaliste tenant compte de l'âge",
+          "La durée de formation ne doit pas dépasser celle indiquée par la personne (formation_duree_max_libelle)",
+          "Les contraintes de santé (contraintes_sante_libelles) doivent être respectées strictement",
+          "L'âge doit être pris en compte pour la faisabilité (pas de médecine à 55 ans, pas d'apprentissage long à 60 ans)",
+          "Aspects fuis : un métier qui aggrave un aspect_fui doit être exclu ou explicitement signalé"
         ],
         soft_constraints: [
-          "Intérêts déclarés (bonus, pas éliminatoire)",
-          "Secteur d'origine (passerelles possibles)",
-          "Financements disponibles"
+          "Aspects appréciés : bonus de compatibilité",
+          "Centres d'intérêt déclarés : bonus, pas éliminatoire",
+          "Secteur d'origine et secteurs du parcours : passerelles à identifier",
+          "Financements disponibles : à mentionner concrètement"
         ],
         personality_mapping: {
-          N: "Niveau de stress tolérable dans l'environnement de travail",
-          E: "Degré d'interaction sociale requis par le métier",
-          O: "Capacité et appétence pour l'apprentissage et l'innovation",
-          A: "Type de collaboration et rapport aux autres",
-          C: "Niveau d'organisation et d'autonomie structurelle requis"
+          N: "Niveau de stress tolérable dans l'environnement de travail (N bas = supporte la pression)",
+          E: "Degré d'interaction sociale requis par le métier (E haut = beaucoup de contacts ; E bas = travail plus solo)",
+          O: "Capacité et appétence pour l'apprentissage et l'innovation (O haut = appétence forte ; O bas = préférence pour la stabilité)",
+          A: "Type de collaboration et rapport aux autres (A haut = coopératif ; A bas = compétitif/indépendant)",
+          C: "Niveau d'organisation et d'autonomie structurelle requis (C haut = capable de structures exigeantes)"
         },
         output_per_metier: [
-          "Nom du métier",
-          "Score de compatibilité personnalité (%) avec justification",
-          "Pourquoi OUI (forces du profil pour ce métier)",
-          "Pourquoi NON ou RISQUES (faiblesses ou tensions pour ce métier)",
-          "Conditions de réussite",
-          "Formation requise (niveau, durée estimée)",
-          "Accessibilité depuis le profil actuel (immédiate / reconversion courte / reconversion longue)",
-          "Financements possibles",
-          "Fourchette salariale indicative"
+          "Nom du métier (précis, pas un grand domaine)",
+          "Score de compatibilité personnalité en % (calculé en croisant les 5 domaines avec les exigences typiques du métier)",
+          "Justification en 1-2 lignes du score",
+          "Pourquoi OUI (forces du profil pour ce métier, en s'appuyant sur facettes précises)",
+          "Pourquoi NON ou RISQUES (faiblesses ou tensions pour ce métier, honnêtes et précis)",
+          "Conditions de réussite (concrètes et actionnables)",
+          "Formation requise (niveau, durée estimée, plus précis que possible)",
+          "Accessibilité depuis le profil actuel (immédiate / reconversion courte 6-12 mois / reconversion moyenne 1-3 ans / reconversion longue 3-5 ans)",
+          "Financements possibles (CPF, FIF-PL, OPCO, Transition Pro, etc. — selon ce que la personne a déclaré)",
+          "Fourchette salariale indicative (avec source : INSEE, France Travail, conventions collectives)"
         ],
-        mix_requis: "Proposer 5 métiers accessibles rapidement (< 1 an), 10 à moyen terme (1-3 ans), 5 ambitieux mais atteignables"
+        mix_requis: "Proposer 5 métiers accessibles rapidement (< 1 an), 10 à moyen terme (1-3 ans), 5 ambitieux mais atteignables (2-5 ans). Total 20.",
+        principe_diversite: "Les 20 métiers doivent couvrir au moins 3 directions différentes. Éviter de proposer 18 métiers du même secteur."
       },
 
-      validation_questions: "Produire 5 à 8 questions que la personne devrait se poser ou qu'un consultant pourrait poser en entretien pour affiner l'orientation"
+      validation_questions_directive: "Produire 5 à 8 questions que la personne devrait se poser ou qu'un consultant pourrait poser en entretien pour affiner l'orientation. Les questions doivent porter sur des dimensions non encore explorées par le bilan : valeurs, contraintes financières, environnement familial, niveau d'incertitude tolérable, ressources de réseau."
     },
 
-    // ═══ COUCHE 4B: INSTRUCTIONS DE RENDU ═══
+    // ═══════════════════════════════════════════════════════════════
+    //  COUCHE 6 — INSTRUCTIONS DE RENDU PDF
+    // ═══════════════════════════════════════════════════════════════
     render_instructions: {
       brand: {
         positionnement: "Conception : C Concept&Dev © — Intelligence Psychométrique & Orientation",
         branding_rules: [
-          "Le branding C Concept&Dev apparaît en PETIT et EN BAS de chaque page, jamais en haut ni en gros",
-          "Ne JAMAIS afficher de statut juridique (pas de 'auto-entrepreneur')",
+          "Le branding C Concept&Dev apparaît en PETIT (taille 7-8 pt) et EN BAS de chaque page, jamais en haut ni en gros",
           "Format exact du pied de page : 'Conception : C Concept&Dev © — Intelligence Psychométrique & Orientation'",
-          "Ne JAMAIS écrire 'usage exclusivement professionnel'"
+          "Ne JAMAIS afficher de statut juridique (pas de 'auto-entrepreneur', pas de SIRET)",
+          "Ne JAMAIS écrire 'usage exclusivement professionnel'",
+          "Ne JAMAIS mentionner de nom personnel du psychologue référent"
         ],
-        couleurs: { mer: "#8FAFB1", vert_sauge: "#C8D0C3", beige_sable: "#D8CDBB", sable: "#E6D7C3", blanc: "#FFFFFF", noir: "#000000" },
-        police: "Montserrat"
+        couleurs_charte: {
+          mer: "#8FAFB1",
+          mer_dark: "#6A9496",
+          vert_sauge: "#C8D0C3",
+          beige_sable: "#D8CDBB",
+          sable: "#E6D7C3",
+          gris_bg: "#F5F2ED",
+          blanc: "#FFFFFF",
+          noir: "#000000",
+          gris: "#333333",
+          gris_light: "#666666",
+          accent_n: "#C1666B",
+          accent_e: "#D4A574",
+          accent_o: "#7BA38C",
+          accent_a: "#6B9DAD",
+          accent_c: "#9B8EC4"
+        },
+        usage_couleurs: {
+          titres_principaux: "noir sur blanc, ou blanc sur mer",
+          encadres_forces: "fond vert_sauge clair (avec opacité), bordure mer",
+          encadres_vigilances: "fond sable, bordure beige_sable",
+          encadres_neutres: "fond gris_bg, bordure légère",
+          radar_5_domaines: "utiliser les 5 accents (accent_n, accent_e, accent_o, accent_a, accent_c)",
+          barres_de_score: "dégradé du sable (bas) au mer (haut)",
+          fond_general: "blanc — éviter les fonds colorés massifs",
+          principe_a4: "Lisibilité prioritaire en impression A4. Contrastes suffisants. Couleurs pastel mais texte en noir/gris foncé."
+        },
+        typographie: {
+          police_titres: "Lora, Georgia, serif (élégant, lecture aérée)",
+          police_corps: "Glacial Indifference, Jost, Segoe UI, sans-serif (en l'absence dispo : Helvetica, Arial)",
+          taille_titre_h1: "18-22 pt",
+          taille_titre_h2: "13-15 pt",
+          taille_corps: "10-11 pt",
+          taille_pied_page: "7-8 pt",
+          interligne: "1,4 à 1,5 pour le corps de texte",
+          principe_lisibilite_a4: "Marges minimum 2 cm. Pas de bloc de texte plein sans aération. Encadrés et tableaux pour casser la monotonie."
+        }
       },
       professionnel_referent: {
         titre: "Psychologue et Psychologue du travail",
         numero_adeli_rpps: "10009953539",
         mention_obligatoire: "Rapport établi sous la responsabilité d'un Psychologue et Psychologue du travail — N° ADELI/RPPS : 10009953539"
       },
-      format: "PDF professionnel de 15 à 20 pages",
-      style: {
-        ton: "Professionnel, accessible, bienveillant, constructif",
+      format_general: {
+        format_pdf: "A4 portrait",
+        nb_pages_cible: "20 à 30 pages selon richesse du contenu",
+        regle_longueur: "Adapter la longueur à la richesse du dossier. Un profil simple = 20 pages ; un profil multi-métiers complexe = 30 pages. Ne jamais étirer artificiellement.",
+        accents: "IMPÉRATIF : tous les accents français doivent être présents (é, è, ê, à, ù, ç, î, ô, etc.). Vérifier systématiquement.",
         vouvoiement: true,
-        graphiques: "Barres de couleur et radar pour les scores quand possible",
-        accents: "IMPÉRATIF : tous les accents français doivent être présents (é, è, ê, à, ù, ç, î, ô, etc.). Vérifier systématiquement. Aucun mot français ne doit manquer d'accent.",
-        page_de_garde: "Fond BLANC, police NOIRE, encadrés dans les couleurs charte (mer #8FAFB1, beige sable #D8CDBB). PAS de fond coloré. Éléments centrés. Branding C Concept&Dev en petit en bas."
+        page_de_garde_specs: "Fond BLANC, police NOIRE, encadrés dans les couleurs charte (mer, beige_sable). Éléments centrés. Branding C Concept&Dev en petit en bas. PAS de fond coloré."
       },
       structure_pdf: [
-        { section: "1. Page de garde", detail: "Fond BLANC, texte NOIR, éléments CENTRÉS. Titre 'Bilan de Personnalité NEO PI-R', sous-titre 'Rapport d'analyse approfondie', nom du bénéficiaire, date, informations clés (âge, formation, profession, situation). Encadrés dans les couleurs charte. Mention : 'Rapport établi sous la responsabilité d'un Psychologue et Psychologue du travail — N° ADELI/RPPS : 10009953539'. En bas en petit : 'Conception : C Concept&Dev © — Intelligence Psychométrique & Orientation'. PAS de fond coloré, PAS de nom personnel du psychologue." },
-        { section: "2. Synthèse narrative globale (2-3 pages)", detail: "Portrait psychologique exhaustif et NARRATIF (pas de liste à puces). Inclure : vue d'ensemble des 5 domaines en interaction, portrait fonctionnel (style de traitement de l'information, style décisionnel, style relationnel, style d'engagement dans l'action, style d'exploration vs stabilité), 10-12 caractéristiques dominantes, style de leadership, environnement de travail préféré, mode de résolution de problèmes, difficultés potentielles, suggestions de développement." },
-        { section: "3. Analyse des 5 domaines et 30 facettes (5 pages)", detail: "Pour chaque domaine : score, niveau, interprétation clinique détaillée, les 6 facettes avec score et interprétation individuelle, interactions et contradictions notables entre facettes." },
-        { section: "4. Forces et zones de vigilance (1 page)", detail: "5 à 8 forces majeures. 3 à 5 zones de vigilance avec recommandations concrètes." },
-        { section: "5. Contradictions et tensions internes (1 page)", detail: "Analyser les contradictions détectées dans derived_data.contradiction_analysis. Proposer des hypothèses explicatives et des implications pratiques." },
-        { section: "6. Compatibilité professionnelle (3-4 pages)", detail: "Tableau de 20 professions avec les champs définis dans career_reasoning_framework.output_per_metier. Respecter le mix_requis." },
-        { section: "7. Pistes prioritaires développées (2 pages)", detail: "Développer les 3-5 métiers les plus compatibles : justification profil, parcours concret, financement, perspectives, journée type." },
-        { section: "8. Questions de validation (1 page)", detail: "5-8 questions pour affiner l'orientation en entretien ou en auto-réflexion." },
-        { section: "9. Annexe : tableau complet des scores", detail: "Scores bruts et pourcentages, domaines et 30 facettes, indicateurs de qualité de passation." },
-        { section: "10. Mentions légales", detail: "NEO PI-R Costa & McCrae (1992). Traduction française Rolland & Petot. Rapport établi sous la responsabilité d'un Psychologue et Psychologue du travail — N° ADELI/RPPS : 10009953539. Ne remplace pas un suivi psychologique individuel. En bas : 'Conception : C Concept&Dev © — Intelligence Psychométrique & Orientation'. NE PAS mentionner de nom personnel du psychologue, NE PAS écrire 'auto-entrepreneur', NE PAS écrire 'usage exclusivement professionnel'." }
+        {
+          section: "1. Page de garde",
+          longueur: "1 page",
+          detail: "Fond BLANC, texte NOIR, éléments CENTRÉS. Titre 'Bilan de Personnalité NEO PI-R', sous-titre 'Rapport d'analyse approfondie', nom du bénéficiaire, date, informations clés (âge, formation, profession actuelle, situation, type de profil de carrière, années d'expérience totale). Encadrés dans les couleurs charte. Mention obligatoire du psychologue référent. Pied de page branding."
+        },
+        {
+          section: "2. Synthèse narrative globale",
+          longueur: "2 à 3 pages",
+          detail: "Portrait psychologique exhaustif et NARRATIF (paragraphes de prose, pas listes à puces). Sous-sections obligatoires : (a) vue d'ensemble des 5 domaines en interaction ; (b) portrait fonctionnel en 5 styles : traitement de l'information / décisionnel / relationnel / engagement dans l'action / exploration vs stabilité ; (c) 10 à 12 caractéristiques dominantes ; (d) style de leadership ; (e) environnement de travail préféré ; (f) mode de résolution de problèmes ; (g) difficultés potentielles ; (h) suggestions de développement. **Adapter le ton selon tranche d'âge et type de profil de carrière.**"
+        },
+        {
+          section: "3. Analyse des 5 domaines et 30 facettes",
+          longueur: "5 à 6 pages",
+          detail: "Pour chaque domaine : score, niveau, interprétation clinique détaillée, les 6 facettes avec score et interprétation individuelle, interactions notables entre facettes (en s'appuyant sur interpretation_reference.interaction_patterns). Inclure un radar des 5 domaines en début de section."
+        },
+        {
+          section: "4. Forces et zones de vigilance",
+          longueur: "1 à 2 pages",
+          detail: "5 à 8 forces majeures (encadrés vert_sauge). 3 à 5 zones de vigilance (encadrés sable) avec recommandations concrètes pour chacune."
+        },
+        {
+          section: "5. Contradictions et tensions internes",
+          longueur: "1 page",
+          detail: "Analyser les contradictions détectées dans derived_data.contradiction_analysis ET les tensions issues des interaction_patterns. Hypothèses explicatives, implications pratiques. Si aucune contradiction majeure : signaler la cohérence interne."
+        },
+        {
+          section: "6. Compatibilité professionnelle — 20 pistes",
+          longueur: "4 à 6 pages",
+          detail: "Tableau des 20 professions selon career_reasoning_framework. Respecter le mix_requis (5 court + 10 moyen + 5 ambitieux). Chaque métier doit avoir TOUS les champs définis dans output_per_metier. Tenir compte du parcours_passe pour identifier les passerelles. Tenir compte des aspects_fuis pour exclure les métiers inadaptés."
+        },
+        {
+          section: "7. Pistes prioritaires développées",
+          longueur: "2 à 3 pages",
+          detail: "Développer les 3 métiers les plus compatibles : justification profil, parcours concret par étapes, financements précis (selon financements_envisages déclarés), perspectives à 1/3/5 ans, journée type."
+        },
+        {
+          section: "8. Questions de validation",
+          longueur: "1 page",
+          detail: "5 à 8 questions selon validation_questions_directive. Chaque question accompagnée d'un court paragraphe explicatif sur ce que la réponse permettra de clarifier."
+        },
+        {
+          section: "9. Annexe — Tableau complet des scores",
+          longueur: "1 à 2 pages",
+          detail: "Scores bruts et T-scores des 5 domaines et 30 facettes, avec barres visuelles. Indicateurs de qualité de passation (response_quality)."
+        },
+        {
+          section: "10. Mentions légales",
+          longueur: "0,5 à 1 page",
+          detail: "NEO PI-R Costa & McCrae (1992). Traduction française Rolland & Petot. Mention obligatoire du psychologue référent. Confidentialité, limites de l'analyse, recommandation de croisement avec un consultant. Pied de page branding standard."
+        }
+      ]
+    },
+
+    // ═══════════════════════════════════════════════════════════════
+    //  COUCHE 7 — ROBUSTESSE (gestion des cas limites)
+    // ═══════════════════════════════════════════════════════════════
+    robustness: {
+      missing_data_policy: {
+        principe: "Si un champ est manquant ou null, ne pas inventer. Soit signaler explicitement 'information non renseignée', soit poser une hypothèse marquée comme telle ('on peut supposer que...').",
+        champs_critiques_si_manquants: ["age", "niveau_etudes", "metier_actuel", "objectif_bilan"],
+        si_objectif_manquant: "Adopter une posture exploratoire : présenter une carte des possibles plutôt qu'une orientation directive.",
+        si_parcours_passe_vide: "Ne pas inventer d'expériences. Travailler à partir du seul métier actuel et préciser que le bilan est mono-métier."
+      },
+      reliability_thresholds: {
+        elevee: "interpretation_reliability == 'élevée' OU completion_rate >= 0.95 ET reverse_item_consistency >= 0.80",
+        moderee: "completion_rate >= 0.80 ET (straightlining_index < 0.30 OU reverse_item_consistency >= 0.60)",
+        faible: "completion_rate < 0.80 OU straightlining_index >= 0.30 OU reverse_item_consistency < 0.60"
+      },
+      coherence_checks_avant_pdf: [
+        "Les contraintes santé sont-elles bien respectées dans les 20 métiers proposés ?",
+        "L'expérience effective est-elle prise en compte (pas de supervision recommandée à 5 ans de pratique) ?",
+        "Les aspects fuis ont-ils été exclus des recommandations ?",
+        "La fiabilité de passation est-elle reflétée dans le ton ?",
+        "Y a-t-il une diversité dans les 20 métiers (pas tous du même secteur) ?",
+        "Les phrases interdites sont-elles absentes ?"
       ]
     }
   };
@@ -1773,7 +2319,7 @@ function downloadAnalysisFile() {
   var info = document.getElementById('downloadInfo');
   var size = (json.length / 1024).toFixed(1);
   var tokens = Math.round(json.length / 4);
-  info.innerHTML = '✓ <strong>' + a.download + '</strong> · ' + size + ' Ko · ~' + tokens + ' tokens — Glissez dans Claude ou ChatGPT, tapez « Analyse ce fichier et génère le PDF »';
+  info.innerHTML = '✓ <strong>' + a.download + '</strong> · ' + size + ' Ko · ~' + tokens + ' tokens — Glissez dans Claude Opus, tapez « Analyse ce fichier et génère le PDF »';
 }
 
 function restart() {
