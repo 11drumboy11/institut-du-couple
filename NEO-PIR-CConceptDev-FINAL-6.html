@@ -35,11 +35,24 @@
 html { scroll-behavior:smooth; }
 
 body {
-  font-family: 'Glacial Indifference', 'Jost', 'Segoe UI', sans-serif;
+  font-family: 'Glacial Indifference', 'Jost', 'Segoe UI', Tahoma, Verdana, Arial, sans-serif;
   background: #F2F2F2;
   color: var(--gris);
   line-height: 1.7;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ═══ FIX WINDOWS : Glacial Indifference n'a pas tous les glyphes accentués.
+       On force une police Windows-native sur les éléments de formulaire
+       pour que les é, è, à, ô... s'affichent dans la bonne couleur. ═══ */
+label, input, select, textarea, button, option,
+.checkbox-pill, .field-group, .field-group small,
+.parcours-line {
+  color: var(--gris);
+  font-family: 'Segoe UI', Tahoma, 'Glacial Indifference', 'Jost', Verdana, Arial, sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6,
@@ -206,6 +219,8 @@ h1, h2, h3, h4, h5, h6,
   font-size: 0.82rem;
   transition: all 0.2s;
   user-select: none;
+  color: var(--gris);
+  font-family: 'Segoe UI', Tahoma, 'Glacial Indifference', 'Jost', Verdana, Arial, sans-serif;
 }
 
 .checkbox-pill:hover { border-color: var(--mer); }
@@ -793,6 +808,21 @@ h1, h2, h3, h4, h5, h6,
         </div>
         <div class="checkbox-pill" onclick="togglePill(this)">
           <input type="checkbox" value="stress"> Environnement à faible stress requis
+        </div>
+        <div class="checkbox-pill" onclick="togglePill(this)">
+          <input type="checkbox" value="hauteur"> Travail en hauteur impossible (vertige)
+        </div>
+        <div class="checkbox-pill" onclick="togglePill(this)">
+          <input type="checkbox" value="horaires_fixes"> Horaires fixes nécessaires (familial, médical)
+        </div>
+        <div class="checkbox-pill" onclick="togglePill(this)">
+          <input type="checkbox" value="deplacements"> Déplacements professionnels limités
+        </div>
+        <div class="checkbox-pill" onclick="togglePill(this)">
+          <input type="checkbox" value="visuel"> Déficience visuelle
+        </div>
+        <div class="checkbox-pill" onclick="togglePill(this)">
+          <input type="checkbox" value="auditif"> Déficience auditive
         </div>
         <div class="checkbox-pill" onclick="togglePill(this)">
           <input type="checkbox" value="aucune"> Aucune contrainte
@@ -1837,7 +1867,13 @@ function downloadAnalysisFile() {
   var CONTRAINTES_LABEL = {
     "debout":"Station debout prolongée impossible","charges":"Port de charges limité",
     "nuit":"Travail de nuit impossible","mobilite":"Mobilité réduite",
-    "ecran":"Temps d'écran limité","stress":"Environnement à faible stress requis","aucune":"Aucune"
+    "ecran":"Temps d'écran limité","stress":"Environnement à faible stress requis",
+    "hauteur":"Travail en hauteur impossible (vertige)",
+    "horaires_fixes":"Horaires fixes nécessaires (contraintes familiales ou traitements médicaux)",
+    "deplacements":"Déplacements professionnels limités",
+    "visuel":"Déficience visuelle",
+    "auditif":"Déficience auditive",
+    "aucune":"Aucune"
   };
   var FORMATION_LABEL = {
     "court":"Courte (< 6 mois)","moyen":"Moyenne (6 à 12 mois)","long1":"Longue (1 à 2 ans)",
