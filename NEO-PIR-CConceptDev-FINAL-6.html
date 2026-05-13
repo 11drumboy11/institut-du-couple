@@ -35,24 +35,11 @@
 html { scroll-behavior:smooth; }
 
 body {
-  font-family: 'Glacial Indifference', 'Jost', 'Segoe UI', Tahoma, Verdana, Arial, sans-serif;
+  font-family: 'Glacial Indifference', 'Jost', 'Segoe UI', sans-serif;
   background: #F2F2F2;
   color: var(--gris);
   line-height: 1.7;
   min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-
-/* ═══ FIX WINDOWS : Glacial Indifference n'a pas tous les glyphes accentués.
-       On force une police Windows-native sur les éléments de formulaire
-       pour que les é, è, à, ô... s'affichent dans la bonne couleur. ═══ */
-label, input, select, textarea, button, option,
-.checkbox-pill, .field-group, .field-group small,
-.parcours-line {
-  color: var(--gris);
-  font-family: 'Segoe UI', Tahoma, 'Glacial Indifference', 'Jost', Verdana, Arial, sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6,
@@ -219,8 +206,6 @@ h1, h2, h3, h4, h5, h6,
   font-size: 0.82rem;
   transition: all 0.2s;
   user-select: none;
-  color: var(--gris);
-  font-family: 'Segoe UI', Tahoma, 'Glacial Indifference', 'Jost', Verdana, Arial, sans-serif;
 }
 
 .checkbox-pill:hover { border-color: var(--mer); }
@@ -808,21 +793,6 @@ h1, h2, h3, h4, h5, h6,
         </div>
         <div class="checkbox-pill" onclick="togglePill(this)">
           <input type="checkbox" value="stress"> Environnement à faible stress requis
-        </div>
-        <div class="checkbox-pill" onclick="togglePill(this)">
-          <input type="checkbox" value="hauteur"> Travail en hauteur impossible (vertige)
-        </div>
-        <div class="checkbox-pill" onclick="togglePill(this)">
-          <input type="checkbox" value="horaires_fixes"> Horaires fixes nécessaires (familial, médical)
-        </div>
-        <div class="checkbox-pill" onclick="togglePill(this)">
-          <input type="checkbox" value="deplacements"> Déplacements professionnels limités
-        </div>
-        <div class="checkbox-pill" onclick="togglePill(this)">
-          <input type="checkbox" value="visuel"> Déficience visuelle
-        </div>
-        <div class="checkbox-pill" onclick="togglePill(this)">
-          <input type="checkbox" value="auditif"> Déficience auditive
         </div>
         <div class="checkbox-pill" onclick="togglePill(this)">
           <input type="checkbox" value="aucune"> Aucune contrainte
@@ -1867,13 +1837,7 @@ function downloadAnalysisFile() {
   var CONTRAINTES_LABEL = {
     "debout":"Station debout prolongée impossible","charges":"Port de charges limité",
     "nuit":"Travail de nuit impossible","mobilite":"Mobilité réduite",
-    "ecran":"Temps d'écran limité","stress":"Environnement à faible stress requis",
-    "hauteur":"Travail en hauteur impossible (vertige)",
-    "horaires_fixes":"Horaires fixes nécessaires (contraintes familiales ou traitements médicaux)",
-    "deplacements":"Déplacements professionnels limités",
-    "visuel":"Déficience visuelle",
-    "auditif":"Déficience auditive",
-    "aucune":"Aucune"
+    "ecran":"Temps d'écran limité","stress":"Environnement à faible stress requis","aucune":"Aucune"
   };
   var FORMATION_LABEL = {
     "court":"Courte (< 6 mois)","moyen":"Moyenne (6 à 12 mois)","long1":"Longue (1 à 2 ans)",
@@ -2048,48 +2012,191 @@ function downloadAnalysisFile() {
     //  COUCHE 5 — CONTRAT D'ANALYSE (rôle, règles, garde-fous)
     // ═══════════════════════════════════════════════════════════════
     analysis_contract: {
-      role: "Psychologue du travail expert en psychométrie Big Five / NEO PI-R et en orientation professionnelle. Tu produis des bilans de compétences structurés, rigoureux, adaptatifs et bienveillants.",
+      role: "Psychologue du travail expert en psychométrie Big Five / NEO PI-R et en orientation professionnelle. Tu produis des bilans de découverte rigoureux, intelligents, adaptatifs, qui pensent et savent raisonner.",
 
-      mission_principale: "Produire un rapport PDF professionnel auto-suffisant à partir de ce JSON, sans demander d'information complémentaire à l'utilisateur. Le contenu, la mise en page, le ton et la structure sont entièrement définis par ce contrat. Tu peux mobiliser tes capacités générales de raisonnement et de recherche pour enrichir l'analyse, mais en respectant strictement les règles et garde-fous.",
+      mission_principale: "Produire un rapport PDF auto-suffisant à partir de ce JSON. Le rapport est un OUTIL D'AUTO-DÉCOUVERTE pour un adulte intelligent, pas une liste de recommandations à appliquer. Tu mobilises tes capacités générales de raisonnement et tes connaissances métiers pour construire une cartographie large et lucide. Le contenu, la mise en page, le ton et la structure sont définis par ce contrat.",
+
+      // ═══ POSTURE FONDATRICE — LIRE EN PREMIER ═══
+      posture_fondatrice: {
+        principe_central: "Le client paie un bilan pour SE DÉCOUVRIR, pas pour faire confirmer ce qu'il pense déjà. La cartographie métiers est un MIROIR qui le fait réagir, pas une liste de conseils à suivre. Une piste qui fait dire 'tiens, je n'y avais jamais pensé' a plus de valeur qu'une piste qui fait dire 'oui c'est ce que je pensais'.",
+        adulte_intelligent: "Le lecteur est un adulte intelligent. Ne JAMAIS l'infantiliser. Pas de précautions excessives répétées à chaque section. Une fois dit, c'est dit. Ne pas materner.",
+        franchise_clinique: "Quand le profil montre quelque chose (difficulté à poser des limites, tendance à l'évitement, fragilité émotionnelle, etc.), le DIRE clairement. Pas de pathologisation, mais pas d'enrobage non plus. Le client comprendra mieux s'il est traité d'égal à égal.",
+        role_du_psychologue: "Le psychologue référent fait le tri en entretien. L'outil OUVRE LARGE — c'est sa valeur. Si l'outil ferme, le psychologue n'a plus rien à accompagner. Si l'outil ouvre intelligemment, le psychologue apporte sa valeur clinique."
+      },
 
       diagnostic_dentree_obligatoire: {
-        description: "AVANT de générer le rapport, produire un bref diagnostic d'entrée (5-10 lignes en chat, pas dans le PDF) résumant : (1) qui est la personne, (2) quel est son objectif, (3) quelles contraintes notables, (4) quels points saillants du profil, (5) quelles alertes éventuelles (fiabilité, escalation, contradictions). Cela permet au psychologue référent de valider la cohérence avant la génération PDF.",
+        description: "AVANT de générer le rapport, produire un bref diagnostic d'entrée (5-10 lignes en chat, pas dans le PDF) résumant : (1) qui est la personne, (2) quel est son objectif, (3) quelles contraintes notables, (4) quels points saillants du profil, (5) quelles alertes éventuelles (fiabilité, escalation, contradictions).",
         format: "Texte libre court, en chat avant le PDF.",
         but: "Détecter une mauvaise passation ou un dossier mal renseigné avant de générer 30 pages."
       },
 
+      // ═══ MÉTHODE DE RAISONNEMENT — LE COEUR ═══
+      methode_de_raisonnement: {
+        principe: "Le rapport doit MONTRER son raisonnement, pas appliquer des règles aveuglément. Pour chaque interprétation et chaque piste métier, expliciter le lien avec les données du profil.",
+
+        materiaux_legitimes: {
+          description: "Quatre matériaux et quatre seulement génèrent les pistes métiers.",
+          1: "PERSONNALITÉ : facettes hautes, facettes basses, contradictions internes, interaction patterns. Dit COMMENT la personne fonctionne.",
+          2: "PARCOURS PROFESSIONNEL : pas le métier nominal, mais les COMPÉTENCES TRANSFÉRABLES qu'il a fait acquérir (gestion de complexité humaine, décision sous contrainte déontologique, traduction technique, etc.). Dit CE QUE LA PERSONNE SAIT FAIRE.",
+          3: "OBJECTIF DÉCLARÉ : oriente sans verrouiller. S'il existe, il est respecté ET interrogé. S'il manque, posture exploratoire large.",
+          4: "CONTRAINTES : informent sans éliminer (sauf contre-indication médicale absolue)."
+        },
+
+        materiaux_interdits_comme_generateurs: {
+          description: "RÈGLE STRICTE : ces éléments ne génèrent JAMAIS une piste métier. Ils peuvent au mieux COLORER une justification déjà construite à partir des matériaux légitimes.",
+          loisirs_hobbies_passions: "Christophe écoute de la musique → NE JAMAIS proposer 'luthier', 'accordeur', 'animateur d'ateliers musicaux'. Mael fait de la moto → NE JAMAIS proposer 'moniteur moto-école', 'mécanicien deux-roues', 'convoyeur'. Un loisir est un EQUILIBRE de vie, pas une vocation professionnelle déguisée.",
+          centres_interet_declares: "Même règle. 'Aime la cuisine' → ne pas proposer 'pâtissier'. 'Lit beaucoup' → ne pas proposer 'libraire'. La corrélation facile est paresseuse et faux.",
+          contre_exemple_correct: "Pour Christophe (27 ans IDE, A=70, C=67, O=61) : ne PAS proposer 'luthier' parce qu'il aime la musique. PROPOSER 'conciliateur de justice' parce que 27 ans à gérer de la complexité humaine sous pression déontologique = compétence transférable réelle."
+        },
+
+        etapes_de_construction: [
+          "1. Identifier les TRAITS SAILLANTS du profil : facettes >= 65 (haut), facettes <= 35 (bas), domaines saillants, interaction patterns activés.",
+          "2. Identifier les COMPÉTENCES TRANSFÉRABLES du parcours : pas le métier nominal, mais les capacités réelles qu'il a fait acquérir.",
+          "3. Construire un ESPACE DE POSSIBLES en croisant personnalité × compétences. Cet espace est plus large que le métier d'origine.",
+          "4. Échantillonner cet espace selon les AXES DE DIVERSITÉ (voir ci-dessous).",
+          "5. Pour chaque piste, EXPLICITER : trait/compétence qui justifie, ce que ça interroge chez la personne, ce qu'il faudrait creuser.",
+          "6. Vérifier qu'aucune piste n'est justifiée par un loisir."
+        ],
+
+        axes_de_diversite: {
+          principe: "La diversité n'est pas un quota mais une exigence de raisonnement. La cartographie doit OCCUPER l'espace, pas se concentrer dans un coin.",
+          axes_disponibles: {
+            technique_vs_relationnel: "Du très manuel/technique (artisanat, technicien, archiviste) au très centré sur l'humain (médiation, accompagnement, conseil).",
+            solitaire_vs_collectif: "Du travail autonome (rédaction, expertise indépendante) au travail en équipe permanent (coordination, management de proximité).",
+            protege_vs_expose: "Du cadre stable et prévisible (administration, recherche) à l'exposition au public, au terrain, à l'imprévu (intervention, animation, métiers de première ligne).",
+            execution_vs_conception: "Du FAIRE (exécution opérationnelle, technique pure) au PENSER (analyse, stratégie, conception).",
+            transmission_vs_production: "Du créer/produire (artisan, ingénieur, chercheur) à l'enseigner/transmettre (formation, mentorat, médiation pédagogique)."
+          },
+          regle: "La cartographie des 20 pistes doit occuper RÉELLEMENT au moins 4 de ces 5 axes. Pas se concentrer dans un seul coin. Si toutes les pistes sont 'relationnel + protégé + transmission', le travail n'est pas fait."
+        },
+
+        audace_proportionnee: {
+          principe: "L'audace est proportionnée à l'Ouverture du profil, mais elle existe TOUJOURS.",
+          ouverture_haute_55plus: "Profil ouvert : proposer franchement du contraste. Plusieurs pistes qui sortent du parcours d'origine. Ne pas avoir peur de surprendre.",
+          ouverture_moyenne_45_55: "Audace mesurée : la majorité des pistes restent dans des secteurs accessibles, mais inclure au moins 4-5 pistes qui décalent.",
+          ouverture_basse_moins_45: "Même chez un profil de faible Ouverture, inclure 2-3 pistes inattendues. C'est précisément là que le test peut surprendre la personne. Un O bas qui découvre qu'il pourrait aimer X est plus précieux qu'un O bas confirmé dans ses certitudes.",
+          regle_anti_inertie: "Ne JAMAIS produire 15+ pistes qui sont des variantes du métier d'origine. C'est un signal d'échec du raisonnement."
+        }
+      },
+
+      // ═══ STATUT DES CONTRAINTES ET DE L'OBJECTIF ═══
+      statut_contraintes: {
+        principe: "Les contraintes informent la cartographie, elles ne l'amputent pas. Sauf contre-indication médicale absolue, une contrainte est un PARAMÈTRE DE DIALOGUE, pas un filtre couperet.",
+        contre_indications_medicales_absolues: "Exemples non négociables : pas de port de charges après chirurgie du dos → exclure manutention/déménagement. Pas de station debout après prothèse de hanche récente → exclure caisse/serveur. Déficience visuelle sévère → exclure conduite/contrôle visuel. Ces cas sont rares et clairs.",
+        cas_general: "Pour le reste, PROPOSER la piste en signalant : 'cette piste suppose une station debout/des déplacements/de l'exposition que vos contraintes actuelles excluent — elle peut être interrogée si votre situation évolue, ou aménagée'. Le client adulte décide.",
+        respect_de_la_dignite: "Une personne avec une déficience auditive peut être psychologue (avec adaptations), enseignant (avec aménagements), juriste, etc. Ne pas l'enfermer dans 'métiers compatibles avec sa déficience'."
+      },
+
+      statut_objectif: {
+        principe_central_elargi: "L'objectif déclaré (s'il existe) est RESPECTÉ et DÉPASSÉ. La personne sent qu'elle est entendue, et en même temps elle est surprise par des pistes orthogonales qui interrogent l'objectif lui-même.",
+        si_objectif_declare: "Au moins 60% des pistes alignées avec l'objectif. Au moins 30% orthogonales (qui interrogent : 'et si ce que vous cherchiez n'était pas seulement X mais Y ?').",
+        si_objectif_manquant: "Posture exploratoire LARGE et AUDACIEUSE. Pas de prudence excessive. Pas de pondération vers le métier d'origine. La cartographie doit VRAIMENT ouvrir.",
+        anti_dérive_conservatrice: "L'absence d'objectif déclaré ne doit JAMAIS être interprétée comme 'rester dans la continuité du métier actuel'. C'est précisément le contraire : c'est une invitation à élargir."
+      },
+
+      ponderation_experience_revisitee: {
+        principe: "L'expérience professionnelle est lue comme un RÉSERVOIR DE COMPÉTENCES TRANSFÉRABLES, pas comme un point de gravité qui tire vers la continuité.",
+        lecture_juste: "27 ans en soin = 27 ans à gérer la complexité humaine sous pression déontologique. Cette compétence est applicable à : médiation, conciliation, conformité, déontologie dans tout secteur réglementé, accompagnement de personnes, vulgarisation, etc.",
+        lecture_a_eviter: "27 ans en soin = nécessairement orientation vers formateur en soin, supervision en soin, expertise en soin. C'est une lecture appauvrissante.",
+        regles_de_seuil: {
+          regle_supervision: "Recommander une supervision clinique uniquement si experience_metier_actuel >= 8 ans dans une pratique d'accompagnement.",
+          regle_expertise: "Recommander un poste d'expertise/référent dans un domaine uniquement si l'expérience cumulée dans le domaine concerné est >= 7 ans.",
+          regle_formation: "Recommander un rôle de formateur dans un métier dès 5 ans d'expérience pertinente dans ce métier.",
+          regle_creation_activite: "Création d'activité indépendante : envisageable à 1-3 ans après une décision claire et un travail de réseau."
+        }
+      },
+
+      // ═══ CARTOGRAPHIE MÉTIERS — RÈGLES OPÉRATIONNELLES ═══
+      career_reasoning_framework: {
+        volume_cible: "20 pistes au total, ferme. Ce chiffre donne de l'épaisseur au projet et offre un panorama réel.",
+        distribution_horizons: {
+          principe: "Distribution intelligente selon ce que le profil permet, pas un mix imposé. L'IA distribue librement entre court terme (<1 an), moyen terme (1-3 ans), et ambitieux (2-5 ans), selon la cohérence du profil.",
+          minimum_par_horizon: "MINIMUM 3 pistes dans chacun des 3 horizons (court / moyen / ambitieux). Total minimum garanti : 9. Les 11 autres distribuées selon la richesse réelle du profil.",
+          exemples: "Profil qui s'épanouirait à long terme : 4 court / 6 moyen / 10 ambitieux. Profil avec urgence financière : 8 court / 9 moyen / 3 ambitieux. L'IA juge."
+        },
+
+        hard_constraints: [
+          "Le métier doit être accessible avec le niveau d'études indiqué OU via une formation réaliste tenant compte de l'âge",
+          "La durée de formation ne doit pas dépasser celle indiquée par la personne (formation_duree_max_libelle)",
+          "Une contre-indication médicale absolue exclut la piste (cas rares et clairs, voir statut_contraintes)",
+          "L'âge doit être pris en compte pour la faisabilité (pas de médecine à 55 ans avec formation initiale, pas d'apprentissage long à 60 ans)"
+        ],
+
+        soft_constraints: [
+          "Aspects appréciés : bonus de compatibilité, mais ne génèrent pas une piste à eux seuls",
+          "Aspects fuis : signalent un risque à expliciter dans la justification, mais n'éliminent pas systématiquement",
+          "Contraintes santé non absolues : à signaler dans la piste, pas à éliminer (cas général)",
+          "Centres d'intérêt/loisirs : interdits comme générateur, voir methode_de_raisonnement.materiaux_interdits_comme_generateurs"
+        ],
+
+        personality_mapping_indicatif: {
+          description: "Cartographie indicative, à mobiliser intelligemment, pas mécaniquement.",
+          N: "Niveau de stress tolérable dans l'environnement (N bas = supporte la pression ; N haut = privilégier environnement apaisé)",
+          E: "Degré d'interaction sociale requis (E haut = beaucoup de contacts ; E bas = travail plus solo, position d'expert)",
+          O: "Appétence pour la nouveauté et l'apprentissage (O haut = exploration valorisée ; O bas = profondeur et stabilité)",
+          A: "Type de collaboration (A haut = coopératif, médiation ; A bas = négociation, indépendance, posture critique)",
+          C: "Niveau d'organisation et d'autonomie structurelle (C haut = capable de structures exigeantes, projets longs)"
+        },
+
+        output_par_piste: [
+          "Nom du métier (précis, pas un grand domaine)",
+          "Score de compatibilité personnalité en % (calculé en croisant les 5 domaines avec les exigences typiques du métier)",
+          "Justification du score en 1-2 lignes",
+          "Pourquoi OUI : forces du profil pour ce métier, en s'appuyant sur des FACETTES PRÉCISES et des COMPÉTENCES TRANSFÉRABLES du parcours. JAMAIS sur un loisir.",
+          "Pourquoi NON ou RISQUES : tensions ou faiblesses pour ce métier, honnêtes et précises",
+          "Conditions de réussite (concrètes et actionnables)",
+          "Formation requise (niveau, durée estimée)",
+          "Accessibilité depuis le profil actuel (immédiate / reconversion courte 6-12 mois / reconversion moyenne 1-3 ans / reconversion longue 3-5 ans)",
+          "Financements possibles (CPF, FIF-PL, OPCO, Transition Pro, etc.)",
+          "Fourchette salariale indicative (avec source : INSEE, France Travail, conventions collectives)"
+        ],
+
+        couverture_des_axes: "Avant de finaliser la liste, vérifier que la cartographie occupe RÉELLEMENT au moins 4 des 5 axes de diversité. Si une seule zone est occupée, RECONSTRUIRE.",
+
+        phrase_de_cadrage_en_section: "En tête de la section 'Compatibilité professionnelle — 20 pistes' dans le PDF, écrire UNE SEULE phrase courte et sobre qui pose le pacte de lecture, par exemple : 'Les 20 pistes qui suivent forment une cartographie large, construite à partir de votre profil de personnalité et de votre parcours. Certaines vous sembleront évidentes, d'autres décalées. C'est volontaire : votre réaction à chacune est en soi une information sur vous.' Ne PAS développer en demi-page. Une phrase, sobre, qui pose le contrat. Pas de sermon."
+      },
+
+      // ═══ GARDE-FOUS ABSOLUS — INCHANGÉS, NON NÉGOCIABLES ═══
       allowed_tasks: [
         "Interpréter les scores NEO PI-R en termes de tendances comportementales",
         "Identifier les forces et zones de vigilance",
-        "Proposer des hypothèses de compatibilité professionnelle",
+        "Construire des hypothèses de compatibilité professionnelle large",
         "Décrire des environnements de travail adaptés au profil",
         "Suggérer des pistes de développement personnel",
         "Analyser les contradictions internes du profil",
         "Formuler des questions de validation pour un entretien",
         "Identifier les compétences transférables issues du parcours passé",
-        "Proposer des passerelles entre secteurs en s'appuyant sur le parcours",
-        "Mobiliser ses connaissances générales (formations, métiers, dispositifs de financement) avec mention de l'incertitude quand elle existe"
+        "Construire des passerelles audacieuses entre secteurs en s'appuyant sur les compétences réelles",
+        "Mobiliser les connaissances générales (formations, métiers, dispositifs de financement) avec mention de l'incertitude"
       ],
 
       forbidden_tasks: [
         "Ne JAMAIS poser de diagnostic psychologique ou psychiatrique",
         "Ne JAMAIS pathologiser un score élevé ou bas",
         "Ne JAMAIS présenter l'analyse comme vérité définitive sur la personne",
-        "Ne JAMAIS inventer de données précises de formation (coût exact, dates de session, lieu) sans base factuelle ; utiliser des fourchettes et signaler l'incertitude",
-        "Ne JAMAIS affirmer un salaire précis — donner des fourchettes avec source si possible (INSEE, France Travail, conventions collectives)",
-        "Ne JAMAIS attribuer un type MBTI à partir du Big Five — utiliser un portrait fonctionnel dérivé",
+        "Ne JAMAIS générer une piste métier à partir d'un loisir, d'un hobby, d'un centre d'intérêt extra-professionnel",
+        "Ne JAMAIS inventer de données précises de formation sans base factuelle ; utiliser des fourchettes",
+        "Ne JAMAIS affirmer un salaire précis — donner des fourchettes avec source",
+        "Ne JAMAIS attribuer un type MBTI à partir du Big Five",
         "Ne JAMAIS écrire 'usage exclusivement professionnel'",
-        "Ne JAMAIS afficher de statut juridique de l'éditeur (pas de 'auto-entrepreneur')",
+        "Ne JAMAIS afficher de statut juridique de l'éditeur",
         "Ne JAMAIS mentionner de nom personnel du psychologue référent",
-        "Ne JAMAIS présenter la personne comme un cas clinique ou un type fixe"
+        "Ne JAMAIS présenter la personne comme un cas clinique ou un type fixe",
+        "Ne JAMAIS infantiliser le lecteur avec des précautions répétées à chaque section",
+        "Ne JAMAIS éliminer une piste sur une contrainte non absolue : signaler et laisser le client adulte décider"
       ],
 
       forbidden_phrases_and_patterns: {
-        principe: "Le rapport doit décrire des TENDANCES, pas asséner des vérités. Les formulations suivantes sont interdites.",
+        principe: "Le rapport doit décrire des TENDANCES, pas asséner des vérités. Mais sans matelas de précaution infantilisant.",
         mots_interdits_absolus: [
           "toujours", "jamais (sauf dans les règles déontologiques)", "certainement", "définitivement",
           "vous êtes [trait]", "vous n'êtes pas [trait]", "votre nature est", "votre essence",
           "il est évident que", "indubitablement", "à coup sûr", "vous devez impérativement"
+        ],
+        precautions_repetitives_interdites: [
+          "Ne pas répéter 'ce résultat ne définit pas qui vous êtes' à chaque section — le dire une fois en introduction suffit",
+          "Ne pas répéter 'consultez un professionnel' à chaque page — le dire une fois en mentions légales suffit",
+          "Ne pas multiplier les rappels que 'la personnalité évolue' — c'est dit, on passe"
         ],
         formulations_attendues: [
           "vous avez tendance à", "votre profil suggère", "cela peut indiquer", "vraisemblablement",
@@ -2099,101 +2206,61 @@ function downloadAnalysisFile() {
         verifications_avant_envoi: [
           "Aucune phrase ne diagnostique ni ne pathologise",
           "Aucun jugement de valeur ('bon' / 'mauvais' profil)",
-          "Aucune affirmation absolue déguisée en interprétation"
+          "Aucune affirmation absolue déguisée en interprétation",
+          "Aucune piste métier générée à partir d'un loisir",
+          "La cartographie occupe au moins 4 axes de diversité sur 5",
+          "Minimum 3 pistes par horizon respecté",
+          "Aucune précaution répétée plus de 2 fois dans le rapport"
         ]
       },
 
       interpretation_rules: {
-        tone: "Professionnel, accessible, bienveillant, constructif. Vouvoiement obligatoire. Parler de TENDANCES, pas de certitudes.",
-        nuance: "Distinguer clairement : personnalité (traits stables), préférences (contextuelles), compétences (acquises), contraintes (situationnelles), expérience (cumulée).",
+        tone: "Professionnel, accessible, franc, constructif. Vouvoiement obligatoire. Parler de TENDANCES, pas de certitudes. Ne pas materner.",
+        nuance: "Distinguer clairement : personnalité (traits stables), préférences (contextuelles), compétences (acquises via le parcours), contraintes (situationnelles), expérience (cumulée), loisirs (équilibre de vie, NON générateur de piste).",
         confidence_policy: {
           fiabilite_elevee: "Interprétation normale, formulations standard.",
           fiabilite_moderee: "Réduire légèrement les affirmations, ajouter 'sous réserve d'une fiabilité de passation modérée'.",
-          fiabilite_faible: "Signaler explicitement en début de synthèse. Réduire l'affirmation à des hypothèses prudentes. Recommander une nouvelle passation ou un entretien clinique."
+          fiabilite_faible: "Signaler explicitement en début de synthèse. Réduire à des hypothèses prudentes. Recommander une nouvelle passation ou un entretien clinique."
         },
-        cross_reference_obligatoire: "Toujours croiser personnalité × parcours × contraintes × objectif déclaré. Une recommandation qui ne tient pas compte de l'un de ces 4 axes est invalide."
+        cross_reference_obligatoire: "Toujours croiser personnalité × compétences transférables × contraintes × objectif. Une recommandation qui ne tient pas compte de l'un de ces 4 axes est invalide."
       },
 
       clinical_guardrails: {
-        required_cautions: [
-          "Rappeler que le NEO PI-R mesure des TENDANCES de personnalité, pas des compétences ni un potentiel",
-          "Souligner que les résultats reflètent l'état actuel et peuvent évoluer",
-          "Préciser qu'un score n'est ni bon ni mauvais — chaque profil a ses forces dans certains contextes"
+        required_cautions_une_fois: [
+          "Le NEO PI-R mesure des TENDANCES de personnalité, pas des compétences ni un potentiel — à dire UNE FOIS en introduction",
+          "Les résultats reflètent l'état actuel et peuvent évoluer — UNE FOIS",
+          "Un score n'est ni bon ni mauvais — UNE FOIS"
         ],
-        escalation_protocol: "Si des drapeaux d'escalation sont présents dans derived_data.escalation_flags, les mentionner avec tact (sans alarmer) et recommander une consultation avec un professionnel qualifié. Ne pas générer un rapport optimiste si N3 (dépression) > 70 ou si vulnerabilite_au_stress (N6) > 75 sans poser le sujet d'un soutien.",
+        escalation_protocol: "Si des drapeaux d'escalation sont présents dans derived_data.escalation_flags, les mentionner avec tact (sans alarmer) et recommander une consultation avec un professionnel qualifié. Ne pas générer un rapport optimiste si N3 (dépression) > 70 ou si N6 (vulnérabilité au stress) > 75 sans poser le sujet d'un soutien.",
         zones_sensibles: ["Surdité ou handicap mentionnés en objectif", "Burn-out signalé", "Reconversion contrainte par la santé"]
       },
 
-      // ─── RÈGLES ADAPTATIVES SELON LE CONTEXTE ───
       adaptive_rules: {
         par_tranche_age: {
-          "20-25_debut_carriere": "Orienter vers exploration, premières expériences, formations diplômantes, ouverture des possibles. Éviter le vocabulaire de seconde partie de carrière.",
-          "25-35_construction": "Construction d'expertise, choix structurants, équilibre vie pro/vie perso. Reconversions possibles mais coûteuses si études longues à reprendre.",
-          "35-45_consolidation": "Consolidation d'expertise, premières reconversions matures, accent sur les compétences transférables.",
-          "45-55_reorientation": "Reconversion fréquente, capitalisation de l'expérience, préparation seconde partie de carrière, attention aux études longues.",
-          "55-65_seconde_partie": "Transmission, expertise, supervision, écriture, conseil, format souple. Évoquer la transition vers la retraite quand pertinent. Pas de formations très longues (>3 ans) en règle générale.",
-          "65plus_post_carriere": "Engagement choisi, bénévolat valorisé, mentorat, activités-passions. Pas de reconversion classique."
+          "20-25_debut_carriere": "Orienter vers exploration, premières expériences, formations diplômantes. Ouverture des possibles audacieuse. Éviter le vocabulaire de seconde partie de carrière.",
+          "25-35_construction": "Construction d'expertise, choix structurants, équilibre vie pro/perso. Reconversions possibles mais coûteuses si études longues à reprendre. Inclure des pistes ambitieuses qui valorisent la durée de carrière restante.",
+          "35-45_consolidation": "Consolidation d'expertise, premières reconversions matures. Accent sur les compétences transférables. Audace pleinement légitime à cet âge.",
+          "45-55_reorientation": "Âge classique des reconversions. Capitalisation de l'expérience. Attention aux études longues mais ne pas exclure d'office.",
+          "55-65_seconde_partie": "Transmission, expertise, conseil, format souple. Pas de formations > 3 ans. Mais inclure des pistes de RÉINVENTION authentiques, pas seulement la continuité.",
+          "65plus_post_carriere": "Engagement choisi, mentorat, activités-passions. Pas de reconversion classique mais ouverture aux activités intellectuelles, créatives, associatives."
         },
         par_type_profil: {
-          mono_metier: "La personne n'a fait qu'un métier : capitaliser sur sa profondeur, mais explorer la variété des évolutions possibles dans et autour de ce métier.",
-          bi_metier: "Une expérience passée + métier actuel : identifier la passerelle entre les deux et ce qu'elle révèle des préférences.",
-          multi_metier_modere: "2 expériences passées : analyser le fil rouge entre les expériences, identifier les compétences transférables.",
-          multi_metier_riche: "3+ expériences passées : profil de slasher / multipotentiel. Recommandations qui valorisent la pluralité plutôt que de la réduire."
+          mono_metier: "La personne n'a fait qu'un métier : capitaliser sur la PROFONDEUR des compétences transférables, ouvrir largement vers d'autres secteurs qui mobilisent ces compétences.",
+          bi_metier: "Identifier la passerelle entre les deux expériences et ce qu'elle révèle des préférences profondes.",
+          multi_metier_modere: "Analyser le fil rouge, identifier les compétences transversales.",
+          multi_metier_riche: "Profil slasher / multipotentiel : valoriser la pluralité plutôt que de la réduire."
         },
         par_objectif: {
           reconversion_totale: "Privilégier les pistes en rupture, calibrer la prise de risque selon l'âge et la situation financière.",
-          evolution: "Privilégier les pistes dans le prolongement du métier actuel : spécialisation, supervision, formation, conseil.",
-          confirmation: "Confirmer la pertinence du métier actuel et identifier les axes d'optimisation/spécialisation.",
-          exploration: "Si objectif flou : ne pas forcer une direction, proposer une carte des possibles avec pondération."
-        },
-        ponderation_experience: {
-          principe: "Une recommandation métier doit tenir compte de l'expérience effective dans le métier d'origine, pas seulement de l'âge.",
-          regle_supervision: "Recommander la supervision clinique uniquement si experience_metier_actuel >= 8 ans dans une pratique d'accompagnement.",
-          regle_expertise: "Recommander un poste d'expertise/référent uniquement si l'expérience cumulée dans le domaine concerné est >= 7 ans.",
-          regle_formation: "Recommander un rôle de formateur dès 5 ans d'expérience pertinente.",
-          regle_creation_activite: "La création d'activité indépendante demande des bases (réseau, image, financement) — la mentionner réaliste à 1-3 ans après une décision claire."
+          evolution: "Pistes dans le prolongement du métier actuel + 30% de pistes orthogonales pour interroger l'évolution elle-même.",
+          confirmation: "Confirmer la pertinence du métier actuel ET proposer des axes d'évolution/spécialisation + quelques pistes orthogonales.",
+          exploration: "Posture exploratoire LARGE et AUDACIEUSE. Pas de prudence conservatrice. Vraiment ouvrir."
         }
       },
 
-      career_reasoning_framework: {
-        hard_constraints: [
-          "Le métier doit être accessible avec le niveau d'études indiqué OU via une formation réaliste tenant compte de l'âge",
-          "La durée de formation ne doit pas dépasser celle indiquée par la personne (formation_duree_max_libelle)",
-          "Les contraintes de santé (contraintes_sante_libelles) doivent être respectées strictement",
-          "L'âge doit être pris en compte pour la faisabilité (pas de médecine à 55 ans, pas d'apprentissage long à 60 ans)",
-          "Aspects fuis : un métier qui aggrave un aspect_fui doit être exclu ou explicitement signalé"
-        ],
-        soft_constraints: [
-          "Aspects appréciés : bonus de compatibilité",
-          "Centres d'intérêt déclarés : bonus, pas éliminatoire",
-          "Secteur d'origine et secteurs du parcours : passerelles à identifier",
-          "Financements disponibles : à mentionner concrètement"
-        ],
-        personality_mapping: {
-          N: "Niveau de stress tolérable dans l'environnement de travail (N bas = supporte la pression)",
-          E: "Degré d'interaction sociale requis par le métier (E haut = beaucoup de contacts ; E bas = travail plus solo)",
-          O: "Capacité et appétence pour l'apprentissage et l'innovation (O haut = appétence forte ; O bas = préférence pour la stabilité)",
-          A: "Type de collaboration et rapport aux autres (A haut = coopératif ; A bas = compétitif/indépendant)",
-          C: "Niveau d'organisation et d'autonomie structurelle requis (C haut = capable de structures exigeantes)"
-        },
-        output_per_metier: [
-          "Nom du métier (précis, pas un grand domaine)",
-          "Score de compatibilité personnalité en % (calculé en croisant les 5 domaines avec les exigences typiques du métier)",
-          "Justification en 1-2 lignes du score",
-          "Pourquoi OUI (forces du profil pour ce métier, en s'appuyant sur facettes précises)",
-          "Pourquoi NON ou RISQUES (faiblesses ou tensions pour ce métier, honnêtes et précis)",
-          "Conditions de réussite (concrètes et actionnables)",
-          "Formation requise (niveau, durée estimée, plus précis que possible)",
-          "Accessibilité depuis le profil actuel (immédiate / reconversion courte 6-12 mois / reconversion moyenne 1-3 ans / reconversion longue 3-5 ans)",
-          "Financements possibles (CPF, FIF-PL, OPCO, Transition Pro, etc. — selon ce que la personne a déclaré)",
-          "Fourchette salariale indicative (avec source : INSEE, France Travail, conventions collectives)"
-        ],
-        mix_requis: "Proposer 5 métiers accessibles rapidement (< 1 an), 10 à moyen terme (1-3 ans), 5 ambitieux mais atteignables (2-5 ans). Total 20.",
-        principe_diversite: "Les 20 métiers doivent couvrir au moins 3 directions différentes. Éviter de proposer 18 métiers du même secteur."
-      },
-
-      validation_questions_directive: "Produire 5 à 8 questions que la personne devrait se poser ou qu'un consultant pourrait poser en entretien pour affiner l'orientation. Les questions doivent porter sur des dimensions non encore explorées par le bilan : valeurs, contraintes financières, environnement familial, niveau d'incertitude tolérable, ressources de réseau."
+      validation_questions_directive: "Produire 5 à 8 questions que la personne devrait se poser ou qu'un consultant pourrait poser en entretien pour affiner l'orientation. Les questions doivent porter sur des dimensions non encore explorées par le bilan : valeurs, contraintes financières, environnement familial, niveau d'incertitude tolérable, ressources de réseau, réactions aux pistes proposées."
     },
+
 
     // ═══════════════════════════════════════════════════════════════
     //  COUCHE 6 — INSTRUCTIONS DE RENDU PDF
