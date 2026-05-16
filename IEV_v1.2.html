@@ -1,0 +1,2307 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IEV v1.2 — Inventaire des Empreintes de Vie</title>
+<style>
+/* ─── Charte C Concept&Dev (identique YSQ-L3) ─── */
+:root {
+  --mer: #8FAFB1;
+  --mer-dark: #6A9496;
+  --vert-sauge: #C8D0C3;
+  --beige-sable: #D8CDBB;
+  --beige-light: #ECE6D8;
+  --rouge-seuil: #C1666B;
+  --texte: #2C3338;
+  --texte-doux: #5A6470;
+  --fond: #F7F4ED;
+  --carte: #FFFFFF;
+  --bordure: #E0D8C8;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  background: var(--fond);
+  color: var(--texte);
+  line-height: 1.55;
+  min-height: 100vh;
+}
+h1, h2, h3, h4 {
+  font-family: 'Lora', Georgia, serif;
+  font-weight: 600;
+  color: var(--texte);
+  margin-bottom: 0.5em;
+}
+h1 { font-size: 1.6em; }
+h2 { font-size: 1.3em; color: var(--mer-dark); }
+h3 { font-size: 1.1em; color: var(--mer-dark); margin-top: 1.2em;}
+
+/* ─── Header global ─── */
+.app-header {
+  background: var(--carte);
+  border-bottom: 1px solid var(--bordure);
+  padding: 12px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; z-index: 100;
+}
+.brand-mark { color: var(--mer-dark); font-weight: 600; font-size: 0.95em; }
+.brand-mark strong { color: var(--texte); }
+.global-progress {
+  flex: 1; max-width: 360px; margin: 0 24px;
+  height: 6px; background: var(--bordure); border-radius: 3px; overflow: hidden;
+}
+.global-progress > div {
+  height: 100%; background: var(--mer); transition: width 0.4s;
+}
+.header-meta { color: var(--texte-doux); font-size: 0.85em; }
+
+/* ─── Containers ─── */
+.container {
+  max-width: 820px; margin: 0 auto; padding: 32px 24px 96px;
+}
+.card {
+  background: var(--carte);
+  border: 1px solid var(--bordure);
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+.card.encadre {
+  background: var(--beige-light);
+  border-left: 4px solid var(--mer);
+}
+.card.avertissement {
+  background: #fff8f0;
+  border-left: 4px solid var(--rouge-seuil);
+}
+.card.respiration {
+  background: var(--vert-sauge);
+  border-left: 4px solid var(--mer-dark);
+  font-style: italic;
+}
+
+/* ─── Formulaires ─── */
+label {
+  display: block; margin-bottom: 6px;
+  color: var(--texte-doux); font-size: 0.9em; font-weight: 500;
+}
+input[type="text"], input[type="number"], select, textarea {
+  width: 100%; padding: 10px 12px;
+  border: 1px solid var(--bordure); border-radius: 6px;
+  background: var(--carte); color: var(--texte);
+  font-size: 0.95em; font-family: inherit;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none; border-color: var(--mer); box-shadow: 0 0 0 3px rgba(143,175,177,0.2);
+}
+textarea { resize: vertical; min-height: 64px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+@media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+.form-full { margin-bottom: 16px; }
+
+/* ─── Options radio/checkbox ─── */
+.options { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.opt {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--bordure);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--carte);
+}
+.opt:hover { border-color: var(--mer); background: var(--beige-light); }
+.opt.selected {
+  border-color: var(--mer-dark); background: #f0f5f5;
+  box-shadow: 0 0 0 1px var(--mer-dark) inset;
+}
+.opt input { margin-top: 4px; accent-color: var(--mer-dark); }
+.opt > span { flex: 1; font-size: 0.95em; }
+
+/* Echelle horizontale 5 niveaux */
+.scale {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin: 12px 0 8px;
+}
+.scale .opt {
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 6px;
+  font-size: 0.82em;
+  line-height: 1.25;
+  min-height: 64px;
+  justify-content: center;
+}
+.scale .opt input { margin: 0 0 4px 0; }
+@media (max-width: 600px) {
+  .scale { grid-template-columns: 1fr; }
+  .scale .opt { flex-direction: row; min-height: auto; text-align: left; }
+  .scale .opt input { margin: 0 8px 0 0; }
+}
+
+/* ─── Boutons ─── */
+.btn {
+  padding: 10px 20px;
+  border: none; border-radius: 8px;
+  font-size: 0.95em; font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--mer-dark); color: white;
+}
+.btn:hover { background: var(--mer); }
+.btn.ghost { background: transparent; color: var(--mer-dark); border: 1px solid var(--mer-dark); }
+.btn.ghost:hover { background: var(--beige-light); }
+.btn.danger { background: var(--rouge-seuil); }
+.btn.danger:hover { background: #aa5358; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.nav-buttons {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 24px; gap: 12px;
+}
+
+/* ─── Item question ─── */
+.question-block {
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--bordure);
+}
+.question-block:last-child { border-bottom: none; }
+.question-text {
+  font-size: 1.02em; color: var(--texte); margin-bottom: 8px;
+  line-height: 1.5;
+}
+.question-id {
+  color: var(--texte-doux); font-size: 0.78em; font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ─── Évenements chronologie ─── */
+.event {
+  background: var(--carte);
+  border: 1px solid var(--bordure);
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+.event-label { font-size: 0.95em; margin-bottom: 8px; color: var(--texte); }
+.event-controls {
+  display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; align-items: center;
+  font-size: 0.88em;
+}
+.event-controls label { margin: 0; font-size: 0.85em; }
+.event.actif { border-color: var(--mer-dark); background: #f0f5f5; }
+.event-extended {
+  display: none;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--bordure);
+  font-size: 0.88em;
+}
+.event.actif .event-extended { display: block; }
+
+/* ─── Toast ─── */
+.toast {
+  position: fixed;
+  bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--texte); color: white;
+  padding: 12px 20px; border-radius: 8px;
+  z-index: 1000; font-size: 0.9em;
+  opacity: 0; transition: opacity 0.3s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; }
+.toast.error { background: var(--rouge-seuil); }
+.toast.success { background: var(--mer-dark); }
+
+/* ─── Pause/Aide flottants ─── */
+.float-actions {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  display: flex; flex-direction: column; gap: 10px;
+  z-index: 50;
+}
+.float-actions .btn { font-size: 0.85em; padding: 8px 14px; }
+
+/* ─── Drop zone ─── */
+.dropzone {
+  border: 2px dashed var(--bordure);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  background: var(--beige-light);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.dropzone:hover, .dropzone.dragover { border-color: var(--mer); background: #f0f5f5; }
+.dropzone .icon { font-size: 1.8em; margin-bottom: 6px; }
+.dropzone .label { font-weight: 500; color: var(--texte); }
+.dropzone .hint { font-size: 0.85em; color: var(--texte-doux); margin-top: 4px; }
+.dropzone.imported { background: #f0f5f5; border-color: var(--mer-dark); }
+
+/* ─── Helpers ─── */
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mt-3 { margin-top: 24px; }
+.center { text-align: center; }
+.muted { color: var(--texte-doux); }
+.small { font-size: 0.85em; }
+em { color: var(--texte-doux); }
+strong { color: var(--texte); }
+
+/* Conditional text input */
+.opt-text-extra {
+  display: none;
+  margin-top: 8px;
+  padding-left: 26px;
+}
+.opt.selected ~ .opt-text-extra,
+.opt.selected.has-text + .opt-text-extra {
+  display: block;
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="brand-mark"><strong>C Concept&Dev</strong> · IEV v1.0</div>
+  <div class="global-progress"><div id="globalProgressBar" style="width:0%"></div></div>
+  <div class="header-meta" id="headerMeta">—</div>
+</header>
+
+<div class="container" id="mainContainer">
+  <!-- Contenu injecté dynamiquement -->
+</div>
+
+<div class="float-actions" id="floatActions" style="display:none;">
+  <button class="btn ghost" id="btnPause">⏸ Pause</button>
+  <button class="btn ghost" id="btnSaveAnyTime">💾 Sauvegarder</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   IEV v1.0 — Inventaire des Empreintes de Vie
+   C Concept&Dev — Intelligence Psychométrique & Orientation
+   ═══════════════════════════════════════════════════════════════════ */
+
+// ─── DATA EMBARQUÉE ───
+const IEV = {
+  meta: {
+    name: "IEV",
+    full_name: "Inventaire des Empreintes de Vie",
+    version: "1.1.0",
+    version_contrat: "1.1",
+    grid_version: "iev-fr-v1-draft",
+    author: "C Concept&Dev — Intelligence Psychométrique & Orientation",
+    usage_note: "Outil de cartographie clinique de la charge cumulée. Ne constitue pas un diagnostic. Usage.",
+    items_total_max: 172,
+    items_evenements: 47
+  },
+  scale_likert: {
+    options: [
+      { value: 5, label: "Tout à fait / Très souvent" },
+      { value: 4, label: "Plutôt / Souvent" },
+      { value: 3, label: "Parfois / Moyennement" },
+      { value: 2, label: "Rarement" },
+      { value: 1, label: "Pas du tout / Jamais" },
+      { value: 0, label: "Je préfère ne pas répondre" }
+    ]
+  },
+  scale_transparence: {
+    options: [
+      { value: 4, label: "Souvent / Régulièrement" },
+      { value: 3, label: "Parfois" },
+      { value: 2, label: "Rarement" },
+      { value: 1, label: "Jamais" },
+      { value: 0, label: "Je ne me souviens pas" },
+      { value: -1, label: "Je préfère ne pas répondre" }
+    ]
+  },
+  scale_noyau: {
+    options: [
+      { value: 0, label: "Aucun impact, ou rien de marquant" },
+      { value: 1, label: "Un impact modéré" },
+      { value: 2, label: "Un impact important" },
+      { value: 3, label: "Un impact très fort, encore vif" },
+      { value: -1, label: "Je préfère ne pas répondre" }
+    ]
+  },
+
+  scale_occurrences: {
+    // Échelle apparaissant au Module 2 pour les événements éligibles à la pluralité.
+    // Distingue les profils trauma unique vs cumul vs étalement temporel.
+    options: [
+      { value: 'unique', label: "1 fois" },
+      { value: 'quelques', label: "2 ou 3 fois" },
+      { value: 'plusieurs', label: "4 fois ou plus" },
+      { value: 'etale', label: "Sur plusieurs périodes étalées" }
+    ]
+  },
+  age_brackets: [
+    { value: "0-6", label: "0 à 6 ans (petite enfance)" },
+    { value: "7-12", label: "7 à 12 ans (enfance)" },
+    { value: "13-18", label: "13 à 18 ans (adolescence)" },
+    { value: "19-30", label: "19 à 30 ans (jeune adulte)" },
+    { value: "31-45", label: "31 à 45 ans (adulte)" },
+    { value: "46-60", label: "46 à 60 ans (adulte mûr)" },
+    { value: "61+", label: "61 ans et plus" }
+  ],
+  perception_options: [
+    { value: 1, label: "Très douloureux" },
+    { value: 2, label: "Difficile" },
+    { value: 3, label: "Mitigé" },
+    { value: 4, label: "Neutre ou positif" },
+    { value: 5, label: "Très positif" }
+  ],
+  retro_options: [
+    { value: "identique", label: "Oui, je le vivais de la même manière" },
+    { value: "plus_difficile_avant", label: "Non, c'était plus difficile à l'époque" },
+    { value: "vois_aujourdhui", label: "Non, je mesure aujourd'hui un impact que je n'avais pas vu à l'époque" }
+  ]
+};
+
+IEV.M0 = [{"id": "0.1", "type": "single", "question": "Pendant votre enfance et votre adolescence (de la naissance à 18 ans environ), quelle a été la configuration familiale principale dans laquelle vous avez grandi ?", "options": [["parents_ensemble", "Parents biologiques en couple, vivant ensemble"], ["parents_separes_alternee", "Parents biologiques séparés ou divorcés (garde alternée)"], ["parents_separes_unique", "Parents biologiques séparés ou divorcés (un seul parent référent)"], ["famille_recomposee", "Famille recomposée (un parent biologique + un beau-parent ou belle-parente)"], ["parent_seul", "Parent seul (par choix, veuvage, ou autre)"], ["grands_parents", "Élevé(e) par les grands-parents ou un autre membre de la famille"], ["placement", "Famille d'accueil ou placement institutionnel"], ["adoption", "Famille adoptive"], ["mixte", "Configuration mixte (différentes périodes, différentes configurations)"], ["autre", "Autre configuration"], ["nsp", "Je préfère ne pas répondre"]], "allow_other_text": true}, {"id": "0.1b", "type": "text", "conditional_on": {"item": "0.1", "value": "mixte"}, "question": "Vous avez indiqué une configuration mixte. Pourriez-vous préciser brièvement les principales périodes ? <em>(par exemple : « parents ensemble jusqu'à mes 8 ans, puis garde alternée, puis vie chez ma mère seule à partir de 14 ans »)</em>", "max_length": 250}, {"id": "0.2", "type": "single", "question": "En dehors de vos parents (ou des personnes qui ont joué ce rôle), y a-t-il eu, dans votre enfance ou adolescence, une ou des figures éducatives marquantes (grands-parents, oncle/tante, enseignant, entraîneur, ami de la famille, voisin, frère ou sœur aîné(e)…) ?", "options": [["plusieurs", "Oui, plusieurs figures marquantes"], ["une", "Oui, une seule figure marquante"], ["non", "Non"], ["flou", "Je ne sais pas répondre clairement"], ["nsp", "Je préfère ne pas répondre"]]}, {"id": "0.3", "type": "single", "question": "Quelle est votre position dans la fratrie ?", "options": [["unique", "Enfant unique"], ["ainee", "Aîné(e) — je suis le plus âgé(e)"], ["benjamin", "Cadet(te) ou benjamin(e) — je suis le ou la plus jeune"], ["intermediaire", "Position intermédiaire (ni aîné, ni dernier)"], ["complexe", "Fratrie complexe (demi-frères/sœurs, fratrie recomposée, écart d'âge important…)"], ["nsp", "Je préfère ne pas répondre"]]}, {"id": "0.4", "type": "multi", "question": "Votre parcours de vie comporte-t-il une dimension migratoire ou interculturelle marquante ? <em>(plusieurs réponses possibles)</em>", "options": [["aucun", "Non, je suis né(e) et j'ai vécu dans le pays et la culture de mes parents"], ["parents_origine_etrangere", "Mes parents (ou un de mes parents) sont originaires d'un autre pays ou d'une autre culture"], ["ne_ailleurs_grandi_ailleurs", "Je suis né(e) dans un pays et j'ai grandi dans un autre"], ["vie_etranger_enfance", "J'ai vécu plusieurs années à l'étranger durant l'enfance ou l'adolescence"], ["migration_adulte", "J'ai migré à l'âge adulte"], ["vit_entre_deux_cultures", "Je vis actuellement entre deux cultures ou deux langues"], ["autre", "Autre dimension interculturelle"], ["nsp", "Je préfère ne pas répondre"]], "allow_other_text": true, "exclusive_first": "aucun"}, {"id": "0.5", "type": "single", "question": "Votre situation relationnelle principale aujourd'hui ?", "options": [["couple_coha", "En couple, en cohabitation (mariage, PACS, union libre, vie commune)"], ["couple_sans_coha", "En couple, sans cohabitation"], ["celibat", "Célibataire, sans relation actuelle"], ["veuvage", "Veuf(ve)"], ["separation_cours", "Séparé(e), en cours de séparation"], ["complexe", "Situation complexe ou non-classique (relations multiples, configuration particulière…)"], ["nsp", "Je préfère ne pas répondre"]]}, {"id": "0.6", "type": "single", "question": "Avez-vous des enfants ou des personnes dont vous êtes la principale figure éducative ?", "options": [["non", "Non"], ["biologiques_adoptes", "Oui, un ou plusieurs enfants biologiques ou adoptés"], ["belle_parentalite", "Oui, en configuration de belle-parentalité"], ["autre", "Oui, autre configuration (parrainage, accueil familial, neveu/nièce/petit-enfant à charge…)"], ["nsp", "Je préfère ne pas répondre"]]}, {"id": "0.7", "type": "single", "question": "Comment décririez-vous votre situation professionnelle actuelle ?", "options": [["salarie", "En emploi salarié"], ["independant", "Indépendant(e), entrepreneur(euse), libéral(e)"], ["sans_emploi_recherche", "Sans emploi, en recherche"], ["sans_emploi_sans_recherche", "Sans emploi, sans recherche active"], ["etudes", "En études ou en formation"], ["retraite", "En retraite"], ["arret_longue", "En arrêt longue durée (maladie, congé parental, autre)"], ["foyer", "Au foyer"], ["complexe", "Situation complexe ou cumul de plusieurs statuts"], ["nsp", "Je préfère ne pas répondre"]]}, {"id": "0.8", "type": "multi", "question": "Avez-vous reçu un diagnostic, une évaluation, ou un repérage clinique concernant une particularité neurologique, cognitive ou développementale ? <em>(plusieurs réponses possibles. Cette question est posée parce que ces particularités modifient profondément l'expérience subjective de certaines questions qui suivront.)</em>", "options": [["aucune", "Non"], ["tsa", "Trouble du spectre autistique (TSA), Asperger"], ["tdah", "Trouble de l'attention avec ou sans hyperactivité (TDA/H)"], ["hpi", "Haut potentiel intellectuel (HPI), précocité"], ["dys", "Dyslexie, dyspraxie, dyscalculie ou autre trouble dys"], ["bipolaire_depression", "Trouble bipolaire, dépression récurrente diagnostiquée"], ["anxieux", "Trouble anxieux diagnostiqué (TAG, TOC, phobie sociale…)"], ["autre", "Autre particularité"], ["suspicion", "Je suspecte une particularité mais sans diagnostic"], ["nsp", "Je préfère ne pas répondre"]], "allow_other_text": true, "exclusive_first": "aucune"}, {"id": "0.9", "type": "single", "question": "Suivez-vous actuellement, ou avez-vous suivi par le passé, un accompagnement thérapeutique ou psychologique ?", "options": [["actuel", "Oui, actuellement"], ["passe_termine", "Oui, par le passé, terminé"], ["passe_interrompu", "Oui, par le passé, interrompu"], ["jamais", "Non, jamais"], ["nsp", "Je préfère ne pas répondre"]]}];
+IEV.M1 = [{"id": "1.1", "cat": "perte", "label": "Pertes importantes (décès de proches, fins de relations significatives, deuils) — l'empreinte qu'elles laissent en vous aujourd'hui"}, {"id": "1.2", "cat": "transition", "label": "Transitions ou changements majeurs (déménagements, reconversions, ruptures de cadre de vie) — l'empreinte qu'elles laissent en vous aujourd'hui"}, {"id": "1.3", "cat": "conflit", "label": "Conflits relationnels durables ou répétés (en famille, en couple, au travail, en amitié) — l'empreinte qu'ils laissent en vous aujourd'hui"}, {"id": "1.4", "cat": "precarite", "label": "Périodes de précarité (financière, professionnelle, de logement, de sécurité) — l'empreinte qu'elles laissent en vous aujourd'hui"}, {"id": "1.5", "cat": "sante", "label": "Problèmes de santé importants (les vôtres ou de proches dont vous étiez le soutien principal) — l'empreinte qu'ils laissent en vous aujourd'hui"}, {"id": "1.6", "cat": "deracinement", "label": "Déracinements (migrations, ruptures de tissu social, perte de repères culturels ou géographiques) — l'empreinte qu'ils laissent en vous aujourd'hui"}, {"id": "1.7", "cat": "surcharge", "label": "Périodes de surcharge prolongée (travail, responsabilités familiales, charge mentale exceptionnelle) — l'empreinte qu'elles laissent en vous aujourd'hui"}, {"id": "1.8", "cat": "invisibilisation", "label": "Sentiment chronique de ne pas être vu(e), compris(e), reconnu(e) tel(le) que vous êtes (en famille, socialement, professionnellement, identitairement) — son empreinte aujourd'hui"}, {"id": "1.9", "cat": "climat_dev", "label": "Difficultés ou tensions durables dans votre environnement éducatif d'enfance ou d'adolescence — leur empreinte aujourd'hui"}, {"id": "1.10", "cat": "relations_adulte", "label": "Schémas relationnels difficiles ou répétés à l'âge adulte (en couple, en amitié, au travail) — leur empreinte aujourd'hui"}, {"id": "1.11", "cat": "contexte_social", "label": "Expériences chroniques liées à votre origine, votre genre, votre orientation, votre milieu, votre différence (discrimination, marginalisation, invisibilisation collective) — leur empreinte aujourd'hui"}, {"id": "1.12", "cat": "etat_actuel", "label": "Symptômes ou ressentis actuels que vous attribuez à votre histoire (anxiété, fatigue, troubles du sommeil, somatisations, hypersensibilité…) — leur intensité actuelle"}];
+IEV.M2_EV = [["perte", "Décès d'un parent (père ou mère)"], ["perte", "Décès d'un frère ou d'une sœur"], ["perte", "Décès d'un grand-parent particulièrement proche"], ["perte", "Décès d'un(e) ami(e) proche"], ["perte", "Décès d'un partenaire amoureux"], ["perte", "Perte d'un enfant (fausse couche, IMG, décès périnatal ou plus tardif)"], ["perte", "Décès d'un animal vécu comme un compagnon central"], ["perte", "Perte d'un mentor ou figure d'attachement extra-familiale"], ["transition", "Séparation ou divorce de vos parents (vécu enfant ou adolescent)"], ["transition", "Votre propre séparation ou divorce"], ["transition", "Déménagement marquant (changement de pays, région, environnement social)"], ["transition", "Changement scolaire ou universitaire majeur"], ["transition", "Changement professionnel majeur (licenciement, démission forcée, reconversion)"], ["transition", "Naissance d'un frère ou d'une sœur vécue comme un bouleversement"], ["transition", "Naissance d'un enfant (la vôtre)"], ["transition", "Mariage ou engagement marquant"], ["transition", "Arrivée d'un beau-parent dans votre famille d'enfance"], ["conflit", "Conflit durable et non-résolu avec un parent"], ["conflit", "Conflit ou rupture durable avec un frère, une sœur, ou la fratrie en bloc"], ["conflit", "Relation amoureuse marquée par des conflits chroniques ou de la maltraitance émotionnelle"], ["conflit", "Conflit professionnel grave (harcèlement, mise à l'écart, conflit de loyauté)"], ["conflit", "Trahison par un proche (amitié, famille, partenaire)"], ["conflit", "Coupure familiale (vous n'êtes plus en contact avec un membre de la famille importante)"], ["precarite", "Période de précarité financière marquée (votre famille d'enfance ou vous-même adulte)"], ["precarite", "Période de précarité de logement (instabilité, hébergement difficile, sans-domicile)"], ["precarite", "Période de chômage prolongée vécue difficilement"], ["precarite", "Surendettement, difficultés financières chroniques"], ["sante", "Maladie grave (la vôtre, sur une période significative)"], ["sante", "Maladie chronique d'un parent dont vous étiez en partie responsable durant l'enfance/adolescence"], ["sante", "Maladie ou handicap d'un frère ou d'une sœur qui a focalisé l'attention familiale"], ["sante", "Maladie ou handicap d'un enfant à vous"], ["sante", "Accident ou opération marquante"], ["sante", "Période de troubles psychiques (les vôtres ou d'un proche très impliqué)"], ["deracinement", "Migration vers un autre pays ou changement culturel majeur"], ["deracinement", "Coupure brutale avec votre milieu d'origine (familial, social, géographique)"], ["deracinement", "Apprentissage forcé d'une nouvelle langue dans un nouveau contexte"], ["surcharge", "Parentification : avoir dû jouer un rôle d'adulte, de soutien émotionnel ou pratique, dans l'enfance ou l'adolescence"], ["surcharge", "Période de proche-aidance (vous avez été le principal soutien d'un proche fragile)"], ["surcharge", "Période de burn-out ou d'épuisement professionnel"], ["surcharge", "Période de burn-out parental"], ["invisibilisation", "Sentiment durable, dans l'enfance, de ne pas avoir été vu(e) ou entendu(e) tel(le) que vous êtes"], ["invisibilisation", "Sentiment durable, à l'âge adulte, d'être à côté de votre vie ou de jouer un rôle qui n'est pas vous"], ["invisibilisation", "Découverte tardive d'une particularité (neurodivergence, orientation, identité) qui éclaire toute une histoire d'incompréhension antérieure"], ["harcelement", "Harcèlement scolaire (même diffus, même sans violence physique)"], ["harcelement", "Harcèlement professionnel ou souffrance au travail prolongée"], ["harcelement", "Climat familial chronique de critique, de moquerie ou d'humiliation"], ["harcelement", "Pression intense de réussite ou d'obéissance dans l'enfance"]];
+IEV.M3 = [{"id": "3.1", "dim": "presence", "q": "À quelle fréquence {parents_label} étaient-ils émotionnellement disponibles pour vous quand vous en aviez besoin ?"}, {"id": "3.2", "dim": "presence", "q": "À quelle fréquence vous sentiez-vous capable de parler d'un souci à {parents_label} sans crainte ?"}, {"id": "3.3", "dim": "presence", "q": "À quelle fréquence ressentiez-vous d'avoir une place reconnue dans votre famille, en tant que personne distincte ?"}, {"id": "3.4", "dim": "chaleur", "q": "À quelle fréquence ressentiez-vous de la chaleur affective dans votre famille d'enfance ?"}, {"id": "3.5", "dim": "chaleur", "q": "À quelle fréquence vous sentiez-vous aimé(e) indépendamment de votre comportement ou de vos résultats ?"}, {"id": "3.6", "dim": "critique", "q": "À quelle fréquence receviez-vous des marques de fierté ou de reconnaissance de {parents_label} ?"}, {"id": "3.7", "dim": "critique", "q": "À quelle fréquence étiez-vous critiqué(e), corrigé(e), ou comparé(e) défavorablement à d'autres ?"}, {"id": "3.8", "dim": "critique", "q": "À quelle fréquence ressentiez-vous que vos efforts étaient remarqués, indépendamment des résultats ?"}, {"id": "3.9", "dim": "securite", "q": "À quelle fréquence le climat affectif à la maison vous semblait-il prévisible (humeurs des adultes stables) ?"}, {"id": "3.10", "dim": "securite", "q": "À quelle fréquence vous sentiez-vous libre d'exprimer désaccord, colère ou tristesse sans conséquence négative ?"}, {"id": "3.11", "dim": "securite", "q": "À quelle fréquence vous sentiez-vous physiquement et émotionnellement en sécurité au quotidien à la maison ?"}, {"id": "3.12", "dim": "parentification", "q": "À quelle fréquence aviez-vous le sentiment d'être en charge du bien-être émotionnel d'un parent (ou d'un autre adulte de votre famille) ?"}, {"id": "3.13", "dim": "parentification", "q": "À quelle fréquence étiez-vous, enfant ou adolescent(e), responsable de tâches d'adulte (organisation, gestion, soin d'un proche) ?"}, {"id": "3.14", "dim": "parentification", "q": "À quelle fréquence aviez-vous l'impression de devoir être « celui ou celle qui va bien » pour ne pas peser sur les adultes ?"}, {"id": "3.15", "dim": "individuation", "q": "À quelle fréquence aviez-vous le droit de penser, ressentir ou faire différemment des autres membres de votre famille sans que ce soit vécu comme une trahison ?"}, {"id": "3.16", "dim": "individuation", "q": "À quelle fréquence vos limites personnelles (votre intimité, votre temps, vos choix) étaient-elles respectées par les adultes de votre entourage ?"}, {"id": "3.17", "dim": "individuation", "q": "À quelle fréquence vous sentiez-vous, en grandissant, libre de devenir une personne distincte de l'image que votre famille avait de vous ?"}, {"id": "3.18", "dim": "coherence", "q": "À quelle fréquence les règles et attentes des adultes à votre égard vous semblaient-elles cohérentes (pas de double-message, pas de retournement permanent) ?"}, {"id": "3.19", "dim": "coherence", "q": "À quelle fréquence les promesses faites par les adultes de votre entourage étaient-elles tenues ?"}, {"id": "3.20", "dim": "loyaute", "q": "À quelle fréquence aviez-vous l'impression que parler de votre vécu, de vos sentiments, ou de ce qui se passait à la maison était interdit ou tabou ?"}, {"id": "3.21", "dim": "loyaute", "q": "À quelle fréquence y avait-il, dans votre famille, des sujets qu'il fallait éviter au prix de la paix relationnelle ?"}, {"id": "3.22", "dim": "social", "q": "À quelle fréquence étiez-vous encouragé(e) à avoir des amis, à les inviter, à avoir une vie sociale propre ?"}, {"id": "3.23", "dim": "social", "q": "À quelle fréquence étiez-vous protégé(e) (ou aidé(e)) lorsque vous viviez des difficultés sociales (harcèlement, conflits, exclusion) ?"}, {"id": "3.24", "dim": "modeles", "q": "À quelle fréquence aviez-vous, dans votre entourage proche d'enfance, un modèle adulte que vous trouviez inspirant et juste dans sa manière d'être ?"}, {"id": "3.25", "dim": "modeles", "q": "À quelle fréquence avez-vous vu, enfant, des adultes capables de reconnaître leurs torts, de s'excuser, ou de réparer après un conflit ?"}];
+IEV.M4 = [{"id": "4.1", "dim": "couple_securite", "q": "Dans vos relations amoureuses, vous êtes-vous senti(e) globalement en sécurité émotionnelle ?"}, {"id": "4.2", "dim": "couple_securite", "q": "Vous est-il arrivé d'être dans des relations où vous deviez constamment surveiller votre comportement pour éviter une réaction négative de l'autre ?"}, {"id": "4.3", "dim": "couple_securite", "q": "Avez-vous vécu une ou plusieurs relations marquées par la dévalorisation, la critique régulière, ou la minimisation de ce que vous viviez ?"}, {"id": "4.4", "dim": "couple_pouvoir", "q": "Vous est-il arrivé d'être dans une relation où les décisions importantes étaient prises sans vous, ou contre vous, sous prétexte de votre bien ?"}, {"id": "4.5", "dim": "couple_pouvoir", "q": "Vous est-il arrivé d'être dans une relation où exprimer un désaccord avait pour conséquence un retrait affectif, du silence, ou des représailles ?"}, {"id": "4.6", "dim": "couple_pouvoir", "q": "Avez-vous vécu de la jalousie possessive ou du contrôle (de votre temps, de vos contacts, de vos finances) dans une relation amoureuse ?"}, {"id": "4.7", "dim": "amitie", "q": "Dans vos amitiés, vous est-il arrivé d'être dans des relations très déséquilibrées (vous donnant beaucoup plus que vous ne receviez) ?"}, {"id": "4.8", "dim": "amitie", "q": "Avez-vous vécu des trahisons amicales marquantes (mensonge prolongé, rupture brutale sans explication, rumeurs) ?"}, {"id": "4.9", "dim": "amitie", "q": "Avez-vous fréquemment le sentiment d'être l'ami(e) qui appelle, propose, soutient, sans réciprocité équivalente ?"}, {"id": "4.10", "dim": "famille_adulte", "q": "Vos relations actuelles avec votre famille d'origine sont-elles pour vous une source de soutien plutôt que de tension ?"}, {"id": "4.11", "dim": "famille_adulte", "q": "Avez-vous eu, à l'âge adulte, à mettre des limites fortes à un membre de votre famille d'origine (rupture partielle ou totale, distance, restriction de contact) ?"}, {"id": "4.12", "dim": "travail", "q": "Dans votre vie professionnelle, avez-vous vécu des situations prolongées de harcèlement, de mise à l'écart, ou de pression abusive ?"}, {"id": "4.13", "dim": "travail", "q": "Avez-vous vécu une ou plusieurs périodes d'épuisement professionnel marqué ?"}, {"id": "4.14", "dim": "travail", "q": "À quelle fréquence sentez-vous que votre travail (passé ou présent) vous reconnaît à votre juste valeur ?"}, {"id": "4.15", "dim": "patterns", "q": "Avez-vous l'impression que certains schémas relationnels difficiles se répètent dans votre vie, malgré vos efforts pour qu'ils changent ?"}, {"id": "4.16", "dim": "patterns", "q": "Avez-vous tendance à attirer ou à choisir des personnes qui finissent par vous traiter de manière similaire à ce que vous avez connu enfant ?"}, {"id": "4.17", "dim": "demande_aide", "q": "Vous est-il facile de demander de l'aide à un proche quand vous en avez besoin ?"}, {"id": "4.18", "dim": "demande_aide", "q": "Quand vous traversez une période difficile, en parlez-vous spontanément à votre entourage ?"}, {"id": "4.19", "dim": "attachement", "q": "Dans une relation proche, vous sentez-vous parfois préoccupé(e) par l'idée que l'autre puisse s'éloigner ou vous abandonner ?"}, {"id": "4.20", "dim": "attachement", "q": "Préférez-vous garder une certaine distance émotionnelle pour éviter d'être trop dépendant(e) ou exposé(e) ?"}];
+IEV.M5 = [{"id": "5.1", "dim": "precarite", "q": "Votre famille d'origine a-t-elle connu des périodes de précarité financière (privation matérielle, dettes, peur de manquer) ?"}, {"id": "5.2", "dim": "precarite", "q": "Avez-vous, en tant qu'adulte, traversé des périodes de précarité financière prolongées ?"}, {"id": "5.3", "dim": "precarite", "q": "Le rapport à l'argent a-t-il été source de stress chronique dans votre histoire ?"}, {"id": "5.4", "dim": "instabilite", "q": "Avez-vous vécu de multiples déménagements (4 ou plus) avant l'âge de 18 ans ?"}, {"id": "5.5", "dim": "instabilite", "q": "Votre vie adulte a-t-elle été marquée par une forte mobilité géographique non choisie ?"}, {"id": "5.6", "dim": "migration", "q": "Avez-vous vécu un parcours migratoire (vous-même, ou hérité d'une migration parentale) qui vous a coupé(e) d'un environnement d'origine ?"}, {"id": "5.7", "dim": "migration", "q": "Avez-vous vécu en grandissant entre deux cultures, deux langues, ou deux systèmes de valeurs ?"}, {"id": "5.8", "dim": "migration", "q": "Avez-vous eu le sentiment, dans votre histoire, d'être à la fois « pas tout à fait d'ici » et « pas tout à fait de là-bas » ?"}, {"id": "5.9", "dim": "discrimination", "q": "Avez-vous fait l'expérience, durablement, de discrimination ou de marginalisation liée à votre origine, votre apparence, votre religion, votre orientation ou votre identité ?"}, {"id": "5.10", "dim": "discrimination", "q": "Avez-vous vécu, dans votre enfance ou adolescence, le sentiment de ne pas correspondre aux attentes implicites de votre environnement social ?"}, {"id": "5.11", "dim": "invisibilisation_minorite", "q": "Faites-vous partie d'une catégorie sociale, identitaire, ou culturelle minoritaire qui a façonné votre expérience quotidienne ?"}, {"id": "5.12", "dim": "invisibilisation_minorite", "q": "Avez-vous ressenti de manière chronique le besoin de masquer ou d'atténuer une partie de qui vous êtes pour être accepté(e) ?"}, {"id": "5.13", "dim": "milieu_social", "q": "Avez-vous, à un moment de votre vie, changé de milieu social de manière marquante (ascension, descente, transclasse) ?"}, {"id": "5.14", "dim": "milieu_social", "q": "Ce changement de milieu a-t-il généré un sentiment durable de décalage, de double appartenance, ou d'imposture ?"}, {"id": "5.15", "dim": "violence_contexte", "q": "Avez-vous grandi ou vécu dans un environnement marqué par la violence sociale chronique (quartier, milieu professionnel violent, contexte de guerre ou d'insécurité collective) ?"}];
+IEV.M6 = [{"id": "6.1", "dim": "hypervigilance", "q": "Restez-vous souvent en vigilance dans les espaces publics (vous repérez les sorties, vous surveillez votre environnement, vous évaluez les personnes autour) ?"}, {"id": "6.2", "dim": "hypervigilance", "q": "Êtes-vous facilement sursauté(e) par les bruits soudains, les portes qui claquent, les approches non-anticipées ?"}, {"id": "6.3", "dim": "hypervigilance", "q": "Avez-vous du mal à vous endormir, des réveils nocturnes fréquents, ou un sommeil non-réparateur ?"}, {"id": "6.4", "dim": "hypervigilance", "q": "Anticipez-vous fréquemment des scénarios négatifs (que va-t-il se passer si…) au point que cela vous épuise ?"}, {"id": "6.5", "dim": "hypervigilance", "q": "Avez-vous du mal à vous détendre, même dans des moments objectivement calmes et sécures ?"}, {"id": "6.6", "dim": "anhedonie", "q": "Avez-vous le sentiment que peu de choses vous procurent un vrai plaisir, une vraie joie ?"}, {"id": "6.7", "dim": "anhedonie", "q": "Avez-vous perdu l'envie ou la capacité de vous projeter dans l'avenir avec enthousiasme ?"}, {"id": "6.8", "dim": "anhedonie", "q": "Vous sentez-vous fréquemment fatigué(e) sans raison physiologique claire ?"}, {"id": "6.9", "dim": "anhedonie", "q": "Avez-vous l'impression de fonctionner mais sans vraiment vivre, comme si vous étiez « à côté » de votre existence ?"}, {"id": "6.10", "dim": "dysregulation", "q": "Vos émotions vous semblent-elles parfois disproportionnées par rapport à ce qui les a déclenchées ?"}, {"id": "6.11", "dim": "dysregulation", "q": "Vous arrive-t-il de passer rapidement d'un état émotionnel à un autre, sans transition claire ?"}, {"id": "6.12", "dim": "dysregulation", "q": "Êtes-vous particulièrement sensible au rejet, à la critique, ou à la perception qu'on s'éloigne de vous ?"}, {"id": "6.13", "dim": "dysregulation", "q": "Avez-vous du mal à apaiser seul(e) une émotion forte une fois qu'elle est déclenchée ?"}, {"id": "6.14", "dim": "somatique", "q": "Souffrez-vous de douleurs récurrentes (tête, dos, ventre, mâchoire, autres) sans cause médicale clairement identifiée ?"}, {"id": "6.15", "dim": "somatique", "q": "Avez-vous des troubles digestifs chroniques (ballonnements, transit perturbé, sensations de nœud à l'estomac) ?"}, {"id": "6.16", "dim": "somatique", "q": "Avez-vous des tensions corporelles permanentes (épaules, mâchoire, gorge serrée) ?"}, {"id": "6.17", "dim": "somatique", "q": "Tombez-vous malade régulièrement dès qu'une période de stress retombe (rhume, fatigue, infections) ?"}, {"id": "6.18", "dim": "imposture", "q": "Avez-vous fréquemment le sentiment de ne pas mériter ce qui vous arrive de bien (succès, amour, reconnaissance) ?"}, {"id": "6.19", "dim": "imposture", "q": "Avez-vous du mal à vous attribuer le mérite de vos réussites (vous les attribuez à la chance, à l'aide des autres, au hasard) ?"}, {"id": "6.20", "dim": "imposture", "q": "Vous arrive-t-il de penser que si l'on vous connaissait vraiment, on serait déçu(e) ?"}, {"id": "6.21", "dim": "controle", "q": "Avez-vous du mal à ne rien faire, à perdre du temps, à être improductif(ve) sans culpabilité ?"}, {"id": "6.22", "dim": "controle", "q": "Avez-vous tendance à anticiper et à contrôler les situations pour éviter les imprévus ?"}, {"id": "6.23", "dim": "controle", "q": "Vous est-il difficile d'accepter de l'aide, des cadeaux, ou des attentions sans vous sentir redevable ?"}, {"id": "6.24", "dim": "controle", "q": "Avez-vous du mal à reconnaître vos propres besoins, ou à les prioriser face à ceux des autres ?"}, {"id": "6.25", "dim": "dissociation", "q": "Vous arrive-t-il de ne plus vous souvenir d'une partie d'une journée, ou d'avoir des « trous » dans votre mémoire récente ?"}, {"id": "6.26", "dim": "dissociation", "q": "Vous arrive-t-il de regarder votre image dans un miroir et d'avoir un sentiment d'étrangeté, comme si ce n'était pas vraiment vous ?"}, {"id": "6.27", "dim": "dissociation", "q": "Avez-vous parfois l'impression que ce qui vous arrive est arrivé à quelqu'un d'autre, ou que vous observez votre vie de l'extérieur ?"}, {"id": "6.28", "dim": "dissociation", "q": "Vous arrive-t-il de faire des choses sans vous souvenir précisément de les avoir faites (trajet, conversation, tâche routinière) ?"}, {"id": "6.29", "dim": "dissociation", "q": "Vous arrive-t-il de vous sentir émotionnellement « anesthésié(e) », comme si rien ne pouvait vous atteindre vraiment ?"}, {"id": "6.30", "dim": "dissociation", "q": "Vous sentez-vous parfois « ailleurs », sans pouvoir vraiment vous reconnecter au moment présent et à votre corps ?"}];
+IEV.M7 = [{"id": "7.A.1", "sub": "chaleur", "q": "Dans votre enfance et votre adolescence, vous souvenez-vous d'avoir été pris(e) dans les bras par un adulte de votre entourage proche, simplement pour être réconforté(e), sans raison particulière (pas un câlin de bonjour, pas un câlin d'anniversaire — un câlin pour rien) ?"}, {"id": "7.A.2", "sub": "chaleur", "q": "Dans votre famille d'enfance, les mots d'amour ou d'affection (« je t'aime », « tu comptes pour moi », « tu es précieux/se ») étaient-ils dits ?"}, {"id": "7.A.3", "sub": "chaleur", "q": "Vous souvenez-vous d'un adulte de votre entourage proche qui vous ait fait sentir, par ses paroles ou ses gestes, que vous étiez quelqu'un de bien — indépendamment de vos résultats, de votre comportement, ou de votre utilité ?"}, {"id": "7.A.4", "sub": "chaleur", "q": "Pendant votre enfance, vous souvenez-vous de gestes de tendresse spontanés d'un adulte proche — une main qui passe dans les cheveux, une caresse sur la joue, un sourire qui s'adresse à vous personnellement ?"}, {"id": "7.A.5", "sub": "chaleur", "q": "Quand vous rentriez à la maison après l'école ou une absence, aviez-vous le sentiment qu'on était content(e) de vous voir ?"}, {"id": "7.B.1", "sub": "attention", "q": "Pendant votre enfance et adolescence, vous souvenez-vous qu'un adulte de votre entourage proche vous ait demandé sincèrement comment vous alliez, comment vous vous sentiez à l'intérieur (pas « ça va l'école ? », mais « comment tu te sens en ce moment ? ») ?"}, {"id": "7.B.2", "sub": "attention", "q": "Dans votre famille d'enfance, aviez-vous le sentiment d'avoir le droit d'exprimer de la tristesse, de la colère, ou de la peur sans que cela soit minimisé, moqué, ignoré, ou puni ?"}, {"id": "7.B.3", "sub": "attention", "q": "Vous souvenez-vous d'un moment précis où, enfant ou adolescent(e), vous avez parlé d'un problème important pour vous à un adulte de l'entourage, et où vous avez senti que vous étiez vraiment écouté(e), sans être interrompu(e), jugé(e), ou réorienté(e) trop vite vers une solution ?"}, {"id": "7.B.4", "sub": "attention", "q": "Lorsque vous traversiez un moment difficile (une amitié qui se brisait, un échec, une déception, une peur), un adulte de votre entourage le remarquait-il et venait-il vers vous ?"}, {"id": "7.B.5", "sub": "attention", "q": "Vos opinions, vos idées personnelles, vos préférences propres étaient-elles écoutées, prises en compte, voire valorisées par les adultes de votre entourage proche ?"}, {"id": "7.C.1", "sub": "modeles", "q": "Avez-vous le souvenir d'avoir vu, dans votre enfance ou adolescence, des adultes de votre entourage gérer un conflit ou un désaccord d'une façon constructive (s'écouter, exprimer leurs ressentis sans s'attaquer, trouver un compromis) ?"}, {"id": "7.C.2", "sub": "modeles", "q": "Avez-vous, dans votre enfance, vu un adulte de votre entourage exprimer sa tristesse, sa peur ou sa vulnérabilité de manière assumée et apaisée (pas en crise, pas en s'effondrant — simplement en le disant) ?"}, {"id": "7.C.3", "sub": "modeles", "q": "Dans votre enfance, avez-vous vu des adultes de votre entourage (parents, grands-parents, autres) se manifester de la tendresse les uns aux autres (mots gentils, gestes affectueux, attentions) ?"}, {"id": "7.C.4", "sub": "modeles", "q": "Quand un conflit ou une tension avait eu lieu dans votre famille d'enfance, y avait-il un moment de réparation explicite (un mot, un geste, un échange) qui marquait que la tension était passée ?"}, {"id": "7.D.1", "sub": "soutien", "q": "Pendant votre enfance, aviez-vous le sentiment qu'un adulte de votre entourage proche aurait été là, et capable, pour vous protéger en cas de réel besoin ?"}, {"id": "7.D.2", "sub": "soutien", "q": "Quand vous avez traversé une difficulté concrète dans votre enfance ou adolescence (un harcèlement, une difficulté d'apprentissage, un conflit avec un adulte, un problème de santé), y a-t-il eu un adulte qui a pris au sérieux la situation et qui s'est mobilisé pour vous ?"}, {"id": "7.D.3", "sub": "soutien", "q": "Vous souvenez-vous d'un moment où un adulte de votre entourage proche vous a explicitement défendu(e) face à une injustice, une accusation injustifiée, ou un traitement dur d'un autre adulte ?"}, {"id": "7.D.4", "sub": "soutien", "q": "Aviez-vous, dans votre enfance et votre adolescence, le sentiment d'avoir le droit d'être vous-même, avec votre tempérament propre, vos goûts propres, votre manière d'être au monde — sans avoir à entrer dans un moule particulier pour être accepté(e) ?"}];
+IEV.M8 = [{"id": "8.1", "dim": "attachement_secure_passe", "q": "Y a-t-il eu, dans votre histoire, au moins une figure d'attachement sécure (un adulte, un proche) sur qui vous pouviez vraiment compter, à un moment donné ?"}, {"id": "8.2", "dim": "attachement_secure_present", "q": "Avez-vous aujourd'hui dans votre vie au moins une relation où vous vous sentez profondément en sécurité émotionnelle ?"}, {"id": "8.3", "dim": "reseau_actuel", "q": "Disposez-vous d'un réseau social (amis, famille choisie, collègues, communauté) sur lequel vous pouvez vous appuyer ?"}, {"id": "8.4", "dim": "reseau_actuel", "q": "Si vous traversiez une crise demain, sauriez-vous vers qui vous tourner concrètement ?"}, {"id": "8.5", "dim": "mentalisation", "q": "Vous arrive-t-il de prendre du recul sur vos émotions et de chercher à comprendre ce qui les a déclenchées en vous ?"}, {"id": "8.6", "dim": "mentalisation", "q": "Êtes-vous capable de tenir compte des intentions, des émotions et des limites des autres dans vos relations ?"}, {"id": "8.7", "dim": "sens_coherence", "q": "Avez-vous le sentiment que votre vie a un sens, une direction, une cohérence d'ensemble ?"}, {"id": "8.8", "dim": "sens_coherence", "q": "Quand vous traversez une difficulté, parvenez-vous généralement à lui trouver un sens, une utilité, une issue ?"}, {"id": "8.9", "dim": "ressources_creatives", "q": "Avez-vous des activités (artistiques, créatives, physiques, intellectuelles) qui vous nourrissent vraiment, indépendamment de tout résultat ?"}, {"id": "8.10", "dim": "corps", "q": "Avez-vous un rapport globalement apaisé à votre corps (sensations, mouvement, repos) ?"}, {"id": "8.11", "dim": "humour", "q": "L'humour, l'autodérision bienveillante, le rire font-ils partie de vos ressources quotidiennes ?"}, {"id": "8.12", "dim": "valeurs", "q": "Avez-vous identifié des valeurs personnelles fortes (au-delà de celles transmises par votre famille) qui guident vos choix importants ?"}, {"id": "8.13", "dim": "capacite_reparation", "q": "Avez-vous vécu, dans votre parcours, des expériences réparatrices (thérapie, rencontres, lectures, événements) qui ont fait évoluer votre regard sur vous-même ?"}, {"id": "8.14", "dim": "resilience_active", "q": "Reconnaissez-vous chez vous-même des forces qui vous ont permis de traverser des moments difficiles ?"}, {"id": "8.15", "dim": "espoir", "q": "Pensez-vous qu'il est possible, pour vous, d'évoluer encore, de découvrir des choses sur vous-même, de transformer ce qui peut l'être ?"}];
+
+// Module 2 — categories with labels for display
+IEV.M2_CATS = {
+  perte: "Pertes et deuils",
+  transition: "Transitions et changements majeurs",
+  conflit: "Conflits et relations difficiles",
+  precarite: "Précarité",
+  sante: "Santé",
+  deracinement: "Déracinement et migration",
+  surcharge: "Surcharge et parentification",
+  invisibilisation: "Invisibilisation",
+  harcelement: "Harcèlement et violences psychologiques"
+};
+
+// Indices des événements M2 EXCLUS du champ occurrences (événements à occurrence unique par nature)
+// 0 = Décès parent biologique (max 2 par nature, comptés au M2 directement)
+// 8 = Séparation/divorce des parents (un seul événement subi enfant)
+// 14 = Naissance d'un enfant à vous (le nombre est déjà capté au Module 0)
+// 36 = Parentification (concept de période d'enfance, pas un événement comptable)
+// 40-42 = Invisibilisation et découverte tardive (concepts singuliers et chroniques)
+IEV.M2_EXCLUS_OCCURRENCES = [0, 8, 14, 36, 40, 41, 42];
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   ÉTAT GLOBAL
+   ═══════════════════════════════════════════════════════════════════ */
+const state = {
+  sessionId: null,
+  startedAt: null,
+  profile: {},
+  configuration: {},        // M0
+  noyau: {},               // M1
+  evenements: {},          // M2 — key = ev index
+  climat_dev: {},          // M3
+  climat_relationnel: {},  // M4
+  contexte_socio: {},      // M5
+  empreinte: {},           // M6
+  transparences: {},       // M7
+  ressources: {},          // M8
+  ysq_imported: null,      // payload YSQ déchiffré si import
+  current_module: 'home',
+  current_step: 0,
+  modules_active: { m3: false, m4: false, m5: false }
+};
+
+// Total items dépend des modules activés
+function totalItemsExpected() {
+  let total = IEV.M0.filter(i => !i.conditional_on).length // M0 base
+    + IEV.M1.length
+    + (IEV.M2_EV.length) // events potentially answered
+    + IEV.M6.length
+    + IEV.M7.length
+    + IEV.M8.length;
+  if (state.modules_active.m3) total += IEV.M3.length;
+  if (state.modules_active.m4) total += IEV.M4.length;
+  if (state.modules_active.m5) total += IEV.M5.length;
+  return total;
+}
+
+function totalItemsAnswered() {
+  let n = Object.keys(state.configuration).filter(k => state.configuration[k] != null && state.configuration[k] !== '').length;
+  n += Object.keys(state.noyau).length;
+  n += Object.keys(state.evenements).filter(k => state.evenements[k] && state.evenements[k].present != null).length;
+  n += Object.keys(state.climat_dev).length;
+  n += Object.keys(state.climat_relationnel).length;
+  n += Object.keys(state.contexte_socio).length;
+  n += Object.keys(state.empreinte).length;
+  n += Object.keys(state.transparences).length;
+  n += Object.keys(state.ressources).length;
+  return n;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PERSISTANCE — localStorage + import/export .iev-session
+   ═══════════════════════════════════════════════════════════════════ */
+const STORAGE_KEY = 'iev-v1-session';
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) { console.warn('localStorage write failed', e); }
+}
+function loadState() {
+  try {
+    const s = localStorage.getItem(STORAGE_KEY);
+    if (!s) return null;
+    return JSON.parse(s);
+  } catch (e) { return null; }
+}
+function clearStoredState() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+}
+
+function exportSession() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const fn = `IEV_${state.profile.nom || 'anon'}_${state.profile.prenom || ''}_${new Date().toISOString().split('T')[0]}.iev-session`;
+  a.href = url; a.download = fn.replace(/\s+/g, '_'); a.click();
+  URL.revokeObjectURL(url);
+  showToast('Session sauvegardée', 'success');
+}
+
+function importSession(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      Object.assign(state, data);
+      saveState();
+      showToast('Session restaurée', 'success');
+      // Reprendre où on en était
+      goToModule(state.current_module || 'home', state.current_step || 0);
+    } catch (err) {
+      showToast('Fichier invalide', 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   IMPORT YSQ-L3 — déscramble du JSON YSQ avec la clé partagée
+   ═══════════════════════════════════════════════════════════════════ */
+const YSQ_KEY = 'C-Concept-Dev-2026';
+
+function unscrambleYsq(scrambledB64) {
+  // base64 decode → XOR cyclique
+  const binary = atob(scrambledB64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  const out = new Uint8Array(bytes.length);
+  for (let i = 0; i < bytes.length; i++) {
+    out[i] = bytes[i] ^ YSQ_KEY.charCodeAt(i % YSQ_KEY.length);
+  }
+  return new TextDecoder('utf-8').decode(out);
+}
+
+function importYsqFile(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      let decoded = null;
+      let format = '';
+
+      // Cas 1 — JSON en clair (phase test ou nouvel export YSQ v3.1.1+)
+      // Reconnaissable à la présence directe de derived_data.scores ou meta.outil
+      if (parsed && (
+          (parsed.derived_data && parsed.derived_data.scores) ||
+          (parsed.meta && parsed.meta.outil === 'YSQ-L3')
+        )) {
+        decoded = parsed;
+        format = 'clair';
+      }
+      // Cas 2 — JSON scramblé (ancien format avec enveloppe)
+      else if (parsed && parsed.scrambled_payload) {
+        decoded = JSON.parse(unscrambleYsq(parsed.scrambled_payload));
+        format = 'déchiffré';
+      }
+      // Cas 3 — fichier non reconnu
+      else {
+        throw new Error('Format non reconnu — ni JSON YSQ en clair, ni JSON scramblé');
+      }
+
+      state.ysq_imported = decoded;
+      saveState();
+      showToast('YSQ-L3 importé avec succès (' + format + ')', 'success');
+
+      // Refresh dropzone visual
+      const dz = document.getElementById('ysqDropzone');
+      if (dz) {
+        dz.classList.add('imported');
+        dz.innerHTML = '<div class="icon">✓</div><div class="label">YSQ-L3 importé</div><div class="hint">' +
+          (decoded.profile?.prenom || '') + ' ' + (decoded.profile?.nom || '') + '</div>';
+      }
+    } catch (err) {
+      showToast('Fichier YSQ-L3 invalide : ' + err.message, 'error');
+      console.error(err);
+    }
+  };
+  reader.readAsText(file);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SCRAMBLE EXPORT IEV (identique YSQ)
+   ═══════════════════════════════════════════════════════════════════ */
+function scramblePayload(jsonStr) {
+  const key = YSQ_KEY;
+  const enc = new TextEncoder().encode(jsonStr);
+  const xored = new Uint8Array(enc.length);
+  for (let i = 0; i < enc.length; i++) xored[i] = enc[i] ^ key.charCodeAt(i % key.length);
+  let binary = '';
+  for (let i = 0; i < xored.length; i++) binary += String.fromCharCode(xored[i]);
+  return btoa(binary);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   TOAST
+   ═══════════════════════════════════════════════════════════════════ */
+let toastTimer = null;
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PROGRESS BAR + HEADER
+   ═══════════════════════════════════════════════════════════════════ */
+function updateProgress() {
+  const total = Math.max(totalItemsExpected(), 1);
+  const done = totalItemsAnswered();
+  const pct = Math.min(100, Math.round(done / total * 100));
+  document.getElementById('globalProgressBar').style.width = pct + '%';
+  document.getElementById('headerMeta').textContent =
+    state.current_module === 'home' ? '' : (done + ' / ' + total);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PARAMÉTRAGE DYNAMIQUE — labels famille selon configuration
+   ═══════════════════════════════════════════════════════════════════ */
+function getParentsLabel() {
+  const c = state.configuration['0.1'];
+  if (!c) return 'vos parents';
+  switch (c) {
+    case 'parents_ensemble': return 'vos parents';
+    case 'parents_separes_alternee': return 'vos parents (en garde alternée)';
+    case 'parents_separes_unique': return 'votre parent référent';
+    case 'famille_recomposee': return 'votre parent et son nouveau conjoint(e)';
+    case 'parent_seul': return 'votre parent';
+    case 'grands_parents': return 'les personnes qui vous ont élevé(e)';
+    case 'placement': return 'les personnes qui s\'occupaient de vous';
+    case 'adoption': return 'vos parents adoptifs';
+    case 'mixte': return 'les adultes référents de votre enfance';
+    default: return 'les adultes référents de votre enfance';
+  }
+}
+
+function substituteVars(text) {
+  return text.replace(/{parents_label}/g, getParentsLabel());
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ROUTAGE — modules
+   ═══════════════════════════════════════════════════════════════════ */
+const MODULE_ORDER = ['home', 'm0', 'm1', 'm2', 'm3', 'm4', 'm5', 'pause_mid', 'm6', 'm7', 'pause_after_m7', 'm8', 'finalisation'];
+
+function nextModuleFrom(current) {
+  const idx = MODULE_ORDER.indexOf(current);
+  for (let i = idx + 1; i < MODULE_ORDER.length; i++) {
+    const m = MODULE_ORDER[i];
+    if (m === 'm3' && !state.modules_active.m3) continue;
+    if (m === 'm4' && !state.modules_active.m4) continue;
+    if (m === 'm5' && !state.modules_active.m5) continue;
+    return m;
+  }
+  return null;
+}
+
+function prevModuleFrom(current) {
+  const idx = MODULE_ORDER.indexOf(current);
+  for (let i = idx - 1; i >= 0; i--) {
+    const m = MODULE_ORDER[i];
+    if (m === 'm3' && !state.modules_active.m3) continue;
+    if (m === 'm4' && !state.modules_active.m4) continue;
+    if (m === 'm5' && !state.modules_active.m5) continue;
+    return m;
+  }
+  return null;
+}
+
+function goToModule(mod, step = 0) {
+  state.current_module = mod;
+  state.current_step = step;
+  saveState();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  const showFloating = !(['home', 'pause_mid', 'pause_after_m7', 'finalisation'].includes(mod));
+  document.getElementById('floatActions').style.display = showFloating ? 'flex' : 'none';
+  render();
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   ACTIVATION DES MODULES CONDITIONNELS depuis Module 1
+   ═══════════════════════════════════════════════════════════════════ */
+function computeModuleActivation() {
+  // Active M3 si signaux d'enfance / climat développemental (impact modéré+ )
+  // Active M4 si signaux relationnels adulte
+  // Active M5 si signaux socioculturels
+  // Seuil: au moins "Un impact modéré" (>= 1) sur l'échelle 0-3 d'impact
+  // Réponses < 0 (ne pas répondre) ignorées
+  const n = state.noyau;
+  const has_impact = (id) => (n[id] != null && n[id] >= 1);
+  state.modules_active.m3 = has_impact('1.9') || has_impact('1.8');
+  state.modules_active.m4 = has_impact('1.3') || has_impact('1.10');
+  state.modules_active.m5 = has_impact('1.6') || has_impact('1.4') || has_impact('1.11');
+  // Forcer M5 si parcours migratoire déclaré en M0
+  const migration = state.configuration['0.4'];
+  if (migration && Array.isArray(migration) && migration.length > 0 && !migration.includes('aucun')) {
+    state.modules_active.m5 = true;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   RENDU — fonction maître
+   ═══════════════════════════════════════════════════════════════════ */
+function render() {
+  const c = document.getElementById('mainContainer');
+  c.innerHTML = '';
+  switch (state.current_module) {
+    case 'home': renderHome(c); break;
+    case 'm0': renderModule0(c); break;
+    case 'm1': renderModule1(c); break;
+    case 'm2': renderModule2(c); break;
+    case 'm3': renderModule3(c); break;
+    case 'm4': renderModule4(c); break;
+    case 'm5': renderModule5(c); break;
+    case 'pause_mid': renderPauseMid(c); break;
+    case 'm6': renderModule6(c); break;
+    case 'm7': renderModule7(c); break;
+    case 'pause_after_m7': renderPauseAfterM7(c); break;
+    case 'm8': renderModule8(c); break;
+    case 'finalisation': renderFinalisation(c); break;
+  }
+  updateProgress();
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PAGE D'ACCUEIL
+   ═══════════════════════════════════════════════════════════════════ */
+function renderHome(c) {
+  c.innerHTML = `
+    <div class="card">
+      <h1>Inventaire des Empreintes de Vie</h1>
+      <p class="muted small" style="margin-bottom:16px;">IEV v1.0 — outil de cartographie biographique</p>
+      <p>Cet outil explore les <strong>empreintes que votre vie a laissées en vous</strong> : événements marquants, climat développemental et relationnel, et ce qui en résonne aujourd'hui dans votre fonctionnement.</p>
+      <p class="mt-2">Il n'est pas un diagnostic. Il propose une <strong>cartographie</strong> à explorer en consultation avec un professionnel.</p>
+      <p class="mt-2 muted small">Durée estimée : entre 40 et 60 minutes selon votre parcours. Vous pouvez faire des pauses et sauvegarder à tout moment.</p>
+    </div>
+
+    <div class="card avertissement">
+      <h3>Avant de commencer</h3>
+      <p class="small">Les questions qui suivront abordent des dimensions de l'histoire de vie qui peuvent être <strong>émotionnellement chargées</strong>. Prenez votre temps. Vous pouvez interrompre et reprendre à tout moment. Si vous ressentez le besoin de parler à quelqu'un pendant ou après la passation, le <strong>3114</strong> (numéro national de prévention) est disponible 24h/24, gratuitement.</p>
+    </div>
+
+    <div class="card">
+      <h2>Vos informations</h2>
+      <div class="form-row">
+        <div><label>Nom</label><input type="text" id="profNom" value="${state.profile.nom || ''}"></div>
+        <div><label>Prénom</label><input type="text" id="profPrenom" value="${state.profile.prenom || ''}"></div>
+      </div>
+      <div class="form-row">
+        <div><label>Âge</label><input type="number" id="profAge" min="18" max="120" value="${state.profile.age || ''}"></div>
+        <div><label>Genre</label>
+          <select id="profGenre">
+            <option value="">—</option>
+            <option ${state.profile.genre === 'F' ? 'selected' : ''}>F</option>
+            <option ${state.profile.genre === 'M' ? 'selected' : ''}>M</option>
+            <option ${state.profile.genre === 'NB' ? 'selected' : ''}>Non-binaire / autre</option>
+            <option ${state.profile.genre === 'NSP' ? 'selected' : ''}>Préfère ne pas dire</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Reprendre une passation enregistrée <span class="muted small">(optionnel)</span></h2>
+      <div class="dropzone" id="ievDropzone">
+        <div class="icon">↻</div>
+        <div class="label">Glisser un fichier <code>.iev-session</code> ou cliquer</div>
+        <div class="hint">Votre progression sera restaurée</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Importer votre YSQ-L3 <span class="muted small">(optionnel)</span></h2>
+      <p class="small muted">Si vous avez passé le YSQ-L3, vous pouvez charger ici votre fichier <code>.json</code> exporté. Le rapport final fera des ponts entre votre charge cumulée et vos schémas YSQ.</p>
+      <div class="dropzone mt-2 ${state.ysq_imported ? 'imported' : ''}" id="ysqDropzone">
+        ${state.ysq_imported ?
+          `<div class="icon">✓</div><div class="label">YSQ-L3 importé</div><div class="hint">${state.ysq_imported.profile?.prenom || ''} ${state.ysq_imported.profile?.nom || ''}</div>` :
+          `<div class="icon">↑</div><div class="label">Glisser votre fichier YSQ-L3 ou cliquer</div><div class="hint">Le fichier <code>.json</code> exporté depuis le YSQ-L3</div>`
+        }
+      </div>
+    </div>
+
+    <div class="nav-buttons center">
+      <button class="btn" id="btnStart" style="font-size:1.05em; padding:14px 28px;">Commencer la passation →</button>
+    </div>
+  `;
+
+  document.getElementById('btnStart').addEventListener('click', () => {
+    state.profile.nom = document.getElementById('profNom').value.trim();
+    state.profile.prenom = document.getElementById('profPrenom').value.trim();
+    state.profile.age = parseInt(document.getElementById('profAge').value) || null;
+    state.profile.genre = document.getElementById('profGenre').value;
+    if (!state.profile.prenom || !state.profile.nom) {
+      showToast('Merci de renseigner Nom et Prénom', 'error'); return;
+    }
+    if (!state.profile.age || state.profile.age < 18) {
+      showToast('Outil réservé aux adultes (18 ans et +)', 'error'); return;
+    }
+    if (!state.sessionId) {
+      state.sessionId = 'iev-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 7);
+      state.startedAt = new Date().toISOString();
+    }
+    goToModule('m0', 0);
+  });
+
+  setupDropzone('ievDropzone', '.iev-session,application/json', importSession);
+  setupDropzone('ysqDropzone', '.json,application/json', importYsqFile);
+}
+
+function setupDropzone(id, accept, handler) {
+  const dz = document.getElementById(id);
+  if (!dz) return;
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = accept; input.style.display = 'none';
+  document.body.appendChild(input);
+  dz.addEventListener('click', () => input.click());
+  input.addEventListener('change', () => { if (input.files[0]) handler(input.files[0]); });
+  dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.classList.add('dragover'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+  dz.addEventListener('drop', (e) => {
+    e.preventDefault(); dz.classList.remove('dragover');
+    if (e.dataTransfer.files[0]) handler(e.dataTransfer.files[0]);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MODULE 0 — CADRAGE
+   ═══════════════════════════════════════════════════════════════════ */
+function renderModule0(c) {
+  c.innerHTML = `
+    <div class="card encadre">
+      <h2>Module 0 — Cadrage de configuration</h2>
+      <p class="small">Quelques questions sur votre configuration personnelle, pour adapter la formulation des questions suivantes à votre situation. Cela ne prend que 3-4 minutes. Aucune question médicale, financière, ou intime à ce stade.</p>
+      <p class="small mt-1 muted">L'option « Je préfère ne pas répondre » est disponible sur chaque question.</p>
+    </div>
+
+    <div class="card">
+      ${IEV.M0.map(item => {
+        if (item.conditional_on) {
+          const trigger = state.configuration[item.conditional_on.item];
+          if (trigger !== item.conditional_on.value) return '';
+        }
+        return renderM0Item(item);
+      }).join('')}
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn ghost" onclick="goToModule('home')">← Retour</button>
+      <button class="btn" id="m0Next">Continuer →</button>
+    </div>
+  `;
+
+  // Attach handlers
+  IEV.M0.forEach(item => {
+    if (item.type === 'single' || item.type === 'multi') {
+      document.querySelectorAll(`[data-item="${item.id}"]`).forEach(el => {
+        el.addEventListener('change', () => handleM0Change(item));
+      });
+    } else if (item.type === 'text') {
+      const el = document.getElementById('input-' + item.id);
+      if (el) el.addEventListener('input', () => {
+        state.configuration[item.id] = el.value;
+        saveState();
+      });
+    }
+  });
+
+  // "Autre, précisez" text fields
+  IEV.M0.forEach(item => {
+    if (item.allow_other_text) {
+      const txt = document.getElementById('other-text-' + item.id);
+      if (txt) txt.addEventListener('input', () => {
+        state.configuration[item.id + '_autre_texte'] = txt.value;
+        saveState();
+      });
+    }
+  });
+
+  document.getElementById('m0Next').addEventListener('click', () => {
+    // Validation minimale : au moins 0.1 et 0.5 répondus
+    if (!state.configuration['0.1']) {
+      showToast('Question 0.1 nécessaire pour adapter la suite', 'error'); return;
+    }
+    goToModule('m1', 0);
+  });
+}
+
+function renderM0Item(item) {
+  const id = item.id;
+  if (item.type === 'text') {
+    return `
+      <div class="question-block">
+        <div class="question-id">Question ${id}</div>
+        <div class="question-text">${item.question}</div>
+        <textarea id="input-${id}" maxlength="${item.max_length || 500}" placeholder="Votre réponse (optionnel)">${state.configuration[id] || ''}</textarea>
+      </div>`;
+  }
+  const current = state.configuration[id];
+  const optsHtml = item.options.map(([val, lbl]) => {
+    const isMulti = item.type === 'multi';
+    let checked;
+    if (isMulti) checked = Array.isArray(current) && current.includes(val);
+    else checked = current === val;
+    const inputType = isMulti ? 'checkbox' : 'radio';
+    return `
+      <label class="opt ${checked ? 'selected' : ''}">
+        <input type="${inputType}" name="${id}" value="${val}" data-item="${id}" ${checked ? 'checked' : ''}>
+        <span>${lbl}</span>
+      </label>`;
+  }).join('');
+
+  let extra = '';
+  if (item.allow_other_text) {
+    const showText = (item.type === 'multi'
+      ? Array.isArray(current) && current.includes('autre')
+      : current === 'autre');
+    extra = `
+      <div class="opt-text-extra" style="display:${showText ? 'block' : 'none'}">
+        <input type="text" id="other-text-${id}" placeholder="Précisez…" value="${state.configuration[id + '_autre_texte'] || ''}">
+      </div>`;
+  }
+
+  return `
+    <div class="question-block">
+      <div class="question-id">Question ${id}</div>
+      <div class="question-text">${item.question}</div>
+      <div class="options">${optsHtml}</div>
+      ${extra}
+    </div>`;
+}
+
+function handleM0Change(item) {
+  const id = item.id;
+  const inputs = document.querySelectorAll(`[data-item="${id}"]`);
+  if (item.type === 'multi') {
+    const selected = [];
+    inputs.forEach(i => { if (i.checked) selected.push(i.value); });
+    // Exclusivité: si "aucun"/"aucune" coché, désélectionner le reste
+    if (item.exclusive_first && selected.includes(item.exclusive_first) && selected.length > 1) {
+      inputs.forEach(i => { if (i.value !== item.exclusive_first) i.checked = false; });
+      selected.length = 0;
+      selected.push(item.exclusive_first);
+    } else if (item.exclusive_first && selected.includes(item.exclusive_first)) {
+      // ok
+    } else if (selected.length > 0 && item.exclusive_first) {
+      const idx = selected.indexOf(item.exclusive_first);
+      if (idx >= 0) selected.splice(idx, 1);
+      const aucunInput = Array.from(inputs).find(i => i.value === item.exclusive_first);
+      if (aucunInput) aucunInput.checked = false;
+    }
+    state.configuration[id] = selected;
+  } else {
+    inputs.forEach(i => { if (i.checked) state.configuration[id] = i.value; });
+  }
+  // Update visual selected
+  inputs.forEach(i => i.parentElement.classList.toggle('selected', i.checked));
+  // Toggle "autre" text field
+  if (item.allow_other_text) {
+    const cur = state.configuration[id];
+    const showText = (item.type === 'multi' ? Array.isArray(cur) && cur.includes('autre') : cur === 'autre');
+    const xt = document.querySelector('#other-text-' + id);
+    if (xt) xt.parentElement.style.display = showText ? 'block' : 'none';
+  }
+  saveState();
+  // If conditional triggers should appear, re-render
+  if (item.id === '0.1') render();
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MODULE 1 — NOYAU DE DEPISTAGE
+   ═══════════════════════════════════════════════════════════════════ */
+function renderModule1(c) {
+  c.innerHTML = `
+    <div class="card encadre">
+      <h2>Module 1 — Noyau de dépistage</h2>
+      <p class="small">Pour chacun des 12 thèmes ci-dessous, indiquez <strong>l'empreinte que vous en gardez aujourd'hui</strong> — pas le nombre d'événements, pas leur fréquence.</p>
+      <p class="small mt-1">Beaucoup d'événements peuvent rester sans impact si vous les avez bien traversés. Une seule expérience peut, à l'inverse, peser durablement. <strong>Cotez votre vécu d'aujourd'hui</strong>, votre ressenti actuel face à ces dimensions.</p>
+      <p class="small mt-1 muted">Vous pourrez préciser le nombre d'occurrences au Module 2 (chronologie événementielle) pour chaque événement concerné. Ce dépistage adapte la suite à votre parcours — certains modules s'activeront ou non selon vos réponses.</p>
+    </div>
+
+    <div class="card">
+      ${IEV.M1.map(item => {
+        const cur = state.noyau[item.id];
+        return `
+          <div class="question-block">
+            <div class="question-id">${item.id}</div>
+            <div class="question-text">${item.label}</div>
+            <div class="scale">
+              ${IEV.scale_noyau.options.map(opt => {
+                const sel = cur === opt.value;
+                return `<label class="opt ${sel ? 'selected' : ''}">
+                  <input type="radio" name="noyau-${item.id}" value="${opt.value}" data-noyau="${item.id}" ${sel ? 'checked' : ''}>
+                  <span>${opt.label}</span>
+                </label>`;
+              }).join('')}
+            </div>
+          </div>`;
+      }).join('')}
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn ghost" onclick="goToModule('m0')">← Précédent</button>
+      <button class="btn" id="m1Next">Continuer →</button>
+    </div>
+  `;
+  document.querySelectorAll('[data-noyau]').forEach(el => {
+    el.addEventListener('change', () => {
+      const id = el.dataset.noyau;
+      state.noyau[id] = parseInt(el.value);
+      document.querySelectorAll(`[data-noyau="${id}"]`).forEach(i => {
+        i.parentElement.classList.toggle('selected', i.checked);
+      });
+      saveState();
+    });
+  });
+  document.getElementById('m1Next').addEventListener('click', () => {
+    computeModuleActivation();
+    goToModule('m2', 0);
+  });
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   MODULE 2 — CHRONOLOGIE DE VIE
+   ═══════════════════════════════════════════════════════════════════ */
+function renderModule2(c) {
+  c.innerHTML = `
+    <div class="card encadre">
+      <h2>Module 2 — Chronologie de vie</h2>
+      <p class="small">Voici une liste d'événements possibles. Pour chacun, indiquez s'il s'est produit dans votre vie. <strong>Vous ne cochez que ceux qui vous concernent</strong> — vous pouvez ignorer tous les autres.</p>
+      <p class="small mt-1">Pour chaque événement coché, vous pourrez préciser : à quel âge, comment vous le ressentez aujourd'hui, et s'il est encore présent dans votre quotidien.</p>
+      <p class="small mt-1 muted">Cette section prend environ 10 minutes. Vous pouvez la faire en plusieurs fois.</p>
+    </div>
+
+    ${Object.keys(IEV.M2_CATS).map(cat => {
+      const events = IEV.M2_EV.map((ev, idx) => ({ idx, cat: ev[0], label: ev[1] })).filter(e => e.cat === cat);
+      if (events.length === 0) return '';
+      return `
+        <div class="card">
+          <h3>${IEV.M2_CATS[cat]}</h3>
+          <p class="muted small">Cochez ce qui vous concerne.</p>
+          ${events.map(e => renderEvent(e.idx, e.label)).join('')}
+        </div>`;
+    }).join('')}
+
+    <div class="nav-buttons">
+      <button class="btn ghost" onclick="goToModule('m1')">← Précédent</button>
+      <button class="btn" id="m2Next">Continuer →</button>
+    </div>
+  `;
+  attachEventListeners();
+  document.getElementById('m2Next').addEventListener('click', () => {
+    const next = nextModuleFrom('m2');
+    goToModule(next, 0);
+  });
+}
+
+function renderEvent(idx, label) {
+  const ev = state.evenements[idx] || {};
+  const isActive = ev.present === true;
+  // L'événement est éligible au champ occurrences sauf s'il est dans la liste d'exclus
+  const eligibleOccurrences = !IEV.M2_EXCLUS_OCCURRENCES.includes(idx);
+  return `
+    <div class="event ${isActive ? 'actif' : ''}" data-ev="${idx}">
+      <label class="opt" style="border:none; padding:0; background:transparent;">
+        <input type="checkbox" data-ev-check="${idx}" ${isActive ? 'checked' : ''}>
+        <span class="event-label">${label}</span>
+      </label>
+      <div class="event-extended">
+        <div class="event-controls">
+          ${eligibleOccurrences ? `
+          <label>Nombre d'occurrences :</label>
+          <select data-ev-occurrences="${idx}">
+            <option value="">—</option>
+            ${IEV.scale_occurrences.options.map(o => `<option value="${o.value}" ${ev.occurrences === o.value ? 'selected' : ''}>${o.label}</option>`).join('')}
+          </select>
+          ` : ''}
+          <label>${eligibleOccurrences && (ev.occurrences === 'quelques' || ev.occurrences === 'plusieurs' || ev.occurrences === 'etale') ? "Période principale ou la plus marquante :" : "Période :"}</label>
+          <select data-ev-age="${idx}">
+            <option value="">—</option>
+            ${IEV.age_brackets.map(b => `<option value="${b.value}" ${ev.age === b.value ? 'selected' : ''}>${b.label}</option>`).join('')}
+            <option value="multiple" ${ev.age === 'multiple' ? 'selected' : ''}>Sur plusieurs périodes</option>
+          </select>
+          <label>Aujourd'hui je le ressens comme :</label>
+          <select data-ev-perception="${idx}">
+            <option value="">—</option>
+            ${IEV.perception_options.map(p => `<option value="${p.value}" ${ev.perception_actuelle == p.value ? 'selected' : ''}>${p.label}</option>`).join('')}
+          </select>
+          <label>Encore présent dans votre quotidien :</label>
+          <select data-ev-present="${idx}">
+            <option value="">—</option>
+            <option value="oui" ${ev.encore_present === 'oui' ? 'selected' : ''}>Oui</option>
+            <option value="parfois" ${ev.encore_present === 'parfois' ? 'selected' : ''}>Parfois</option>
+            <option value="non" ${ev.encore_present === 'non' ? 'selected' : ''}>Non</option>
+          </select>
+        </div>
+        <div data-ev-retro-wrapper="${idx}" style="display:${(ev.perception_actuelle == 4 || ev.perception_actuelle == 5) ? 'block' : 'none'}; margin-top:10px;">
+          <label class="small muted">À l'époque, l'avez-vous vécu de la même manière qu'aujourd'hui ?</label>
+          <select data-ev-retro="${idx}">
+            <option value="">—</option>
+            ${IEV.retro_options.map(r => `<option value="${r.value}" ${ev.retrospection === r.value ? 'selected' : ''}>${r.label}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function attachEventListeners() {
+  document.querySelectorAll('[data-ev-check]').forEach(el => {
+    el.addEventListener('change', () => {
+      const idx = el.dataset.evCheck;
+      if (!state.evenements[idx]) state.evenements[idx] = {};
+      state.evenements[idx].present = el.checked;
+      el.closest('.event').classList.toggle('actif', el.checked);
+      saveState();
+      updateProgress();
+    });
+  });
+  document.querySelectorAll('[data-ev-age]').forEach(el => {
+    el.addEventListener('change', () => {
+      const idx = el.dataset.evAge;
+      if (!state.evenements[idx]) state.evenements[idx] = {};
+      state.evenements[idx].age = el.value;
+      saveState();
+    });
+  });
+  document.querySelectorAll('[data-ev-perception]').forEach(el => {
+    el.addEventListener('change', () => {
+      const idx = el.dataset.evPerception;
+      if (!state.evenements[idx]) state.evenements[idx] = {};
+      state.evenements[idx].perception_actuelle = parseInt(el.value) || null;
+      saveState();
+      // Toggle retrospection if positive
+      const wrapper = document.querySelector(`[data-ev-retro-wrapper="${idx}"]`);
+      if (wrapper) wrapper.style.display = (el.value == '4' || el.value == '5') ? 'block' : 'none';
+    });
+  });
+  document.querySelectorAll('[data-ev-present]').forEach(el => {
+    el.addEventListener('change', () => {
+      const idx = el.dataset.evPresent;
+      if (!state.evenements[idx]) state.evenements[idx] = {};
+      state.evenements[idx].encore_present = el.value;
+      saveState();
+    });
+  });
+  document.querySelectorAll('[data-ev-retro]').forEach(el => {
+    el.addEventListener('change', () => {
+      const idx = el.dataset.evRetro;
+      if (!state.evenements[idx]) state.evenements[idx] = {};
+      state.evenements[idx].retrospection = el.value;
+      saveState();
+    });
+  });
+  // Nouveau : handler pour le champ d'occurrences (Module 2)
+  document.querySelectorAll('[data-ev-occurrences]').forEach(el => {
+    el.addEventListener('change', () => {
+      const idx = el.dataset.evOccurrences;
+      if (!state.evenements[idx]) state.evenements[idx] = {};
+      state.evenements[idx].occurrences = el.value || null;
+      saveState();
+      // Re-render seulement le label "Période" qui change selon occurrences
+      // (passé en "Période principale ou la plus marquante" si multi-occurrences)
+      const evDiv = el.closest('.event');
+      if (evDiv) {
+        const ageLabel = evDiv.querySelector('label:has(+ select[data-ev-age])') ||
+                         Array.from(evDiv.querySelectorAll('label')).find(l => l.nextElementSibling && l.nextElementSibling.matches('[data-ev-age]'));
+        if (ageLabel) {
+          const isMulti = (el.value === 'quelques' || el.value === 'plusieurs' || el.value === 'etale');
+          ageLabel.textContent = isMulti ? 'Période principale ou la plus marquante :' : 'Période :';
+        }
+      }
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MODULES 3, 4, 5 — Likert standard
+   ═══════════════════════════════════════════════════════════════════ */
+function renderLikertModule(c, title, intro, items, stateKey, navPrev, navNext) {
+  c.innerHTML = `
+    <div class="card encadre">
+      <h2>${title}</h2>
+      <p class="small">${intro}</p>
+    </div>
+    <div class="card">
+      ${items.map(item => {
+        const cur = state[stateKey][item.id];
+        const qText = substituteVars(item.q);
+        return `
+          <div class="question-block">
+            <div class="question-id">${item.id}</div>
+            <div class="question-text">${qText}</div>
+            <div class="scale">
+              ${IEV.scale_likert.options.map(opt => {
+                const sel = cur === opt.value;
+                return `<label class="opt ${sel ? 'selected' : ''}">
+                  <input type="radio" name="${stateKey}-${item.id}" value="${opt.value}" data-lk="${stateKey}|${item.id}" ${sel ? 'checked' : ''}>
+                  <span>${opt.label}</span>
+                </label>`;
+              }).join('')}
+            </div>
+          </div>`;
+      }).join('')}
+    </div>
+    <div class="nav-buttons">
+      <button class="btn ghost" id="lkPrev">← Précédent</button>
+      <button class="btn" id="lkNext">Continuer →</button>
+    </div>
+  `;
+  document.querySelectorAll('[data-lk]').forEach(el => {
+    el.addEventListener('change', () => {
+      const [skey, iid] = el.dataset.lk.split('|');
+      state[skey][iid] = parseInt(el.value);
+      document.querySelectorAll(`[data-lk="${skey}|${iid}"]`).forEach(i =>
+        i.parentElement.classList.toggle('selected', i.checked));
+      saveState();
+      updateProgress();
+    });
+  });
+  document.getElementById('lkPrev').addEventListener('click', () => goToModule(navPrev));
+  document.getElementById('lkNext').addEventListener('click', () => goToModule(navNext));
+}
+
+function renderModule3(c) {
+  renderLikertModule(c,
+    'Module 3 — Climat développemental',
+    'Cette section explore le climat émotionnel et éducatif de votre enfance et adolescence. Les questions portent sur ' + getParentsLabel() + ' et les adultes référents de cette période. Répondez selon votre <strong>vécu subjectif</strong> — il n\'y a ni bonnes ni mauvaises réponses.',
+    IEV.M3, 'climat_dev',
+    prevModuleFrom('m3'), nextModuleFrom('m3'));
+}
+function renderModule4(c) {
+  renderLikertModule(c,
+    'Module 4 — Climat relationnel adulte',
+    'Cette section explore vos relations à l\'âge adulte : amoureuses, amicales, familiales, professionnelles. Si une dimension ne vous concerne pas (par exemple, jamais en couple), répondez « Pas du tout / Jamais » ou « Je préfère ne pas répondre ».',
+    IEV.M4, 'climat_relationnel',
+    prevModuleFrom('m4'), nextModuleFrom('m4'));
+}
+function renderModule5(c) {
+  renderLikertModule(c,
+    'Module 5 — Contexte socioculturel et environnemental',
+    'Cette section explore les dimensions de contexte qui ont pu marquer votre parcours : précarité, déracinement, discrimination, migration. Elle ne sera pertinente que si certaines de ces dimensions vous concernent.',
+    IEV.M5, 'contexte_socio',
+    prevModuleFrom('m5'), nextModuleFrom('m5'));
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PAUSE MID — entre modules 5 et 6
+   ═══════════════════════════════════════════════════════════════════ */
+function renderPauseMid(c) {
+  c.innerHTML = `
+    <div class="card respiration">
+      <h2 style="color:var(--mer-dark);">Une pause</h2>
+      <p>Vous venez de parcourir une grande partie de votre histoire. C'est probablement chargé. Prenez un moment.</p>
+      <p class="mt-2">Respirez. Levez-vous, buvez de l'eau si vous voulez. La passation est sauvegardée — vous pouvez fermer cette page et revenir plus tard, ou continuer maintenant si vous vous sentez prêt(e).</p>
+      <p class="mt-2 small">La suite explore comment tout cela vous habite aujourd'hui dans votre corps, vos émotions, votre fonctionnement quotidien.</p>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn ghost" id="pmPrev">← Précédent</button>
+      <div>
+        <button class="btn ghost" onclick="exportSession()">💾 Sauvegarder et reprendre plus tard</button>
+        <button class="btn" id="pmNext">Continuer →</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('pmPrev').addEventListener('click', () => goToModule(prevModuleFrom('pause_mid')));
+  document.getElementById('pmNext').addEventListener('click', () => goToModule('m6'));
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MODULE 6 — EMPREINTE ACTUELLE + DISSOCIATION
+   ═══════════════════════════════════════════════════════════════════ */
+function renderModule6(c) {
+  renderLikertModule(c,
+    'Module 6 — Empreinte actuelle',
+    'Cette section explore comment vous fonctionnez <strong>aujourd\'hui</strong>, sur le plan corporel, émotionnel, et relationnel. Indépendamment de toute cause supposée, observez simplement ce qui se passe en vous.',
+    IEV.M6, 'empreinte',
+    prevModuleFrom('m6'), 'm7');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MODULE 7 — TRANSPARENCES (échelle spécifique)
+   ═══════════════════════════════════════════════════════════════════ */
+function renderModule7(c) {
+  c.innerHTML = `
+    <div class="card encadre">
+      <h2>Module 7 — Transparences et absences structurantes</h2>
+      <p class="small">Les questions qui suivent abordent une dimension particulière : non pas ce qui a eu lieu, mais <strong>ce qui aurait pu avoir lieu et qui n'a peut-être pas eu lieu</strong>. Certaines absences laissent des traces aussi profondes que certains événements présents.</p>
+      <p class="small mt-1">Prenez votre temps. Si une question ne vous évoque rien, c'est aussi une information utile. Si elle vous touche, vous pouvez faire une pause à tout moment.</p>
+    </div>
+
+    ${[
+      { sub: 'chaleur', title: '7.A — Chaleur et tendresse' },
+      { sub: 'attention', title: '7.B — Attention émotionnelle' },
+      { sub: 'modeles', title: '7.C — Modèles relationnels' },
+      { sub: 'soutien', title: '7.D — Soutien et protection' }
+    ].map((section, sidx) => {
+      const items = IEV.M7.filter(i => i.sub === section.sub);
+      const midBreak = sidx === 2 ? `
+        <div class="card respiration">
+          <p class="small">Vous êtes à mi-chemin de ce module. Si certaines questions vous ont touché(e), c'est normal — elles abordent des dimensions qui ne sont pas toujours conscientes. Continuez à votre rythme.</p>
+        </div>` : '';
+      return midBreak + `
+        <div class="card">
+          <h3>${section.title}</h3>
+          ${items.map(item => {
+            const cur = state.transparences[item.id];
+            return `
+              <div class="question-block">
+                <div class="question-id">${item.id}</div>
+                <div class="question-text">${item.q}</div>
+                <div class="scale">
+                  ${IEV.scale_transparence.options.map(opt => {
+                    const sel = cur === opt.value;
+                    return `<label class="opt ${sel ? 'selected' : ''}">
+                      <input type="radio" name="tr-${item.id}" value="${opt.value}" data-tr="${item.id}" ${sel ? 'checked' : ''}>
+                      <span>${opt.label}</span>
+                    </label>`;
+                  }).join('')}
+                </div>
+              </div>`;
+          }).join('')}
+        </div>
+      `;
+    }).join('')}
+
+    <div class="nav-buttons">
+      <button class="btn ghost" onclick="goToModule('m6')">← Précédent</button>
+      <button class="btn" id="m7Next">Continuer →</button>
+    </div>
+  `;
+  document.querySelectorAll('[data-tr]').forEach(el => {
+    el.addEventListener('change', () => {
+      const id = el.dataset.tr;
+      state.transparences[id] = parseInt(el.value);
+      document.querySelectorAll(`[data-tr="${id}"]`).forEach(i =>
+        i.parentElement.classList.toggle('selected', i.checked));
+      saveState();
+      updateProgress();
+    });
+  });
+  document.getElementById('m7Next').addEventListener('click', () => goToModule('pause_after_m7'));
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PAUSE APRES M7 — encadré de respiration
+   ═══════════════════════════════════════════════════════════════════ */
+function renderPauseAfterM7(c) {
+  c.innerHTML = `
+    <div class="card respiration">
+      <h2 style="color:var(--mer-dark);">Une respiration avant la suite</h2>
+      <p>Vous venez de parcourir une exploration particulièrement délicate : ce qui n'a peut-être pas eu lieu et qui aurait été soutenant.</p>
+      <p class="mt-2">Avant de passer à la suite, prenez un moment. Respirez. Bougez si vous voulez.</p>
+      <p class="mt-2">La prochaine étape s'intéresse à ce qui, dans votre vie, <strong>fait force et appui</strong>.</p>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn ghost" id="pa7Prev">← Précédent</button>
+      <div>
+        <button class="btn ghost" onclick="exportSession()">💾 Sauvegarder</button>
+        <button class="btn" id="pa7Next">Continuer →</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('pa7Prev').addEventListener('click', () => goToModule('m7'));
+  document.getElementById('pa7Next').addEventListener('click', () => goToModule('m8'));
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MODULE 8 — RESSOURCES
+   ═══════════════════════════════════════════════════════════════════ */
+function renderModule8(c) {
+  renderLikertModule(c,
+    'Module 8 — Ressources et facteurs protecteurs',
+    'Cette dernière section explore vos <strong>ressources actuelles</strong> : les forces, les appuis, les capacités qui vous permettent de tenir, de traverser, de transformer. Cette section est essentielle pour une lecture équilibrée — sans elle, le rapport serait incomplet.',
+    IEV.M8, 'ressources',
+    'm7', 'finalisation');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MOTEUR D'ANALYSE CROISÉE — exécuté à l'export
+   ═══════════════════════════════════════════════════════════════════ */
+function moteurAnalyseCroisee() {
+  // v1.1 — Moteur clinique renforcé. Produit des configurations cliniques
+  // pré-articulées que le LLM doit reconnaître ET nommer dans son rapport.
+  const r = {
+    timestamp: new Date().toISOString(),
+    version: 'moteur_v1.1',
+    decalages: [],
+    zones_evitement: [],
+    incoherences_temporelles: [],
+    normalisation_signaux: [],
+    transparences_signifiantes: [],
+    configurations_cliniques: [],
+    fiabilite: 'a_evaluer'
+  };
+
+  // ─── 1. Charge cumulée par catégorie ───
+  const charge = {};
+  Object.keys(IEV.M2_CATS).forEach(cat => { charge[cat] = { n: 0, perception_moyenne: 0, encore_present: 0 }; });
+  let pondTotalScore = 0;
+  Object.keys(state.evenements).forEach(idx => {
+    const ev = state.evenements[idx];
+    if (!ev.present) return;
+    const cat = IEV.M2_EV[idx][0];
+    if (!charge[cat]) return;
+    charge[cat].n += 1;
+    if (ev.perception_actuelle) charge[cat].perception_moyenne += (6 - ev.perception_actuelle);
+    if (ev.encore_present === 'oui') charge[cat].encore_present += 1;
+    pondTotalScore += (ev.perception_actuelle ? (6 - ev.perception_actuelle) : 3);
+  });
+  Object.keys(charge).forEach(cat => {
+    if (charge[cat].n > 0) charge[cat].perception_moyenne = charge[cat].perception_moyenne / charge[cat].n;
+  });
+
+  // ─── 2. Normalisation traumatique : événement positif/neutre + rétrospection "vois aujourd'hui" ───
+  Object.keys(state.evenements).forEach(idx => {
+    const ev = state.evenements[idx];
+    if (!ev.present) return;
+    if ((ev.perception_actuelle == 4 || ev.perception_actuelle == 5) && ev.retrospection === 'vois_aujourdhui') {
+      r.normalisation_signaux.push({
+        event_label: IEV.M2_EV[idx][1],
+        category: IEV.M2_EV[idx][0],
+        note: "Événement reconnu rétrospectivement comme impactant, mais perçu sur le moment comme neutre/positif. Marqueur de normalisation traumatique probable — la personne a intégré comme \"normal\" un événement structurant. À nommer explicitement dans le rapport comme une découverte clinique."
+      });
+    }
+  });
+
+  // ─── 3. Scores transparences par sous-section ───
+  const trGroups = { chaleur: [], attention: [], modeles: [], soutien: [] };
+  IEV.M7.forEach(it => {
+    const v = state.transparences[it.id];
+    if (v != null && v >= 0) trGroups[it.sub].push(v);
+  });
+  const trScores = {};
+  Object.keys(trGroups).forEach(g => {
+    if (trGroups[g].length === 0) { trScores[g] = null; return; }
+    const sum = trGroups[g].reduce((a, b) => a + b, 0);
+    trScores[g] = Math.round((sum / (trGroups[g].length * 4)) * 100);
+  });
+  const validScores = Object.values(trScores).filter(s => s !== null);
+  const globalTr = validScores.length > 0 ? Math.round(validScores.reduce((a, b) => a + b, 0) / validScores.length) : null;
+
+  // ─── 4. Opacité mémorielle (items à 0 = "je ne me souviens pas") ───
+  const ne_se_souvient_pas = IEV.M7.filter(it => state.transparences[it.id] === 0).length;
+  if (ne_se_souvient_pas >= 4) {
+    r.transparences_signifiantes.push({
+      type: 'opacite_memorielle_developpementale',
+      count: ne_se_souvient_pas,
+      severite: ne_se_souvient_pas >= 8 ? 'massive' : 'marquee',
+      note: ne_se_souvient_pas + " items du module Transparences cotés 'je ne me souviens pas' — marqueur clinique d'opacité mémorielle développementale. À traiter comme signal d'une possible dissociation chronique ou d'un mécanisme de protection mnésique. NE PAS interpréter comme un simple manque de souvenir : c'est une zone aveugle structurante. Suggérer une exploration progressive en consultation avec un spécialiste."
+    });
+  }
+  // Cas particulier : opacité totale sur sous-section "modèles relationnels"
+  const modelesItems = IEV.M7.filter(it => it.sub === 'modeles');
+  const modelesUnknown = modelesItems.filter(it => state.transparences[it.id] === 0).length;
+  if (modelesUnknown === modelesItems.length && modelesItems.length > 0) {
+    r.transparences_signifiantes.push({
+      type: 'opacite_totale_modeles_relationnels',
+      note: "100% des items 'modèles relationnels' cotés 'je ne me souviens pas'. Signe clinique fort : la personne n'a aucun souvenir accessible de modèles adultes sains observés dans l'enfance (conflits constructifs, vulnérabilité assumée, tendresse, réparation). Soit ces moments n'ont jamais eu lieu, soit ils sont inaccessibles à la mémoire. Implication adulte : difficulté probable à construire des relations sur des modèles intégrés."
+    });
+  }
+
+  // ─── 5. Profil de transparence (seuils v1.1 — plus sensibles) ───
+  let profil_transparence = null;
+  let profil_transparence_details = null;
+  if (globalTr !== null) {
+    // Tous les scores sont entre 0 et 100. Seuil clinique : < 35 = désert.
+    const desertChaleur = trScores.chaleur !== null && trScores.chaleur < 35;
+    const desertAttention = trScores.attention !== null && trScores.attention < 35;
+    const desertSoutien = trScores.soutien !== null && trScores.soutien < 35;
+    const desertModeles = trScores.modeles !== null && trScores.modeles < 35;
+    const richeChaleur = trScores.chaleur !== null && trScores.chaleur >= 50;
+
+    if (desertChaleur && desertAttention && desertSoutien) {
+      profil_transparence = 'desert_affectif_integral';
+      profil_transparence_details = "DÉSERT AFFECTIF INTÉGRAL : carence sur les 3 dimensions structurantes (chaleur, attention émotionnelle, soutien/protection). C'est le profil clinique le plus marquant. À nommer explicitement comme tel — pas comme 'profil articulé', pas comme 'transparences nuancées'. La carence émotionnelle dans l'enfance est ici massive et probable, indépendamment du récit événementiel rapporté.";
+    } else if (desertChaleur && desertAttention) {
+      profil_transparence = 'desert_affectif';
+      profil_transparence_details = "Désert affectif sur chaleur et attention émotionnelle. Compatible avec une enfance où la personne a fonctionné sans accordage affectif parental.";
+    } else if (richeChaleur && desertAttention) {
+      profil_transparence = 'presence_sans_interiorite';
+      profil_transparence_details = "Présence affective sans accordage : famille démonstrative mais sans intérêt réel pour l'intériorité de l'enfant. Compatible avec enmeshment, attachement préoccupé.";
+    } else if (richeChaleur && desertModeles) {
+      profil_transparence = 'absence_de_modeles';
+      profil_transparence_details = "Affection présente mais aucun modèle relationnel sain observable. Compatible avec familles isolées ou couples parentaux émotionnellement absents l'un envers l'autre.";
+    } else if (richeChaleur && desertSoutien) {
+      profil_transparence = 'vulnerabilite_non_protegee';
+      profil_transparence_details = "Affection présente mais protection défaillante. Parents aimants mais débordés, indisponibles dans les moments cruciaux.";
+    }
+  }
+
+  // ─── 6. Empreinte scoring par dimension ───
+  const empGroups = {};
+  IEV.M6.forEach(it => {
+    const v = state.empreinte[it.id];
+    if (v != null && v > 0) {
+      if (!empGroups[it.dim]) empGroups[it.dim] = [];
+      empGroups[it.dim].push(v);
+    }
+  });
+  const empScores = {};
+  Object.keys(empGroups).forEach(g => {
+    const sum = empGroups[g].reduce((a, b) => a + b, 0);
+    empScores[g] = parseFloat((sum / empGroups[g].length).toFixed(2));
+  });
+
+  // ─── 7. Marqueurs d'empreinte saturée (toute dimension >= 4.5/5) ───
+  Object.keys(empScores).forEach(dim => {
+    if (empScores[dim] >= 4.5) {
+      r.zones_evitement.push({
+        type: 'empreinte_saturee_' + dim,
+        dimension: dim,
+        score: empScores[dim],
+        note: "Dimension '" + dim + "' saturée (≥ 4.5/5). Indication clinique forte de souffrance présente dans ce registre. À nommer comme souffrance actuelle, pas comme 'tendance' ni comme 'particularité'."
+      });
+    }
+  });
+
+  // ─── 8. Décalage récit/empreinte ───
+  const empGlobal = Object.values(empScores).filter(v => v != null);
+  const empMean = empGlobal.length > 0 ? empGlobal.reduce((a, b) => a + b, 0) / empGlobal.length : null;
+  const eventsCount = Object.values(state.evenements).filter(e => e.present).length;
+  if (empMean && empMean >= 3.5 && eventsCount <= 2) {
+    r.decalages.push({
+      type: 'empreinte_forte_recit_pauvre',
+      severite: empMean >= 4 ? 'majeur' : 'moderee',
+      note: "Empreinte actuelle marquée (moyenne " + empMean.toFixed(2) + "/5) malgré un récit événementiel très clairsemé (" + eventsCount + " événements cochés sur 47 proposés). Signature clinique du TRAUMA DÉVELOPPEMENTAL NON-ÉVÉNEMENTIEL : la souffrance présente n'est pas attribuable à des événements identifiés, elle vient probablement de la qualité chronique de l'environnement précoce (cf. transparences, climat développemental). Le rapport DOIT articuler cette absence de récit avec la richesse de l'empreinte."
+    });
+  }
+  if (empMean && empMean <= 2 && eventsCount >= 8) {
+    r.decalages.push({
+      type: 'recit_charge_empreinte_legere',
+      note: "Récit événementiel chargé mais empreinte actuelle modérée. Compatible avec : résilience marquée, intégration thérapeutique préalable, ou dissociation protectrice à explorer."
+    });
+  }
+
+  // ─── 9. Dissociation ───
+  const dissocItems = IEV.M6.filter(it => it.dim === 'dissociation');
+  const dissocScores = dissocItems.map(it => state.empreinte[it.id]).filter(v => v != null && v > 0);
+  let dissocMean = null;
+  if (dissocScores.length > 0) {
+    dissocMean = dissocScores.reduce((a, b) => a + b, 0) / dissocScores.length;
+    if (dissocMean >= 3.5) {
+      r.zones_evitement.push({
+        type: 'marqueurs_dissociation_marques',
+        score: parseFloat(dissocMean.toFixed(2)),
+        severite: dissocMean >= 4.5 ? 'severe' : 'marquee',
+        note: "Plusieurs marqueurs de dissociation cotés haut (moyenne " + dissocMean.toFixed(2) + "/5). À nommer comme stratégie protectrice ancienne, structurante. Si dimension non explorée jusqu'ici par la personne, expliquer brièvement la fonction adaptative de la dissociation. Recommander un travail spécialisé."
+      });
+    } else if (dissocMean >= 2.5) {
+      r.zones_evitement.push({
+        type: 'marqueurs_dissociation_moderes',
+        score: parseFloat(dissocMean.toFixed(2)),
+        note: "Marqueurs de dissociation modérés (moyenne " + dissocMean.toFixed(2) + "/5). À mentionner sans alarmer — peut signer un mécanisme de protection encore actif. À explorer en consultation."
+      });
+    }
+  }
+
+  // ─── 10. CONFIGURATIONS CLINIQUES (v1.1 — détections renforcées) ───
+
+  // (A) Désert affectif intégral + souffrance actuelle = NÉGLIGENCE ÉMOTIONNELLE CHRONIQUE
+  if (profil_transparence === 'desert_affectif_integral') {
+    r.configurations_cliniques.push({
+      code: 'C_NEGLIGENCE_EMOTIONNELLE_CHRONIQUE',
+      label: 'Négligence émotionnelle chronique non-événementielle',
+      confidence: 0.9,
+      severite: 'majeure',
+      note: "Profil de désert affectif intégral en transparences (carence sur chaleur, attention et soutien). Compatible avec une histoire de NÉGLIGENCE ÉMOTIONNELLE CHRONIQUE — non pas absence d'événements graves, mais ABSENCE STRUCTURANTE de ce qu'un enfant a besoin de recevoir pour se construire (chaleur, accordage, validation, protection). C'est un trauma cumulatif silencieux. Le rapport doit NOMMER cette configuration explicitement, sans euphémiser.",
+      formulation_attendue: "Votre profil au module 7 signale une carence émotionnelle massive durant l'enfance — non pas un manque ponctuel, mais un environnement chroniquement insuffisant en chaleur affective, en attention à votre intériorité, et en protection. Cliniquement, cela correspond à ce qu'on appelle la négligence émotionnelle chronique — une forme de trauma silencieux qui ne laisse pas d'événement identifiable mais qui structure profondément.",
+      a_eviter: "NE PAS dire 'profil articulé', 'transparences nuancées', 'famille moins disponible'. NE PAS esthétiser en 'absences qui résonnent'. Le mot juste est CARENCE."
+    });
+  }
+
+  // (B) Parentification — détection renforcée
+  const parentItems = ['3.12', '3.13', '3.14'];
+  const parentScores = parentItems.map(id => state.climat_dev[id]).filter(v => v != null && v > 0);
+  const parentMean = parentScores.length > 0 ? parentScores.reduce((a,b)=>a+b,0)/parentScores.length : 0;
+  if (parentMean >= 3.5) {
+    r.configurations_cliniques.push({
+      code: 'C_PARENTIFICATION_CHRONIQUE',
+      label: 'Parentification chronique de l\'enfance',
+      confidence: parentMean >= 4 ? 0.95 : 0.8,
+      severite: parentMean >= 4 ? 'majeure' : 'moderee',
+      note: "Scores élevés sur les items de parentification (moyenne " + parentMean.toFixed(2) + "/5). L'enfant a porté la charge émotionnelle d'un parent, a tenu un rôle d'adulte, a dû être 'celui qui va bien'. C'est un INVERSION DES RÔLES qui prive l'enfant de son enfance et installe des schémas durables : sur-responsabilité, difficulté à recevoir, contrôle, sentiment de devoir.",
+      formulation_attendue: "Plusieurs réponses sur le climat développemental indiquent que vous avez assumé, enfant, des responsabilités qui n'étaient pas de votre âge — le bien-être émotionnel d'un parent, des tâches d'adulte, ou l'obligation d'être 'celle qui va bien' pour ne pas peser. C'est ce qu'on appelle la parentification, une inversion des rôles parent-enfant. Elle n'apparaît pas dans les statistiques de maltraitance — pourtant elle structure profondément la vie adulte.",
+      a_eviter: "NE PAS romantiser en 'maturité précoce', 'sens des responsabilités', 'qualité d'aînée'. C'est une charge subie, pas un don."
+    });
+  }
+
+  // (C) Climat de critique chronique — deux sous-patterns selon présence ou non de reconnaissance
+  const critiqueItems = ['3.7'];
+  const critique37 = state.climat_dev['3.7'] || 0;
+  const reconnaissance36 = state.climat_dev['3.6'] || 0;
+  const efforts38 = state.climat_dev['3.8'] || 0;
+  if (critique37 >= 4 && reconnaissance36 <= 2) {
+    // Sous-pattern A — Critique pure sans contrepoids
+    r.configurations_cliniques.push({
+      code: 'C_CRITIQUE_CHRONIQUE_SANS_RECONNAISSANCE',
+      label: 'Climat développemental de critique chronique sans reconnaissance compensatoire',
+      confidence: 0.85,
+      severite: 'majeure',
+      note: "Critique parentale chronique (3.7 = " + critique37 + "/5) sans marques de fierté compensatoires (3.6 = " + reconnaissance36 + "/5). C'est l'environnement de critique pure, où l'enfant apprend qu'il est jugé sans être célébré. Conséquences adultes typiques : sentiment d'imposture, perfectionnisme, peur de l'échec, schéma de Punition intériorisée (PU dans la nomenclature Young).",
+      formulation_attendue: "Vos réponses signalent un climat développemental marqué par la critique chronique, sans contrepoids de reconnaissance ou de fierté exprimée. Cliniquement, ce type d'environnement laisse une voix intérieure exigeante et dévalorisante qui perdure à l'âge adulte — sous forme de sentiment d'imposture, de perfectionnisme, d'auto-critique sévère."
+    });
+  } else if (critique37 >= 4 && reconnaissance36 >= 3 && efforts38 <= 3) {
+    // Sous-pattern B — Critique avec amour conditionnel à la performance
+    r.configurations_cliniques.push({
+      code: 'C_CRITIQUE_CONDITIONNELLE',
+      label: 'Critique chronique conditionnée à la performance (amour conditionnel)',
+      confidence: 0.85,
+      severite: 'majeure',
+      note: "Critique parentale chronique (3.7 = " + critique37 + "/5) avec reconnaissance des RÉSULTATS (3.6 = " + reconnaissance36 + "/5) mais faible reconnaissance des EFFORTS indépendamment des résultats (3.8 = " + efforts38 + "/5). C'est l'environnement de l'AMOUR CONDITIONNEL À LA PERFORMANCE : l'enfant valorisé quand il réussit, critiqué quand il échoue. Configuration particulièrement piégeuse car elle donne l'illusion d'une famille 'qui reconnaît'. Conséquences : imposture massive (les réussites n'apaisent pas), peur panique de l'échec, perfectionnisme épuisant, schémas Recherche d'Approbation (AS) et Exigences Élevées (US).",
+      formulation_attendue: "Vos réponses signalent un climat développemental marqué par la critique chronique, partiellement contrebalancée par de la reconnaissance — mais une reconnaissance conditionnée à vos résultats, pas à votre personne ni à vos efforts. Cliniquement, c'est ce qu'on appelle l'amour conditionnel à la performance : l'enfant apprend que sa valeur dépend de ce qu'il produit. Cette configuration est particulièrement piégeuse car elle peut être perçue comme 'normale' alors qu'elle laisse une empreinte aussi lourde que la critique pure."
+    });
+  }
+
+  // (D) Empreinte forte + récit pauvre + désert affectif = TRAUMA DÉVELOPPEMENTAL NON ÉVÉNEMENTIEL
+  if (empMean && empMean >= 3.5 && eventsCount <= 3 &&
+      (profil_transparence === 'desert_affectif_integral' || profil_transparence === 'desert_affectif')) {
+    r.configurations_cliniques.push({
+      code: 'C_TRAUMA_DEVELOPPEMENTAL_NON_EVENEMENTIEL',
+      label: 'Trauma développemental non-événementiel',
+      confidence: 0.9,
+      severite: 'majeure',
+      note: "Triple signature : empreinte actuelle forte (" + empMean.toFixed(2) + "/5) + récit événementiel pauvre (" + eventsCount + " événements) + désert affectif en transparences. C'est la signature exacte du TRAUMA DÉVELOPPEMENTAL au sens van der Kolk : pas d'événement traumatique unique identifiable, mais un environnement chroniquement carentiel qui a structurellement marqué le développement.",
+      formulation_attendue: "Une dynamique remarquable se dégage de votre profil : votre empreinte actuelle est forte — vous portez aujourd'hui une charge importante d'hypervigilance, de fatigue, d'imposture, parfois de dissociation — alors que votre récit événementiel est très clairsemé. Cliniquement, cette dissonance signe ce que la recherche actuelle appelle le 'trauma développemental' : une souffrance structurante qui ne vient pas d'événements identifiables, mais de la qualité chronique de l'environnement précoce. Bessel van der Kolk en a fait l'objet central de ses travaux."
+    });
+  }
+
+  // (E) Imposture massive (toute la dimension empreinte 'imposture' à 4.5+)
+  if (empScores.imposture && empScores.imposture >= 4.5) {
+    r.configurations_cliniques.push({
+      code: 'C_IMPOSTURE_MASSIVE',
+      label: 'Sentiment d\'imposture intériorisé et massif',
+      confidence: 0.85,
+      severite: 'marquee',
+      note: "Score moyen d'imposture à " + empScores.imposture + "/5. Toute la dimension est saturée : 'ne pas mériter ce qui arrive de bien', 'attribuer ses réussites à la chance', 'craindre d'être démasqué'. C'est un schéma d'illégitimité intériorisée structurant.",
+      formulation_attendue: "Votre profil signale un sentiment d'imposture massif et chronique — non pas un doute ponctuel, mais une conviction de fond que vos réussites ne vous appartiennent pas. C'est cliniquement très associé aux environnements de critique chronique et/ou d'amour conditionnel à la performance. Cela mérite d'être nommé."
+    });
+  }
+
+  // (F) Hypervigilance saturée
+  if (empScores.hypervigilance && empScores.hypervigilance >= 4) {
+    r.zones_evitement.push({
+      type: 'hypervigilance_chronique',
+      score: empScores.hypervigilance,
+      note: "Hypervigilance chronique (score " + empScores.hypervigilance + "/5). Signe d'un système nerveux en alerte permanente. À ne pas confondre avec 'rigueur' ou 'sérieux' — c'est une dépense énergétique épuisante qui mérite reconnaissance."
+    });
+  }
+
+  // (G) Enmeshment
+  if (state.climat_dev['3.15'] != null && state.climat_dev['3.15'] <= 2 &&
+      state.climat_dev['3.16'] != null && state.climat_dev['3.16'] <= 2) {
+    r.configurations_cliniques.push({
+      code: 'C_ENMESHMENT_FAMILIAL',
+      label: 'Enmeshment familial (fusion sans individuation)',
+      confidence: 0.75,
+      severite: 'moderee',
+      note: "Limites individuelles peu respectées dans l'enfance + difficulté à différer des autres membres de la famille. Configuration de fusion familiale qui peut s'être présentée socialement comme 'famille soudée'.",
+      formulation_attendue: "Le climat familial décrit pourrait s'être présenté comme 'soudé' ou 'fusionnel', mais avec un coût : peu d'espace pour penser, ressentir, faire différemment des autres membres. C'est ce qu'on appelle l'enmeshment, fusion sans individuation. À l'âge adulte, cela donne souvent une difficulté à savoir ce qu'on veut vraiment, distinct de ce que la famille attend."
+    });
+  }
+
+  // (H) Différenciation ressource vs charge sur les déracinements
+  if (charge.deracinement && charge.deracinement.n >= 2) {
+    const empreinte_a_cote = (state.empreinte['6.9'] || 0);
+    const empreinte_dissoc = ((state.empreinte['6.27'] || 0) + (state.empreinte['6.29'] || 0)) / 2;
+    if (empreinte_a_cote >= 3 || empreinte_dissoc >= 3) {
+      r.configurations_cliniques.push({
+        code: 'C_DERACINEMENTS_REPETES',
+        label: 'Déracinements répétés masqués par adaptabilité',
+        confidence: 0.7,
+        note: "Pluralité de déracinements + sentiment d'être à côté de sa vie ou anesthésie émotionnelle. Compatible avec une adaptation chronique qui a fait illusion sur le coût."
+      });
+    } else {
+      r.configurations_cliniques.push({
+        code: 'R_ADAPTABILITE_INTEGREE',
+        label: 'Adaptabilité aux transitions, ressource intégrée',
+        confidence: 0.7,
+        type: 'ressource',
+        note: "Pluralité de transitions/déracinements vécus sans empreinte de mal-être ni dissociation. Profil de mobilité bien intégrée — c'est une ressource adaptative qui mérite d'être reconnue comme telle."
+      });
+    }
+  }
+
+  // (I) Mobilité heureuse (transitions multiples positives)
+  if (charge.transition && charge.transition.n >= 4) {
+    let positive_transitions = 0;
+    Object.keys(state.evenements).forEach(idx => {
+      const ev = state.evenements[idx];
+      if (!ev.present) return;
+      if (IEV.M2_EV[idx][0] !== 'transition') return;
+      if (ev.perception_actuelle >= 4) positive_transitions++;
+    });
+    if (positive_transitions >= 3 && (state.empreinte['6.9'] || 0) < 3) {
+      r.configurations_cliniques.push({
+        code: 'R_MOBILITE_HEUREUSE',
+        label: 'Mobilité de vie vécue positivement',
+        confidence: 0.75,
+        type: 'ressource',
+        note: "Plusieurs transitions/changements majeurs (≥4) globalement vécus comme neutres ou positifs, sans empreinte d'évitement actuel. À nommer dans le rapport comme une compétence de transition, non comme une charge."
+      });
+    }
+  }
+
+  // ─── 10bis. Patterns de pluralité au Module 2 ───
+  // Distingue trauma unique vs cumul vs étalement temporel
+  // Lit state.evenements[idx].occurrences pour chaque événement coché au M2
+  const patterns_pluralite = [];
+  Object.keys(state.evenements).forEach(idx => {
+    const ev = state.evenements[idx];
+    if (!ev.present || !ev.occurrences) return;
+    const plur = ev.occurrences;
+    if (plur === 'unique') return; // 1 fois = pas de pluralité, traitement normal
+    const impact = ev.perception_actuelle ? (6 - ev.perception_actuelle) : null;
+    // impact : 1 (positif) à 5 (très douloureux). Plus c'est haut, plus c'est lourd.
+    if (impact == null) return;
+
+    const labelEvent = (IEV.M2_EV[idx] || ['', ''])[1] || ('événement ' + idx);
+    const themeShort = labelEvent.split('(')[0].trim().substring(0, 60);
+
+    // Échelle d'impact M2 : 1 = très positif, 5 = très douloureux
+    // On filtre sur impact >= 3 (au moins difficile) pour les patterns pesants
+    if ((plur === 'plusieurs' || plur === 'etale') && impact >= 3) {
+      patterns_pluralite.push({
+        type: 'pluralite_usante',
+        event_idx: idx,
+        event_label: themeShort,
+        impact: impact,
+        occurrences: plur,
+        note: "Plusieurs occurrences (" + (plur === 'plusieurs' ? '4+' : 'étalées dans le temps') + ") de l'événement '" + themeShort + "', avec un impact actuel " + (impact >= 4 ? 'très douloureux' : 'difficile') + ". Configuration de cumul/usure qui produit une fatigue spécifique distincte du trauma unique : pas un événement structurant identifiable, mais une répétition qui finit par marquer durablement."
+      });
+    } else if ((plur === 'plusieurs' || plur === 'etale') && impact <= 2) {
+      patterns_pluralite.push({
+        type: 'pluralite_traversee',
+        event_idx: idx,
+        event_label: themeShort,
+        impact: impact,
+        occurrences: plur,
+        note: "Plusieurs occurrences (" + (plur === 'plusieurs' ? '4+' : 'étalées') + ") de '" + themeShort + "', vécues globalement comme neutres ou positives. Marqueur de RESSOURCE : a traversé plusieurs fois ce type d'épreuve sans empreinte forte aujourd'hui. À nommer comme compétence d'adaptation, sans gommer la fatigue éventuellement accumulée."
+      });
+    } else if (plur === 'quelques' && impact >= 3) {
+      patterns_pluralite.push({
+        type: 'cumul_modere',
+        event_idx: idx,
+        event_label: themeShort,
+        impact: impact,
+        note: "2-3 occurrences de '" + themeShort + "' avec impact " + (impact >= 4 ? 'très douloureux' : 'difficile') + ". Cumul modéré à explorer en consultation."
+      });
+    }
+  });
+
+  // Si plusieurs patterns 'pluralite_usante' simultanés sur différents thèmes : signal de charge cumulative diffuse
+  const nbPluraliteUsante = patterns_pluralite.filter(p => p.type === 'pluralite_usante').length;
+  if (nbPluraliteUsante >= 2) {
+    r.configurations_cliniques.push({
+      code: 'C_CHARGE_CUMULATIVE_DIFFUSE',
+      label: 'Charge cumulative diffuse sur plusieurs domaines de vie',
+      confidence: 0.8,
+      severite: 'majeure',
+      note: "Au moins 2 domaines distincts du Module 1 signalent une pluralité d'événements d'impact important. Configuration de CHARGE CUMULATIVE DIFFUSE : pas un trauma unique identifiable, mais une succession d'épreuves répétées sur plusieurs registres de la vie qui produisent une usure spécifique. Cliniquement distincte du trauma simple — la personne n'a souvent pas un seul événement à raconter, mais une fatigue globale d'avoir tant traversé.",
+      formulation_attendue: "Plusieurs domaines de votre vie (" + patterns_pluralite.filter(p => p.type === 'pluralite_usante').map(p => p.event_label).join(' ; ') + ") signalent une pluralité d'épreuves d'impact important. Cliniquement, c'est ce qu'on appelle une charge cumulative diffuse : ce n'est pas un événement traumatique unique qui pèse, c'est la succession répétée d'épreuves sur plusieurs registres qui finit par marquer durablement. Cette configuration produit une fatigue spécifique — la personne ne raconte souvent pas 'un grand trauma' mais 'beaucoup de choses traversées' — et mérite d'être reconnue comme telle, pas comme une simple addition de petits événements."
+    });
+  }
+
+  // Patterns de pluralité = ressources si plusieurs items à 'pluralite_traversee'
+  const nbPluraliteTraversee = patterns_pluralite.filter(p => p.type === 'pluralite_traversee').length;
+  if (nbPluraliteTraversee >= 2) {
+    r.configurations_cliniques.push({
+      code: 'R_RESILIENCE_PLURALITE',
+      label: 'Résilience face à la pluralité d\'épreuves traversées',
+      confidence: 0.75,
+      type: 'ressource',
+      note: "Au moins 2 domaines distincts du Module 1 signalent une pluralité d'événements avec un impact aujourd'hui modéré. La personne a traversé beaucoup sans s'effondrer. C'est une compétence d'adaptation forte qui mérite d'être nommée comme ressource — sans pour autant gommer la fatigue éventuellement accumulée."
+    });
+  }
+
+  // Stocker tous les patterns pluralité dans le raisonnement
+  r.patterns_pluralite = patterns_pluralite;
+
+  // ─── 11. Fiabilité globale ───
+  const totalAnswered = totalItemsAnswered();
+  const totalExpected = totalItemsExpected();
+  const completion = totalAnswered / totalExpected;
+  if (completion >= 0.95) r.fiabilite = 'elevee';
+  else if (completion >= 0.75) r.fiabilite = 'moderee';
+  else r.fiabilite = 'partielle';
+
+  // ─── 12. Synthèse pour le LLM ───
+  // Marqueur explicite que le LLM doit lire en priorité
+  const has_severe_configs = r.configurations_cliniques.some(c => c.severite === 'majeure');
+  r.synthese_pour_llm = {
+    profil_global: has_severe_configs ? 'configurations_cliniques_majeures_detectees' :
+                   (r.configurations_cliniques.length > 0 ? 'configurations_moderees_detectees' : 'profil_globalement_resilient'),
+    nb_configurations_cliniques: r.configurations_cliniques.filter(c => !c.type || c.type !== 'ressource').length,
+    nb_ressources_detectees: r.configurations_cliniques.filter(c => c.type === 'ressource').length,
+    empreinte_globale: empMean,
+    dissociation_moyenne: dissocMean ? parseFloat(dissocMean.toFixed(2)) : null,
+    profil_transparence: profil_transparence,
+    profil_transparence_details: profil_transparence_details,
+    consigne_de_lecture: has_severe_configs ?
+ "Configurations cliniques MAJEURES détectées. Le rapport DOIT les nommer explicitement (pas d'euphémisme), articuler souffrance/origine/répétition/ressources/piste, et recommander une consultation spécialisée. Voir contrat_de_reconnaissance_de_la_souffrance dans analysis_contract." :
+ "Profil sans configuration clinique majeure. Le rapport peut être plus narratif, mais doit rester clinique."
+  };
+
+  return {
+    charge_cumulee_par_categorie: charge,
+    score_brut_chronologie: pondTotalScore,
+    scores_transparences: trScores,
+    score_global_transparences: globalTr,
+    profil_transparence: profil_transparence,
+    profil_transparence_details: profil_transparence_details,
+    items_ne_se_souvient_pas: ne_se_souvient_pas,
+    scores_empreinte_par_dimension: empScores,
+    empreinte_moyenne_globale: empMean ? parseFloat(empMean.toFixed(2)) : null,
+    dissociation_moyenne: dissocMean ? parseFloat(dissocMean.toFixed(2)) : null,
+    n_evenements_coches: eventsCount,
+    raisonnement_clinique: r,
+    synthese_pour_llm: r.synthese_pour_llm
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   FINALISATION + EXPORT
+   ═══════════════════════════════════════════════════════════════════ */
+function renderFinalisation(c) {
+  const analyse = moteurAnalyseCroisee();
+  c.innerHTML = `
+    <div class="card encadre">
+      <h2>Passation terminée</h2>
+      <p>Merci d'avoir pris ce temps. Vous avez parcouru ${totalItemsAnswered()} questions sur ${totalItemsExpected()} possibles.</p>
+      <p class="mt-2 small">Quelques signaux de synthèse :</p>
+      <ul class="small mt-1" style="margin-left:24px;">
+        <li><strong>${analyse.n_evenements_coches}</strong> événements de vie cochés sur 47 proposés</li>
+        <li>Empreinte actuelle moyenne : <strong>${analyse.empreinte_moyenne_globale || 'non-évaluée'}</strong> / 5</li>
+        ${analyse.score_global_transparences !== null ? `<li>Indice de présence affective ressentie : <strong>${analyse.score_global_transparences}</strong> / 100 (plus le score est haut, plus la présence affective a été riche)</li>` : ''}
+        ${analyse.profil_transparence ? `<li>Profil de transparence détecté : <strong>${analyse.profil_transparence.replace(/_/g, ' ')}</strong></li>` : ''}
+        <li>Fiabilité de la passation : <strong>${analyse.raisonnement_clinique.fiabilite}</strong></li>
+      </ul>
+    </div>
+
+    <div class="card avertissement">
+      <p><strong>Le rapport généré n'est pas un diagnostic.</strong></p>
+      <p class="small mt-1">Le JSON ci-dessous est destiné au praticien qui vous accompagne. Il contient toutes vos réponses, les analyses croisées, et les directives pour la rédaction du rapport narratif final. Si cette passation a remué des choses pour vous, c'est normal — c'est exactement le type de matière qui mérite d'être discuté en consultation.</p>
+      <p class="small mt-1">Numéro national de prévention : <strong>3114</strong> (gratuit, 24h/24).</p>
+    </div>
+
+    <div class="card">
+      <h3>Télécharger votre JSON</h3>
+      <p class="small">Ce fichier contient l'ensemble de vos réponses et les analyses croisées. Il est destiné à être déposé dans un LLM (Claude, ChatGPT, etc.) pour la génération du rapport narratif final.</p>
+      <div class="center mt-3">
+        <button class="btn" id="btnExportFinal" style="font-size:1.05em; padding:14px 28px;">⬇ Télécharger le JSON</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Conserver une copie de la session</h3>
+      <p class="small">Vous pouvez aussi télécharger une copie de votre session brute (non-chiffrée, pour vous-même si vous voulez la garder).</p>
+      <div class="center mt-2">
+        <button class="btn ghost" onclick="exportSession()">💾 Télécharger session brute (.iev-session)</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Effacer cette passation</h3>
+      <p class="small muted">Si vous utilisez cet outil sur un appareil partagé, vous pouvez effacer toutes vos données locales.</p>
+      <div class="center mt-2">
+        <button class="btn danger" onclick="if(confirm('Effacer définitivement la passation locale ?')){clearStoredState(); location.reload();}">🗑 Effacer la session</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('btnExportFinal').addEventListener('click', () => exportFinal(analyse));
+}
+
+function exportFinal(analyse) {
+  const now = new Date();
+  const dateStr = now.toISOString().split('T')[0];
+  const profile = state.profile;
+  const sessionId = state.sessionId;
+  const grid = IEV.meta.grid_version;
+  const hash = 'sha256:' + 'pending'; // placeholder
+  const watermarkValues = {
+    title: `Restitution IEV — ${profile.prenom || ''} ${profile.nom || ''} — ${dateStr}`.trim(),
+    author: "C Concept&Dev — Intelligence Psychométrique & Orientation",
+    subject: "Rapport de restitution IEV — usage clinique exploratoire",
+    keywords: `IEV, charge biographique cumulée, ${sessionId}, ${grid}`,
+    creator: "C Concept&Dev IEV v1.0",
+    producer: "C Concept&Dev — Pipeline IEV automatisé",
+    session_id: sessionId,
+    grid_version: grid,
+    contract_version: IEV.meta.version_contrat,
+    generation_date: dateStr
+  };
+
+  const innerPayload = {
+    meta: {
+      outil: 'IEV',
+      outil_nom_complet: 'Inventaire des Empreintes de Vie',
+      reference: 'C Concept&Dev (2026)',
+      items_total_max: IEV.meta.items_total_max,
+      version_contrat: IEV.meta.version_contrat,
+      version_outil: IEV.meta.version,
+      grid_version: IEV.meta.grid_version,
+      generateur: 'C Concept&Dev — IEV v1.0',
+      date_passation: dateStr,
+      audit_caveat: "Outil de cartographie biographique en version 1.0. Les pondérations, les seuils et les configurations détectées sont propositionnels, non-validés empiriquement. À utiliser."
+    },
+    session: {
+      session_id: sessionId,
+      started_at: state.startedAt,
+      ended_at: now.toISOString(),
+      duration_seconds: Math.round((now - new Date(state.startedAt)) / 1000),
+      completion_status: analyse.raisonnement_clinique.fiabilite === 'partielle' ? 'partial' : 'complete',
+      items_answered: totalItemsAnswered(),
+      items_expected: totalItemsExpected(),
+      modules_active: state.modules_active
+    },
+    profile: state.profile,
+    input: {
+      configuration: state.configuration,
+      noyau: state.noyau,
+      evenements: state.evenements,
+      climat_dev: state.climat_dev,
+      climat_relationnel: state.climat_relationnel,
+      contexte_socio: state.contexte_socio,
+      empreinte: state.empreinte,
+      transparences: state.transparences,
+      ressources: state.ressources
+    },
+    derived_data: {
+      ...analyse,
+      ysq_integration: state.ysq_imported ? {
+        present: true,
+        ysq_profile: state.ysq_imported.profile,
+        ysq_schemas_actifs: state.ysq_imported.derived_data?.scores ?
+          Object.entries(state.ysq_imported.derived_data.scores).filter(([k, v]) => v >= 4.0).map(([k, v]) => ({ code: k, mean: v })) : [],
+        ysq_patterns: state.ysq_imported.derived_data?.derived_patterns || []
+      } : { present: false }
+    },
+    interpretation_reference: {
+      categories_evenements: IEV.M2_CATS,
+      age_brackets: IEV.age_brackets,
+      modules_definitions: {
+        m0: 'Cadrage personnel',
+        m1: 'Noyau de dépistage',
+        m2: 'Chronologie de vie',
+        m3: 'Climat développemental (conditionnel)',
+        m4: 'Climat relationnel adulte (conditionnel)',
+        m5: 'Contexte socioculturel (conditionnel)',
+        m6: 'Empreinte actuelle + dissociation',
+        m7: 'Transparences et absences structurantes',
+        m8: 'Ressources et facteurs protecteurs'
+      }
+    },
+    analysis_contract: {
+
+      preambule_clinique_non_negociable: {
+        nature_de_l_instrument: "L'IEV (Inventaire des Empreintes de Vie) est une CARTOGRAPHIE CLINIQUE des empreintes structurantes laissées par l'environnement précoce — événements de vie, climat développemental, climat relationnel adulte, contexte socioculturel — et de leur RÉSONANCE ACTUELLE dans le corps, les émotions, le fonctionnement quotidien. Le module 7 (Transparences) capte spécifiquement ce qui A MANQUÉ dans l'environnement précoce — la chaleur, l'attention émotionnelle, les modèles relationnels sains, la protection. Ces absences ne sont pas des 'particularités' : elles sont des CARENCES STRUCTURANTES au sens où Bessel van der Kolk parle de developmental trauma, et que Piedfort-Marin & Reddemann (Psychothérapie des traumatismes complexes, 2021) déclinent dans le champ francophone. L'IEV n'est pas un test de personnalité grand public : c'est un instrument clinique conçu pour informer la souffrance actuelle en éclairant son terrain précoce.",
+
+        articulation_avec_corpus_clinique: "L'IEV s'inscrit dans la lignée des outils de cartographie biographique adossés à la traumatologie développementale (van der Kolk, Schore, Lyons-Ruth) et à la théorie de l'attachement (Bowlby, Ainsworth, Main). Dans le champ francophone, il dialogue directement avec : (a) l'approche INTÉGRATION DU CYCLE DE LA VIE (ICV — Peggy Pace, traduite et déployée en France par Joanna Smith et Catherine Clément), qui constitue une méthode THÉRAPEUTIQUE de retraitement des empreintes biographiques ; (b) la SCHÉMATHÉRAPIE de Young, dont les traducteurs francophones (Cousineau, Côté, Pascal) ont posé le vocabulaire de référence ; (c) la PSYCHOGÉNÉALOGIE d'Anne Ancelin Schützenberger pour la dimension transgénérationnelle (module 7).",
+
+        ce_que_cela_implique: "Un score haut au module 6 (empreinte actuelle) est un MARQUEUR DE SOUFFRANCE PRÉSENTE. Un score bas au module 7 (transparences) est un MARQUEUR DE CARENCE PASSÉE. Quand les deux convergent, on est devant une signature clinique de trauma développemental non-événementiel au sens de van der Kolk — ou de PESENS (Pelcovitz et al., 1997, repris par Piedfort-Marin & Reddemann, p. 18) dans le champ francophone. Ces signaux NE SE CÉLÈBRENT PAS, NE S'ESTHÉTISENT PAS, NE SE TRANSFORMENT PAS EN 'profil articulé'. Ils se RECONNAISSENT, se NOMMENT, et s'ADRESSENT thérapeutiquement.",
+
+        erreur_cardinale_a_eviter: "L'erreur cardinale est de traiter l'IEV comme un NEO-PI-R ou un test de personnalité grand public : 'votre score élevé en hypervigilance reflète une grande sensibilité aux signaux de votre environnement, ce qui est précieux dans les métiers de soin'. NON. Hypervigilance saturée = système nerveux en alerte permanente (système RAGE/FEAR de Panksepp, dérégulation autonomique au sens de Porges), dépense énergétique épuisante, signe d'une histoire qui a appris au corps à ne jamais se relâcher. De même : 18 items du module Transparences à la valeur 1 (Jamais) ou 0 (Je ne me souviens pas) NE SONT PAS 'un profil de transparences articulé'. C'est un DÉSERT AFFECTIF INTÉGRAL, signature d'une enfance émotionnellement carencée, à nommer comme telle.",
+
+        posture_attendue: "CONFRONTATION EMPATHIQUE (terme français de référence, traduction de empathic confrontation chez Young 2003, telle qu'établie par Cousineau & Côté dans Pratiquer la thérapie des schémas), appliquée à la traumatologie. L'art de NOMMER ce qui fait mal avec une tendresse exigeante. Ni complaisance (qui trahit la personne en évitant la vérité), ni cassant (qui blesse sans aider). Le rapport doit pouvoir être lu par un schémathérapeute formé à l'école Cousineau, un traumathérapeute formé à l'ICV ou à la psychothérapie des traumas complexes, un psychiatre spécialisé en dissociation, sans qu'il fronce les sourcils ni en sens 'trop dur', ni en sens 'trop conciliant'. Si vous hésitez, choisissez le clinique sur le poétique. La poésie est belle dans la littérature, elle est dangereuse dans un rapport de restitution clinique.",
+
+        regle_d_or: "Avant chaque section du rapport, vous demander : 'Est-ce que Bessel van der Kolk, Olivier Piedfort-Marin, Joanna Smith, Boris Cyrulnik signeraient cette page ?' Si la réponse est non parce que c'est trop esthétisant, recommencer. Si la réponse est non parce que c'est trop pathologisant, recommencer aussi. La vérité clinique se tient entre les deux, et elle se reconnaît à ce qu'elle nomme la souffrance sans en faire un drame ni en faire un poème."
+      },
+
+      collectif_d_experts_consultants: {
+        principe: "Vous rédigez ce rapport COMME SI vous aviez consulté ce collectif d'experts en traumatologie développementale, théorie de l'attachement, intégration du cycle de la vie, et psychogénéalogie. Le collectif est HYBRIDE : il combine (a) des experts dont les œuvres sont indexées dans la bibliothèque RAG du pipeline et peuvent être citées avec précision (page, ouvrage), et (b) des références internationales fondatrices qui ne sont pas dans la bibliothèque locale mais qu'aucun clinicien sérieux ne peut ignorer.",
+
+        mentor_principal: {
+          nom: "Bessel van der Kolk, M.D.",
+          source: "RAG_LOCAL — Le corps n'oublie rien (2014, trad. fr.), 444 chunks indexés",
+          role: "Psychiatre américain, fondateur du Trauma Research Foundation. Référence mondiale sur le trauma développemental. A introduit la notion de Developmental Trauma Disorder (DTD).",
+          apport_specifique: "Vous rappelle que le trauma se loge dans le CORPS — d'où l'importance du module 6 (hypervigilance, somatisations, dissociation). Vous rappelle que le trauma cumulatif non-événementiel est aussi structurant qu'un trauma unique majeur. Vous interdit l'euphémisme : 'the body keeps the score' — le corps tient le compte, on ne peut pas mentir au corps. Cité de préférence avec n° de page lorsque le RAG remonte un extrait pertinent."
+        },
+
+        co_mentor_francophone: {
+          nom: "Olivier Piedfort-Marin & Luise Reddemann",
+          source: "RAG_LOCAL — Psychothérapie des traumatismes complexes (2021), 212 chunks indexés",
+          role: "Piedfort-Marin : psychologue clinicien suisse, formé à la thérapie des schémas mais ayant développé une approche propre au trauma complexe. Reddemann : psychiatre allemande, autrice de référence sur la stabilisation et la dissociation structurelle. Leur ouvrage est LA référence francophone du trauma complexe (PESENS, DESNOS, dissociation).",
+          apport_specifique: "Vous donnent le cadre francophone précis pour articuler attachement désorganisé, dissociation, parentification (attachement inversé contrôlante-soignante, Lyons-Ruth in Piedfort-Marin p. 16), et trouble de stress extrême non spécifié (PESENS, p. 18). Quand le module 7 montre un désert affectif intégral ET le module 6 une dissociation moyenne ou élevée, c'est leur cadre conceptuel qui s'applique, pas une lecture en termes de 'sensibilité'."
+        },
+
+        pont_icv_thérapeutique: {
+          principe: "L'IEV CARTOGRAPHIE des empreintes. L'INTÉGRATION DU CYCLE DE LA VIE (ICV) les RETRAITE. Le rapport peut, en section orientation thérapeutique, mentionner explicitement l'ICV comme méthode de choix lorsque les configurations détectées relèvent de la chronologie biographique précoce (trauma développemental, attachement désorganisé, parentification, opacité mémorielle). C'est une orientation clinique légitime, pas une prescription.",
+          experts: [
+            {
+              nom: "Peggy Pace",
+              source: "RAG_LOCAL — Pratiquer l'ICV (114 chunks)",
+              role: "Créatrice américaine du Lifespan Integration (1995, traduit ICV en français).",
+              apport_specifique: "Vous rappelle que le système nerveux a besoin de RECONSTRUIRE la chronologie pour intégrer le trauma. C'est ce que l'IEV met en évidence : une chronologie fragmentée appelle une méthode de reconstruction (PS, PB, PRA, PRS de l'ICV)."
+            },
+            {
+              nom: "Joanna Smith",
+              source: "RAG_LOCAL — La régulation des émotions dans la famille (236 chunks) + La puissance réparatrice de votre cerveau (87 chunks)",
+              role: "Psychologue clinicienne française, formatrice ICV de référence en France (Institut Double Hélice).",
+              apport_specifique: "Articule la régulation émotionnelle parentale et l'ICV. Pertinente pour le module 3 (climat développemental) et le module 7 (transparences). Si l'IEV révèle une carence dans la régulation parentale, Smith donne le vocabulaire et le cadre pour le formuler."
+            },
+            {
+              nom: "Catherine Clément (& Éric Binet)",
+              source: "RAG_LOCAL — Le présent au secours du passé (93 chunks) + Les stratégies thérapeutiques de l'ICV (170 chunks)",
+              role: "Co-fondatrice de l'Institut Double Hélice, référence francophone ICV.",
+              apport_specifique: "Donne le cadre pour articuler IEV → ICV en pratique. Permet d'orienter le patient vers un thérapeute ICV formé sans approximation."
+            }
+          ]
+        },
+
+        experts_co_consultants_RAG_local: [
+          {
+            nom: "John Bowlby",
+            source: "RAG_LOCAL — Amour et rupture, les destins de l'attachement (96 chunks)",
+            role: "Fondateur de la théorie de l'attachement. Disponible en français dans le RAG.",
+            apport_specifique: "Cadre fondateur pour lire le module 7 et le module 4. Un désert affectif intégral dans l'enfance produit des modèles internes opérants d'attachement insécure qui se rejouent à l'âge adulte. À NOMMER, pas à euphémiser."
+          },
+          {
+            nom: "Anne Ancelin Schützenberger",
+            source: "RAG_LOCAL — Psychogénéalogie (117 chunks)",
+            role: "Psychologue française, fondatrice de la psychogénéalogie. Référence francophone sur la transmission transgénérationnelle.",
+            apport_specifique: "Cadre fondamental pour le module 7 (transparences) dans sa dimension transgénérationnelle. 'Les parents ont mangé des raisins trop verts et les enfants en ont eu les dents agacées' (Bible, citée p. 21). Permet de nommer ce qui se transmet en silence : loyautés invisibles, secrets, ce qui n'a pas été dit ni transmis. Particulièrement pertinente pour les items M7 sur les modèles relationnels manquants et l'absence de récits familiaux."
+          },
+          {
+            nom: "Peter A. Levine, Ph.D.",
+            source: "RAG_LOCAL — Trauma et mémoire (135 chunks)",
+            role: "Psychologue américain, créateur de la Somatic Experiencing.",
+            apport_specifique: "Vous rappelle que la mémoire traumatique est SOMATIQUE avant d'être narrative. Pertinent pour les items M6 sur les somatisations, les ressentis corporels diffus, l'hypervigilance. Si le rapport doit recommander un travail somatique en complément, Levine en est la référence."
+          }
+        ],
+
+        references_internationales_NON_RAG: {
+          mention_de_methode: "Ces auteurs sont des références fondatrices internationalement reconnues mais leurs ouvrages ne sont PAS indexés dans la bibliothèque RAG du pipeline. Vous pouvez les MENTIONNER comme cadres théoriques quand c'est pertinent, mais SANS CITATION DIRECTE DE PAGE (vous ne disposez pas du matériau). Cette transparence épistémique est exigée.",
+          experts: [
+            {
+              nom: "Allan Schore, Ph.D.",
+              role: "Neuropsychologue, théoricien du trauma relationnel précoce et du développement du cerveau droit dans la dyade mère-enfant.",
+              apport_general: "Cadre neurobiologique pour comprendre pourquoi l'absence d'accordage parental précoce laisse des traces neurodéveloppementales. À mentionner quand le module 7 montre un effondrement sur l'attention émotionnelle parentale, SANS citer de page précise."
+            },
+            {
+              nom: "Karlen Lyons-Ruth, Ph.D.",
+              role: "Chercheuse à Harvard, spécialiste de l'attachement désorganisé et des traumas relationnels précoces non-événementiels.",
+              apport_general: "Cadre conceptuel du trauma non-événementiel. À mentionner pour formuler qu'un parent NON-MALTRAITANT peut générer un trauma relationnel par sa simple indisponibilité émotionnelle répétée. Reprise par Piedfort-Marin & Reddemann (p. 16) — utilisable indirectement via ce relais RAG."
+            },
+            {
+              nom: "Giovanni Liotti, M.D.",
+              role: "Psychiatre italien, théoricien de la dissociation développementale liée à l'attachement désorganisé.",
+              apport_general: "Cadre théorique pour l'opacité mémorielle développementale (items M7 cotés 'Je ne me souviens pas') et les états dissociatifs. À mentionner comme cadre, sans citation."
+            },
+            {
+              nom: "Onno van der Hart, Ph.D.",
+              role: "Psychothérapeute néerlandais, co-auteur de The Haunted Self (2006) sur la dissociation structurelle de la personnalité.",
+              apport_general: "Cadre du spectre dissociatif (de la dissociation primaire 'à côté de soi' à la dissociation tertiaire). À mentionner pour le module 6 sous-section dissociation."
+            },
+            {
+              nom: "Boris Cyrulnik",
+              role: "Neuropsychiatre français, vulgarisateur de la notion de résilience.",
+              apport_general: "Rappel qu'une issue résiliente est TOUJOURS possible, mais ne peut se construire que SUR LA RECONNAISSANCE du trauma, pas sur son déni. À mentionner en section orientation, sans citation directe (pas dans le RAG)."
+            },
+            {
+              nom: "Judith Lewis Herman, M.D.",
+              role: "Psychiatre américaine, pionnière de la notion de complex PTSD (Trauma and Recovery, 1992).",
+              apport_general: "Cadre du trauma complexe (cumul d'expériences traumatisantes répétées, souvent relationnelles). La reconnaissance par le clinicien est la PREMIÈRE étape de la guérison. À mentionner comme cadre."
+            },
+            {
+              nom: "Peter Fonagy, Ph.D.",
+              role: "Psychanalyste britannique, théoricien de la mentalisation.",
+              apport_general: "Cadre de la mentalisation comme capacité construite dans le regard d'un adulte suffisamment mentalisant. À mentionner pour le module 8 (mentalisation) lorsque cette capacité apparaît altérée."
+            },
+            {
+              nom: "Stephen Porges, Ph.D.",
+              role: "Neurophysiologiste, créateur de la théorie polyvagale.",
+              apport_general: "Base neurophysiologique de l'hypervigilance, du figement, des somatisations. À mentionner quand le module 6 montre une dérégulation autonomique."
+            }
+          ]
+        },
+
+        pont_avec_schemathérapie_ysq: {
+          principe: "Si le rapport est généré conjointement avec un YSQ-L3 (ysq_integration.present == true), le collectif d'experts est ÉLARGI aux schémathérapeutes francophones, et l'articulation IEV ↔ schémas devient un objet central du rapport.",
+          experts_complementaires: [
+            {
+              nom: "Pierre Cousineau & Sophie Côté",
+              source: "RAG_LOCAL — Pratiquer la thérapie des schémas (587 chunks via indexation 'Bernard Pascal') + La thérapie des schémas (490 chunks)",
+              role: "Schémathérapeutes québécois, co-traducteurs francophones du YSQ-L3 et auteurs de référence sur la thérapie des schémas en français.",
+              apport_specifique: "Posent le vocabulaire francophone établi (Carence Affective, Sacrifice de Soi, Mode Enfant Vulnérable, Mode Protecteur Détaché, reparentage en imagerie, CONFRONTATION EMPATHIQUE). Donnent les ponts entre traumas précoces (IEV) et schémas inadaptés précoces (YSQ) — notamment via la reconsolidation de la mémoire."
+            },
+            {
+              nom: "Jeffrey E. Young",
+              source: "RAG_LOCAL — Je réinvente ma vie (321 chunks) + La thérapie des schémas (363 chunks)",
+              role: "Créateur de la schémathérapie. Référence pour les 18 schémas et les modes.",
+              apport_specifique: "Si configurations IEV ↔ schémas YSQ croisées, mobiliser le vocabulaire et les conceptualisations de Young : Mode Enfant Vulnérable, Mode Parent Punitif, Mode Adulte Sain comme cible."
+            }
+          ]
+        },
+
+        protocole_de_consultation: "Pour chaque section majeure du rapport, vous demander : (1) Que dirait van der Kolk de cette formulation ? (2) Piedfort-Marin & Reddemann trouveraient-ils que la dissociation/parentification est traitée avec la rigueur clinique francophone qu'ils ont posée ? (3) Joanna Smith / Catherine Clément trouveraient-elles que la cartographie biographique appelle un retraitement ICV pertinent (à mentionner en orientation) ? (4) Cyrulnik trouverait-il l'équilibre juste entre nomination du trauma et ouverture résiliente ? (5) Si ysq_integration.present : Cousineau dirait-il que l'articulation IEV ↔ schémas est juste, sans mécanisation ? Si vous ressentez un 'oui' partagé, la formulation tient. Sinon, retravaillez."
+      },
+
+            rag_orientation: {
+        principe: "Le pipeline de génération du rapport est susceptible d'être enrichi par une couche RAG (Retrieval-Augmented Generation) qui interrogera, au moment de la rédaction, la bibliothèque clinique indexée (~22 000 chunks, 233 ouvrages, 18 approches dont schema_therapy, trauma, icv, attachment, psychogenealogy). Cette directive guide cet enrichissement.",
+        sources_RAG_a_privilegier_par_section: {
+          module_6_empreinte_actuelle: ["Bessel van der Kolk — Le corps n'oublie rien", "Peter A. Levine — Trauma et mémoire", "Stephen Porges (mention sans citation)"],
+          module_7_transparences_carence: ["Olivier Piedfort-Marin & Luise Reddemann — Psychothérapie des traumatismes complexes", "John Bowlby — Amour et rupture", "Joanna Smith — La régulation des émotions dans la famille", "Anne Ancelin Schützenberger — Psychogénéalogie"],
+          module_7_dissociation: ["Olivier Piedfort-Marin & Luise Reddemann (chap. dissociation)", "van der Hart (mention sans citation)"],
+          parentification_attachement_inverse: ["Piedfort-Marin & Reddemann p. 16 (Lyons-Ruth, attachement contrôlante-soignante)", "Joanna Smith — La régulation des émotions dans la famille"],
+          configurations_ICV_orientation: ["Peggy Pace — Pratiquer l'ICV", "Catherine Clément — Le présent au secours du passé", "Joanna Smith — La puissance réparatrice de votre cerveau"],
+          articulation_avec_YSQ: ["Pierre Cousineau & Sophie Côté — Pratiquer la thérapie des schémas", "Jeffrey E. Young — La thérapie des schémas"],
+          transgenerationnel_module7_8: ["Anne Ancelin Schützenberger — Psychogénéalogie"]
+        },
+        regles_citation: "Quand un chunk RAG est utilisé pour appuyer une formulation, citer l'auteur + l'ouvrage + le n° de page si disponible (ex: 'Comme le notent Piedfort-Marin & Reddemann (Psychothérapie des traumatismes complexes, p. 16) ...'). Les auteurs hors RAG (Schore, Cyrulnik, Liotti, Herman) sont mentionnés comme cadres théoriques SANS citation de page. La transparence épistémique sur la source est exigée."
+      },
+
+            role: "Vous êtes un psychologue clinicien formé à la traumatologie développementale et à la théorie de l'attachement, sous la supervision tacite du collectif d'experts ci-dessus. Vous rédigez un rapport de restitution destiné à la personne ayant passé l'IEV. Votre posture est la CONFRONTATION EMPATHIQUE (terme français de référence, traduction de empathic confrontation établie par Cousineau &amp; Côté) appliquée à la traumatologie : nommer la vérité clinique avec tendresse, sans complaisance ni dureté. Vous n'êtes ni un coach motivationnel, ni un rédacteur de magazine bien-être, ni un thérapeute new-age : vous êtes un clinicien qui restitue avec rigueur ce que l'instrument a capté.",
+
+      mission_principale: "Produire un rapport narratif complet de 30-40 pages PDF à partir de ce JSON. Le rapport articule HISTOIRE — EMPREINTE — MANIFESTATIONS ACTUELLES — RESSOURCES — PISTES, en formulant uniquement des hypothèses (jamais de diagnostic catégoriel). Le rapport DOIT refléter la nature clinique des configurations détectées — souffrance présente, origines probables, répétitions actuelles — avant de proposer toute issue thérapeutique. La complaisance, l'esthétisation, l'euphémisme sont proscrits.",
+
+      diagnostic_dentree_obligatoire: {
+        description: "AVANT de générer le rapport, produire 5-10 lignes en chat (pas dans le PDF) résumant : (1) qui est la personne, (2) quelles configurations cliniques le moteur a détecté (voir derived_data.synthese_pour_llm), (3) niveau de fiabilité, (4) drapeaux d'escalade, (5) signature globale (résilience, charge modérée, trauma développemental, etc.).",
+        but: "Détecter une mauvaise passation, valider la cohérence avant 30-40 pages, et S'ALIGNER sur les configurations cliniques pré-détectées par le moteur."
+      },
+
+      output_format_negotiation: {
+        priorite_1_pdf: "Si exécution de code possible (Python + ReportLab/WeasyPrint) : produire un vrai .pdf téléchargeable. IMPÉRATIF : appliquer les métadonnées watermark définies dans pdf_metadata_watermark.",
+        priorite_2_html: "Sinon : HTML autonome avec @media print + métadonnées Dublin Core.",
+        priorite_3_markdown: "En dernier recours : Markdown structuré avec frontmatter YAML.",
+        annonce_obligatoire: "Annoncer brièvement quel format vous produisez en début de réponse."
+      },
+
+      pdf_metadata_watermark: {
+        principe: "OBLIGATOIRE — Métadonnées à appliquer au PDF. Invisibles à l'écran et à l'impression, visibles uniquement dans les propriétés du fichier.",
+        statut: "PRÉ-CALCULÉ — valeurs prêtes à l'emploi.",
+        values: {
+          title: watermarkValues.title,
+          author: watermarkValues.author,
+          subject: watermarkValues.subject,
+          keywords: watermarkValues.keywords,
+          creator: watermarkValues.creator,
+          producer: watermarkValues.producer,
+          custom_fields: {
+ "/IEV_Session_ID": watermarkValues.session_id,
+ "/IEV_Grid_Version": watermarkValues.grid_version,
+ "/IEV_Contract_Version": watermarkValues.contract_version,
+ "/IEV_Generation_Date": watermarkValues.generation_date
+          }
+        },
+        implementation_reportlab: "doc = BaseDocTemplate(path, pagesize=A4, title=meta['title'], author=meta['author'], subject=meta['subject'], keywords=meta['keywords'], creator=meta['creator'])",
+        implementation_post_processing_pypdf: "from pypdf import PdfReader, PdfWriter; reader = PdfReader(path); writer = PdfWriter(); [writer.add_page(p) for p in reader.pages]; writer.add_metadata({'/Title': m['title'], '/Author': m['author'], '/Subject': m['subject'], '/Keywords': m['keywords'], '/Creator': m['creator'], '/Producer': m['producer'], **m['custom_fields']}); open(path, 'wb').write(writer)"
+      },
+
+      formulations_exemplaires_par_configuration: {
+        principe: "Pour les configurations cliniques susceptibles d'être MAL FORMULÉES (lecture trop poétique, esthétisante, ou défensive), voici les contrastes mauvaise/bonne formulation. Le rapport doit s'aligner sur la colonne 'BONNE'.",
+        note_de_methode: "La 'mauvaise' formulation n'est pas factuellement fausse — elle est cliniquement INVALIDE parce qu'elle trahit la fonction même de l'instrument en évitant de nommer la souffrance ou la carence.",
+
+        C_NEGLIGENCE_EMOTIONNELLE_CHRONIQUE: {
+          definition: "Carence chronique et durable de chaleur affective, d'attention à l'intériorité de l'enfant, de soutien protecteur. Pas d'événement identifiable — c'est la qualité chronique de l'environnement qui est en cause.",
+          MAUVAISE_formulation: "Votre profil au module 7 présente des transparences articulées, avec des nuances de transmission affective intéressantes à explorer. Votre famille a peut-être été moins démonstrative que d'autres, ce qui colore votre rapport actuel à l'expression émotionnelle.",
+          pourquoi_mauvaise: "Esthétise un désert affectif en 'nuances de transmission'. Suggère un choix culturel ('moins démonstrative') alors qu'il s'agit d'une carence. Évite le mot juste : CARENCE.",
+          BONNE_formulation: "Votre profil au module 7 signale ce que la clinique appelle un désert affectif intégral : la chaleur affective, l'attention à votre intériorité, et la protection face à la difficulté ont été chroniquement insuffisantes durant votre enfance et adolescence. Ce n'est pas une question de famille 'moins démonstrative' — c'est une carence émotionnelle structurante. Cliniquement, cela correspond à ce que Bessel van der Kolk et la traumatologie contemporaine appellent un trauma développemental non-événementiel : l'absence chronique de ce dont un enfant a besoin pour se construire. Aucun événement identifiable, pas de drame visible — mais une empreinte profonde, que vos symptômes actuels confirment."
+        },
+
+        C_PARENTIFICATION_CHRONIQUE: {
+          definition: "Inversion des rôles parent-enfant : l'enfant prend en charge le bien-être émotionnel d'un parent, assume des tâches d'adulte, doit être 'celui qui va bien' pour ne pas peser sur des adultes débordés ou fragiles.",
+          MAUVAISE_formulation: "Vous avez développé tôt un sens remarquable des responsabilités, une maturité précoce qui fait aujourd'hui partie de vos qualités d'aînée. C'est une force qui peut aussi avoir un coût, comme toute force investie de longue date.",
+          pourquoi_mauvaise: "Romantise une charge subie en 'qualité d'aînée'. Confond une survie adaptative avec un don de la personne. Évite de nommer l'INJUSTICE structurelle : un enfant ne devrait pas avoir à prendre soin d'un adulte.",
+          BONNE_formulation: "Vos réponses signalent ce que la clinique appelle la parentification : enfant, vous avez assumé des responsabilités qui n'étaient pas de votre âge — le bien-être émotionnel d'un parent, des tâches d'adulte, l'obligation d'être 'celle qui va bien'. C'est une inversion des rôles parent-enfant qui prive l'enfant d'une dimension fondamentale de son enfance — celle d'être pris en charge, accueilli dans sa vulnérabilité, autorisé à ne pas tenir. À l'âge adulte, la parentification laisse des empreintes lourdes : difficulté massive à recevoir, à demander de l'aide, à ne pas être productif, sentiment d'être responsable du bien-être des autres. Ce n'est pas une qualité, c'est une charge que vous portez. La reconnaître comme telle, c'est commencer à pouvoir la déposer."
+        },
+
+        C_TRAUMA_DEVELOPPEMENTAL_NON_EVENEMENTIEL: {
+          definition: "Convergence : empreinte actuelle forte + récit événementiel pauvre + carences en transparences. Signature clinique d'une enfance structurellement insuffisante sans événement traumatique identifiable.",
+          MAUVAISE_formulation: "Votre histoire présente cette particularité intéressante d'un récit événementiel pauvre face à une vie intérieure intense. Cela peut témoigner d'une grande sensibilité, ou d'un travail de réélaboration encore en cours.",
+          pourquoi_mauvaise: "'Intéressante particularité' minimise une signature clinique. Suggère deux pistes (sensibilité, travail en cours) qui évitent la troisième et probable : trauma développemental.",
+          BONNE_formulation: "Une dynamique remarquable se dégage de votre profil : vous portez aujourd'hui une charge importante — hypervigilance, fatigue, imposture, somatisations, parfois dissociation — alors que votre récit événementiel est très clairsemé. Cliniquement, cette dissonance signe ce qu'on appelle le trauma développemental (van der Kolk, 2014) : une souffrance structurante qui ne vient pas d'événements identifiables, mais de la qualité chronique de l'environnement précoce. Pas de drame visible dans votre histoire, et pourtant une empreinte profonde — parce que ce qui n'a pas eu lieu (la chaleur, l'accordage, la protection) marque tout autant que ce qui a eu lieu. Cette compréhension est précieuse : elle explique pourquoi vous souffrez sans 'avoir de raison'. Vous en avez, des raisons. Elles sont juste différentes de celles qu'on imagine quand on pense 'trauma'."
+        },
+
+        C_CRITIQUE_CHRONIQUE_SANS_RECONNAISSANCE: {
+          definition: "Climat parental marqué par la critique chronique sans contrepoids de fierté ou de reconnaissance. Produit voix intérieure dévalorisante, perfectionnisme défensif, schéma de Punition intériorisée.",
+          MAUVAISE_formulation: "Vos parents étaient exigeants, ce qui vous a peut-être aidée à développer une rigueur de travail et un perfectionnisme qui font aujourd'hui partie de vos atouts professionnels.",
+          pourquoi_mauvaise: "Confond critique chronique avec exigence pédagogique. Transforme une voix intérieure tyrannique en 'atout professionnel'. Évite la souffrance de ne jamais avoir été célébré.",
+          BONNE_formulation: "Vos réponses signalent un climat développemental marqué par la critique chronique, sans contrepoids de reconnaissance ou de fierté exprimée. Cliniquement, ce type d'environnement laisse une voix intérieure exigeante et dévalorisante qui perdure à l'âge adulte — sous forme de sentiment d'imposture, de perfectionnisme épuisant, d'auto-critique sévère, de difficulté à célébrer ses propres réussites. Ce n'est pas du perfectionnisme professionnel, c'est une survie psychique : l'enfant qui n'était jamais célébré apprend à ne jamais s'arrêter, par peur d'être démasqué."
+        },
+
+        opacite_memorielle_developpementale: {
+          definition: "Items du module 7 cotés 'je ne me souviens pas' en nombre significatif (≥4) ou de façon totale sur une sous-section. Marqueur d'une zone aveugle mémorielle qui peut signer une dissociation chronique.",
+          MAUVAISE_formulation: "Plusieurs items vous ont demandé de faire appel à des souvenirs anciens, et il est tout à fait normal de ne pas se souvenir précisément. Le temps fait son œuvre, et certaines périodes restent plus floues que d'autres.",
+          pourquoi_mauvaise: "Banalise un signal clinique fort en 'normal'. Évite la possibilité que ce 'flou' soit une protection active du psychisme.",
+          BONNE_formulation: "Plusieurs items du module 7 ont été cotés 'je ne me souviens pas' — particulièrement sur la sous-section [détailler]. Cliniquement, cette opacité mérite attention. Elle ne reflète pas un manque d'effort de votre part. Elle signe possiblement une zone que le psychisme a mise en sourdine — soit parce que ces moments n'ont pas eu lieu et qu'il n'y a donc rien à se souvenir, soit parce que la mémoire les a rendus inaccessibles pour vous protéger. Les deux hypothèses méritent d'être tenues. Un travail thérapeutique progressif, avec un clinicien formé à la mémoire traumatique, pourrait permettre d'explorer cette zone sans danger."
+        },
+
+        normalisation_traumatique: {
+          definition: "Événement coché comme 'neutre/positif sur le moment' mais avec rétrospection 'je vois aujourd'hui l'impact que je n'avais pas vu à l'époque'. Signature exacte de la normalisation : un enfant a intégré comme 'normal' un événement structurant.",
+          MAUVAISE_formulation: "Vous avez la sagesse rétrospective de voir aujourd'hui des aspects que vous ne perceviez pas enfant — c'est le signe d'un travail intérieur précieux qui se poursuit.",
+          pourquoi_mauvaise: "Transforme un marqueur de normalisation en 'sagesse rétrospective'. Évite que la personne réalise que sa perception 'positive' sur le moment était une SURVIE, pas une vérité.",
+          BONNE_formulation: "Vous avez coché un événement [détailler] comme vécu 'positivement sur le moment' tout en précisant que vous mesurez aujourd'hui un impact que vous n'aviez pas vu à l'époque. Cette double cotation est cliniquement précieuse : elle signe ce qu'on appelle la normalisation traumatique. Un enfant qui grandit dans un environnement difficile n'a pas d'autre choix que de le percevoir comme 'normal' — sinon, il ne survit pas psychiquement. La normalisation est une stratégie adaptative formidable. Mais à l'âge adulte, elle peut empêcher de reconnaître ce qui pesait. Le fait que vous puissiez aujourd'hui dire 'je vois maintenant ce que je ne voyais pas' est une lucidité qui mérite d'être honorée — et c'est aussi un appel à explorer ce que cet événement vous a réellement coûté."
+        }
+      },
+
+      contrat_de_reconnaissance_de_la_souffrance: {
+        principe_absolu: "Pour CHAQUE configuration clinique détectée par le moteur (derived_data.raisonnement_clinique.configurations_cliniques avec severite 'moderee' ou 'majeure'), le rapport DOIT obligatoirement contenir les 5 éléments suivants : (a) NOMINATION de la souffrance ou de la carence — ce qui pèse, ce qui manque, (b) HYPOTHÈSE D'ORIGINE — l'environnement précoce probable qui a façonné cela, (c) RÉPÉTITION ACTUELLE — comment cela se rejoue maintenant dans le corps, les relations, la vie quotidienne, (d) RESSOURCES RECONNUES de la personne face à cela — mais sans masquer la souffrance, (e) PISTE THÉRAPEUTIQUE — ce que le travail spécialisé pourrait permettre de dénouer.",
+        verification: "À la relecture, pour chaque configuration traitée, vérifier que les 5 éléments (a)(b)(c)(d)(e) sont présents. Si (a) manque, le rapport trahit la fonction même de l'instrument. Si (d) ou (e) manquent, le rapport est désespérant et clos.",
+        ordre_recommande_dans_le_rapport: "Globalement, traiter dans l'ordre : ressources de fond (M8) → configuration clinique majeure 1 avec ses 5 éléments → configuration clinique majeure 2 avec ses 5 éléments → ... → questions ouvertes pour la consultation. Les ressources sont au début pour ancrer la personne ; le développement clinique vient ensuite ; la consultation est l'horizon."
+      },
+
+      anti_complaisance_rules: {
+        principe: "Ces formulations sont la signature d'un rapport qui a oublié la nature clinique de l'instrument. Elles sont PROSCRITES.",
+        patterns_a_proscrire: [
+ "Profil articulé / profil nuancé / profil en deux temps [appliqué à un désert affectif]",
+ "Transparences nuancées [appliqué à un score plancher]",
+ "Famille moins disponible / moins démonstrative [pour décrire une carence]",
+ "Particularité de votre fonctionnement [pour décrire une empreinte saturée]",
+ "Sensibilité [pour décrire une hypervigilance]",
+ "Maturité précoce / qualité d'aînée [pour décrire une parentification]",
+ "Sagesse rétrospective [pour décrire une normalisation traumatique]",
+ "Rigueur / perfectionnisme professionnel [pour décrire un schéma de Punition]",
+ "Travail intérieur en cours [pour minimiser une souffrance non reconnue]",
+ "Mouvement de réélaboration [pour ne pas nommer la zone de mal-être]",
+ "La poésie de votre [esthétisation poétique]",
+ "Votre richesse intérieure [vague poétique évitant le clinique]",
+ "Heureusement vous avez aussi [minimisation par opposition à du positif]",
+ "C'est ce qui fait votre force [appliqué à une configuration dysfonctionnelle]",
+ "Profil de [archétype : 'donneuse', 'guerrière', 'sage', 'sensible']"
+        ],
+        regle_de_detection: "Si en relisant un paragraphe le lecteur pourrait se sentir 'compris dans sa particularité' plutôt que 'reconnu dans sa souffrance', le paragraphe est à reformuler. Si le paragraphe pourrait être publié dans un magazine de développement personnel, il est trop complaisant.",
+        critere_du_test_de_signature: "Pour chaque paragraphe clinique, vous demander : 'van der Kolk signerait-il cette page ?'. Si non parce qu'il dirait 'c'est trop léger, ça ne nomme pas le trauma', reformulez."
+      },
+
+      directives_specifiques_trauma_complexe: {
+        respect_parents: "Ne jamais formuler les résultats du module 7 (transparences) comme une critique des parents. Toujours élargir : les adultes de l'entourage n'ont peut-être pas reçu eux-mêmes ce qu'ils n'ont pas su transmettre. C'est une lecture clinique, pas un procès. MAIS le respect des parents N'EST PAS l'effacement de la carence. On peut dire 'votre mère était probablement débordée, peut-être elle-même blessée, et l'environnement émotionnel n'était pas suffisamment chaleureux pour vous' sans condamner et sans minimiser.",
+        ressources_avant_vulnerabilites: "Le rapport nomme les ressources et facteurs protecteurs (module 8) AVANT de développer les vulnérabilités. Cela ancre la personne dans ce qui tient avant d'aborder ce qui pèse. MAIS les ressources ne sont jamais une EXCUSE pour ne pas nommer les configurations cliniques. Ressources d'abord, vulnérabilités ensuite — pas ressources à la place des vulnérabilités.",
+        normalisation_traumatique: "Si derived_data.raisonnement_clinique.normalisation_signaux contient des éléments, en parler explicitement : ce que la personne avait normalisé comme 'pas si grave' apparaît rétrospectivement comme structurant. C'est une découverte clinique du processus, à honorer.",
+        opacite_memorielle: "Si transparences_signifiantes contient 'opacite_memorielle_developpementale', formuler avec prudence MAIS sans esquive : l'absence de souvenir n'est pas un manque d'effort, c'est possiblement une protection. Suggérer un travail thérapeutique progressif avec un spécialiste de la mémoire traumatique.",
+        hpi_et_environnement_carentiel: "Si configuration.0.8 contient 'hpi' (ou 'suspicion' de neurodivergence) ET qu'une configuration de trauma développemental est détectée : formuler explicitement l'HYPOTHÈSE CLINIQUE que le HPI/la neurodivergence a pu servir de RÉFUGE COGNITIF dans un environnement émotionnellement carentiel. Beaucoup d'enfants HPI ont sur-investi le cognitif faute d'accès à un registre émotionnel sécure. Cette hypothèse n'est pas une certitude, mais elle mérite d'être nommée comme piste de travail.",
+        ysq_integration_systematique: "Si ysq_integration.present == true, croiser systématiquement les schémas YSQ actifs avec les configurations IEV. Tables d'articulation prioritaires (à mobiliser quand les données le confirment) : ED (Carence émotionnelle) ↔ désert affectif IEV module 7 ; SS (Sacrifice de soi) ↔ parentification chronique IEV événement 36 ; PU (Punition) ↔ critique chronique IEV module 3 ; AB (Abandon) ↔ attachement insécure développemental ; MA (Méfiance/Abus) ↔ événements traumatiques relationnels IEV M2 ; IS (Isolement social) ↔ M5 contexte socioculturel ; EM (Échec) ↔ pression intense de réussite IEV harcelement ; SD (Inhibition émotionnelle) ↔ modèles parentaux d'expression M7 ; NP (Négativité/Pessimisme) ↔ climat développemental négatif M3. Le rapport articule ces ponts EN HYPOTHÈSE, jamais en certitude. Référence francophone pour cette articulation : Cousineau & Côté, Pratiquer la thérapie des schémas (chap. reconsolidation de la mémoire). Référence internationale : Young, Klosko & Weishaar, Schema Therapy: A Practitioner's Guide.",
+
+        icv_orientation_specifique: "Lorsque les configurations détectées relèvent prioritairement de la chronologie biographique précoce (C_TRAUMA_DEVELOPPEMENTAL_NON_EVENEMENTIEL, C_NEGLIGENCE_EMOTIONNELLE_CHRONIQUE, C_PARENTIFICATION_CHRONIQUE, C_OPACITE_MEMORIELLE, attachement désorganisé inféré), MENTIONNER explicitement l'INTÉGRATION DU CYCLE DE LA VIE (ICV) comme méthode de retraitement appropriée. L'IEV cartographie, l'ICV retraite. Cette orientation est une suggestion clinique légitime, pas une prescription. Formuler : 'Une approche thérapeutique adaptée à ce type de cartographie biographique est l'Intégration du Cycle de la Vie (ICV), développée par Peggy Pace et déployée en France notamment par l'Institut Double Hélice (Joanna Smith, Catherine Clément). Cette méthode propose une reconstruction chronologique du parcours qui peut être indiquée lorsque les empreintes précoces — notamment celles d'avant 3 ans — sont au premier plan.'",
+
+        transgenerationnel_si_M7_signifiant: "Si le module 7 contient des items M7_modeles_relationnels ou M7_recits_familiaux à 0/1 (Jamais ou Je ne me souviens pas), MENTIONNER la dimension psychogénéalogique (Schützenberger). Formuler en hypothèse : le silence transgénérationnel — l'absence de récits familiaux, l'absence de modèles relationnels nommés — n'est jamais neutre. Anne Ancelin Schützenberger a montré comment ce qui n'a pas pu être dit dans une génération devient le poids invisible de la suivante. La cartographie peut suggérer qu'un travail transgénérationnel a sa place. Sans pathologisation, sans charge."
+      },
+
+      structure_pdf_attendue: [
+ "1. Page de garde (watermark dans métadonnées, mention 'document confidentiel')",
+ "2. Préambule : comment lire ce rapport, posture clinique, limites",
+ "3. Synthèse narrative globale (3-5 pages) — articulation des configurations détectées en récit cohérent",
+ "4. Votre configuration de départ (M0) — brève, factuelle, sans interprétation prématurée",
+ "5. Vos ressources et appuis (M8) — section longue, ancrante, AVANT le développement clinique",
+ "6. Cartographie de votre chronologie de vie (M2 — timeline visuelle)",
+ "7. Charge cumulée par catégorie d'événements",
+ "8. Climat développemental (si M3 actif) — distinction nette critique/parentification/présence",
+ "9. Climat relationnel adulte (si M4 actif)",
+ "10. Contexte socioculturel (si M5 actif)",
+ "11. Empreinte actuelle et marqueurs corporels-émotionnels (M6) — par dimension",
+ "12. Marqueurs de dissociation (sous-section dédiée si scores >= 2.5)",
+ "13. Le poids des absences — transparences (M7) ★ section clé, sans euphémisme",
+ "14. Configurations cliniques détectées (intégration des 5 éléments a-b-c-d-e par configuration)",
+ "15. Articulation avec votre profil YSQ-L3 (si importé)",
+ "16. Hypothèses cliniques croisées et lecture intégrée",
+ "17. Questions ouvertes pour la consultation",
+ "18. Recommandations de suivi (3114, CRP, schémathérapeute, traumathérapeute selon configurations)",
+ "19. Pour aller plus loin — bibliographie clinique (priorisation francophone) : Bessel van der Kolk (Le corps n'oublie rien) ; Olivier Piedfort-Marin & Luise Reddemann (Psychothérapie des traumatismes complexes) ; John Bowlby (Amour et rupture) ; Joanna Smith (La régulation des émotions dans la famille) ; Catherine Clément & Eric Binet (Le présent au secours du passé — ICV) ; Peggy Pace (Pratiquer l'ICV) ; Anne Ancelin Schützenberger (Psychogénéalogie) ; Peter A. Levine (Trauma et mémoire) ; Boris Cyrulnik (Un merveilleux malheur) ; Judith Herman (Trauma and Recovery)",
+ "20. Annexe technique (scores complets, fiabilité)",
+ "21. Mentions légales et limites (audit_caveat, non-diagnostic, RGPD, )"
+      ],
+
+      escalation_protocol: "Si l'empreinte moyenne est >= 4 ET la dissociation moyenne >= 3.5 ET au moins une configuration majeure détectée : recommander EXPLICITEMENT une consultation auprès d'un Centre Régional du Psychotrauma (CRP) — il en existe 10 en France, gratuits, spécialisés. Mentionner aussi le 3114 (prévention suicide, 24h/24, gratuit) comme ressource d'appoint en cas de difficulté entre la lecture du rapport et la consultation."
+    },
+    render_instructions: {
+      brand: {
+        nom: "C Concept&Dev",
+        positionnement: "Intelligence Psychométrique & Orientation",
+couleurs: { mer: "#8FAFB1", mer_dark: "#6A9496", vert_sauge: "#C8D0C3", beige_sable: "#D8CDBB", rouge_seuil: "#C1666B" }
+      },
+      format: "A4, 30-40 pages, vouvoiement, accents préservés",
+      pied_de_page: "Conception : C Concept&Dev © — Intelligence Psychométrique & Orientation"
+    },
+    robustness: {
+      coherence_checks_avant_pdf: [
+ "Aucun diagnostic posé",
+ "Vouvoiement intégral",
+ "Mots interdits absents",
+ "sur page de garde",
+ "Watermark métadonnées appliqué et vérifié (reader.metadata après génération)",
+ "Ressources nommées AVANT vulnérabilités",
+ "Pas de culpabilisation parentale dans la section Transparences",
+ "Mention 3114 et CRP en cas d'escalation_protocol déclenché"
+      ]
+    }
+  };
+
+  // Export JSON en clair (phase test — pas de scramble)
+  const exportObj = innerPayload;
+
+  const blob = new Blob([JSON.stringify(exportObj, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const fn = `IEV_${profile.nom || 'anon'}_${profile.prenom || ''}_${dateStr}.json`.replace(/\s+/g, '_');
+  a.href = url; a.download = fn; a.click();
+  URL.revokeObjectURL(url);
+  showToast('JSON IEV v1.0 téléchargé', 'success');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   BOOTSTRAP
+   ═══════════════════════════════════════════════════════════════════ */
+document.getElementById('btnPause').addEventListener('click', () => {
+  saveState();
+  showToast('Session sauvegardée localement. Vous pouvez fermer cette page.', 'success');
+});
+document.getElementById('btnSaveAnyTime').addEventListener('click', exportSession);
+
+// Initial bootstrap
+const restored = loadState();
+if (restored) {
+  Object.assign(state, restored);
+  // Don't auto-restore on home; just present option in landing page
+  state.current_module = 'home';
+}
+render();
+</script>
+</body>
+</html>
