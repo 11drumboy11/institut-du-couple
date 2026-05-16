@@ -1,0 +1,3508 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)file:///Users/christophebonnet/Downloads/YSQ-L3.html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YSQ-L3 — Questionnaire des Schémas de Young (232 items)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="./YSQ-L3 — Questionnaire des Schémas de Young (232 items)_files/css2" rel="stylesheet">
+<style>
+:root {
+  --mer: #8FAFB1;
+  --mer-dark: #6A9496;
+  --vert-sauge: #C8D0C3;
+  --beige-sable: #D8CDBB;
+  --sable: #E6D7C3;
+  --gris-bg: #F5F2ED;
+  --noir: #1a1a1a;
+  --gris: #333333;
+  --gris-light: #666666;
+  --gris-very-light: #999999;
+  --rouge: #C1666B;
+  --vert: #7BA38C;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--gris);
+  background: var(--gris-bg);
+  min-height: 100vh;
+  padding: 0;
+}
+
+.brand-bar {
+  background: white;
+  border-bottom: 1px solid var(--beige-sable);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+.brand-bar .brand {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--mer-dark);
+  letter-spacing: 0.1em;
+}
+.brand-bar .brand strong { font-weight: 600; font-style: normal; }
+.brand-bar .progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--gris-light);
+}
+.brand-bar .progress-bar {
+  width: 220px;
+  height: 6px;
+  background: var(--gris-bg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.brand-bar .progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--mer), var(--mer-dark));
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+
+/* ─── SETUP SCREEN ─── */
+.screen { display: none; }
+.screen.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.hero {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 40px 24px 32px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+.hero h1 {
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  font-size: 32px;
+  color: var(--noir);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.hero .subtitle {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--mer-dark);
+  margin-bottom: 4px;
+}
+.hero .ref {
+  font-size: 12px;
+  color: var(--gris-very-light);
+  margin-top: 14px;
+  letter-spacing: 0.05em;
+}
+.hero .divider {
+  width: 48px;
+  height: 2px;
+  background: var(--mer);
+  margin: 18px auto;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+.card h2 {
+  font-family: 'Lora', serif;
+  font-size: 18px;
+  color: var(--noir);
+  font-weight: 600;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid var(--mer);
+}
+.card p { margin-bottom: 10px; }
+.card ul { padding-left: 22px; margin-bottom: 10px; }
+.card li { margin-bottom: 4px; }
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.form-row.single { grid-template-columns: 1fr; }
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gris);
+  margin-bottom: 5px;
+  letter-spacing: 0.02em;
+}
+.field input, .field select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--beige-sable);
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  background: white;
+  color: var(--gris);
+  transition: border-color 0.2s;
+}
+.field input:focus, .field select:focus {
+  outline: none;
+  border-color: var(--mer);
+  box-shadow: 0 0 0 3px rgba(143,175,177,0.15);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  letter-spacing: 0.02em;
+}
+.btn.primary {
+  background: var(--mer-dark);
+  color: white;
+}
+.btn.primary:hover { background: var(--noir); transform: translateY(-1px); }
+.btn.primary:disabled { background: var(--gris-very-light); cursor: not-allowed; transform: none; }
+.btn.secondary {
+  background: white;
+  color: var(--gris);
+  border: 1px solid var(--beige-sable);
+}
+.btn.secondary:hover { background: var(--gris-bg); }
+.btn.ghost {
+  background: transparent;
+  color: var(--mer-dark);
+  border: none;
+  padding: 8px 12px;
+}
+.btn.ghost:hover { background: rgba(143,175,177,0.1); }
+
+/* ─── QUIZ SCREEN ─── */
+.quiz-context {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(143,175,177,0.08);
+  border: 1px solid rgba(143,175,177,0.3);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--mer-dark);
+}
+.quiz-context .name { font-weight: 600; color: var(--noir); }
+.quiz-context .count { font-family: 'Lora', serif; }
+
+.scale-legend {
+  background: white;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  position: sticky;
+  top: 60px;
+  z-index: 50;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--beige-sable);
+}
+.scale-legend h3 {
+  font-family: 'Lora', serif;
+  font-size: 13px;
+  color: var(--mer-dark);
+  font-weight: 600;
+  margin-bottom: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.scale-legend .scale {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+.scale-legend .scale-item {
+  text-align: center;
+  font-size: 11px;
+  color: var(--gris-light);
+  padding: 6px 4px;
+  background: var(--gris-bg);
+  border-radius: 4px;
+  line-height: 1.3;
+}
+.scale-legend .scale-item .num {
+  display: block;
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--mer-dark);
+  margin-bottom: 2px;
+}
+
+.item-card {
+  background: white;
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+.item-card.answered { border-color: rgba(143,175,177,0.25); background: rgba(143,175,177,0.03); }
+.item-card.missing-highlight {
+  border-color: var(--rouge);
+  box-shadow: 0 0 0 3px rgba(193,102,107,0.1);
+  animation: shake 0.4s;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+.item-card .item-num {
+  display: inline-block;
+  font-family: 'Lora', serif;
+  font-size: 11px;
+  color: var(--gris-very-light);
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.item-card .item-text {
+  font-size: 15px;
+  color: var(--noir);
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.item-card .item-options {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+.item-card .opt {
+  cursor: pointer;
+  padding: 10px 4px;
+  text-align: center;
+  border: 1.5px solid var(--beige-sable);
+  border-radius: 6px;
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--gris);
+  background: white;
+  transition: all 0.15s;
+  user-select: none;
+}
+.item-card .opt:hover {
+  border-color: var(--mer);
+  color: var(--mer-dark);
+  transform: translateY(-1px);
+}
+.item-card .opt.selected {
+  background: var(--mer-dark);
+  border-color: var(--mer-dark);
+  color: white;
+  box-shadow: 0 2px 6px rgba(106,148,150,0.3);
+}
+
+.section-divider {
+  margin: 32px 0 16px;
+  padding: 10px 16px;
+  font-family: 'Lora', serif;
+  font-size: 11px;
+  color: var(--mer-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  border-left: 3px solid var(--mer);
+  background: white;
+  border-radius: 0 6px 6px 0;
+}
+
+.nav-actions {
+  position: sticky;
+  bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 14px 18px;
+  margin-top: 24px;
+  border-radius: 10px;
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+  border: 1px solid var(--beige-sable);
+  z-index: 50;
+}
+.nav-actions .status { font-size: 13px; color: var(--gris-light); }
+.nav-actions .status strong { color: var(--noir); font-family: 'Lora', serif; }
+
+.warning {
+  padding: 10px 14px;
+  background: rgba(193,102,107,0.08);
+  border-left: 3px solid var(--rouge);
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--rouge);
+  margin-bottom: 14px;
+}
+
+.notice {
+  padding: 14px 16px;
+  background: rgba(143,175,177,0.08);
+  border: 1px solid rgba(143,175,177,0.28);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--gris);
+  margin: 14px 0;
+}
+.notice strong { color: var(--noir); }
+.notice ul { margin: 8px 0 0; padding-left: 20px; }
+.notice li { margin-bottom: 4px; }
+
+/* ─── RESULTS SCREEN ─── */
+.result-hero {
+  background: linear-gradient(135deg, rgba(143,175,177,0.12), rgba(200,208,195,0.18));
+  border-radius: 12px;
+  padding: 32px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+.result-hero h1 {
+  font-family: 'Lora', serif;
+  font-size: 26px;
+  color: var(--noir);
+  margin-bottom: 6px;
+}
+.result-hero .sub {
+  font-style: italic;
+  color: var(--mer-dark);
+  font-family: 'Lora', serif;
+}
+
+.schema-bar-row {
+  display: grid;
+  grid-template-columns: 230px 1fr 60px 80px;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--beige-sable);
+  font-size: 13px;
+}
+.schema-bar-row.head {
+  font-weight: 600;
+  color: var(--mer-dark);
+  border-bottom: 2px solid var(--mer);
+  padding-bottom: 8px;
+  margin-bottom: 6px;
+  font-family: 'Lora', serif;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.schema-bar-row .lbl { line-height: 1.3; }
+.schema-bar-row .lbl .code { font-family: 'Lora', serif; color: var(--mer-dark); font-weight: 600; margin-right: 5px; }
+.schema-bar-row .bar-wrap {
+  height: 14px;
+  background: var(--gris-bg);
+  border-radius: 7px;
+  overflow: hidden;
+  position: relative;
+}
+.schema-bar-row .bar-fill {
+  height: 100%;
+  border-radius: 7px;
+  transition: width 0.6s ease;
+}
+.schema-bar-row .bar-threshold {
+  position: absolute;
+  top: -2px; bottom: -2px;
+  left: 50%; /* threshold ratio = 4/6 = 66.66% but we use 0-6 scale */
+  width: 1px;
+  background: var(--gris-very-light);
+}
+.schema-bar-row .score {
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  text-align: right;
+}
+.schema-bar-row .lvl {
+  text-align: center;
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.schema-bar-row .lvl.bas { background: rgba(123,163,140,0.15); color: var(--vert); }
+.schema-bar-row .lvl.modere { background: rgba(216,205,187,0.5); color: #8b6f4d; }
+.schema-bar-row .lvl.eleve { background: rgba(193,102,107,0.18); color: var(--rouge); }
+.schema-bar-row .lvl.tres-eleve { background: var(--rouge); color: white; }
+
+.export-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 24px 0;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.summary-metric {
+  background: var(--gris-bg);
+  border: 1px solid var(--beige-sable);
+  border-radius: 8px;
+  padding: 12px;
+}
+.summary-metric .value {
+  font-family: 'Lora', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--noir);
+  line-height: 1.1;
+}
+.summary-metric .label {
+  font-size: 11px;
+  color: var(--gris-light);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 4px;
+}
+.result-list {
+  display: grid;
+  gap: 8px;
+}
+.result-list .result-chip {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 9px 11px;
+  border: 1px solid var(--beige-sable);
+  border-radius: 7px;
+  background: white;
+  font-size: 13px;
+}
+.result-list .result-chip strong { color: var(--noir); }
+.small-note {
+  font-size: 12px;
+  color: var(--gris-light);
+  margin-top: 12px;
+}
+
+/* footer */
+.footer-info {
+  text-align: center;
+  font-size: 11px;
+  color: var(--gris-very-light);
+  padding: 24px 0 8px;
+  font-style: italic;
+}
+
+/* ─── TOAST (sauvegarde / feedback) ─── */
+.toast {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  background: var(--noir);
+  color: white;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  z-index: 200;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.25s, transform 0.25s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.success { background: #2d5a3d; }
+.toast.warn { background: #8b5a2b; }
+
+/* ─── ITEM EN FOCUS (raccourci clavier actif) ─── */
+.item-card.focused {
+  border-color: var(--mer);
+  box-shadow: 0 0 0 3px rgba(143,175,177,0.18);
+}
+.item-card.focused::before {
+  content: "✓ Tapez 1-6 ou utilisez ← →";
+  display: block;
+  position: absolute;
+  margin-top: -28px;
+  font-size: 10px;
+  color: var(--mer-dark);
+  font-style: italic;
+  letter-spacing: 0.04em;
+}
+.item-card { position: relative; }
+
+/* ─── MILESTONES (jalons) ─── */
+.milestone {
+  text-align: center;
+  margin: 20px 0;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, rgba(143,175,177,0.10), rgba(216,205,187,0.18));
+  border-radius: 10px;
+  border: 1px dashed var(--mer);
+}
+.milestone .pct {
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--mer-dark);
+  margin-bottom: 4px;
+}
+.milestone .msg {
+  font-size: 13px;
+  color: var(--gris);
+  font-style: italic;
+}
+
+/* ─── SESSION ACTIONS (sauvegarde/restauration) ─── */
+.session-tools {
+  background: rgba(216,205,187,0.25);
+  border: 1px solid var(--beige-sable);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.session-tools .label {
+  color: var(--gris-light);
+  font-style: italic;
+}
+.session-tools .session-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.session-tools .mini-btn {
+  font-size: 12px;
+  padding: 6px 10px;
+  border: 1px solid var(--mer);
+  background: white;
+  color: var(--mer-dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.15s;
+}
+.session-tools .mini-btn:hover { background: var(--mer); color: white; }
+
+/* ─── DISPLAY MODE TOGGLE ─── */
+.mode-toggle {
+  display: inline-flex;
+  background: white;
+  border: 1px solid var(--beige-sable);
+  border-radius: 6px;
+  overflow: hidden;
+  font-size: 12px;
+}
+.mode-toggle button {
+  padding: 6px 12px;
+  border: none;
+  background: white;
+  color: var(--gris-light);
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+}
+.mode-toggle button.active {
+  background: var(--mer-dark);
+  color: white;
+}
+
+/* ─── FONT SIZE TOGGLE ─── */
+body.font-large { font-size: 17px; }
+body.font-large .item-card .item-text { font-size: 17px; }
+body.font-large .item-card .opt { font-size: 17px; padding: 12px 4px; }
+
+/* ─── SESSION UPLOAD ZONE ─── */
+.upload-zone {
+  border: 2px dashed var(--beige-sable);
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  background: rgba(245,242,237,0.5);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+}
+.upload-zone:hover, .upload-zone.dragging {
+  border-color: var(--mer);
+  background: rgba(143,175,177,0.06);
+}
+.upload-zone .icon { font-size: 28px; margin-bottom: 6px; color: var(--mer-dark); }
+.upload-zone .hint { font-size: 12px; color: var(--gris-light); }
+.upload-zone input { display: none; }
+.upload-status {
+  margin-top: 10px;
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+.upload-status.success { background: rgba(123,163,140,0.15); color: var(--vert); }
+.upload-status.error { background: rgba(193,102,107,0.12); color: var(--rouge); }
+
+@media (max-width: 768px) {
+  .form-row { grid-template-columns: 1fr; }
+  .summary-grid { grid-template-columns: 1fr 1fr; }
+  .schema-bar-row { grid-template-columns: 1fr; gap: 4px; padding: 12px 0; }
+  .schema-bar-row .lbl, .schema-bar-row .score, .schema-bar-row .lvl { text-align: left; }
+  .item-card .item-options { grid-template-columns: repeat(6, 1fr); gap: 4px; }
+  .item-card .opt { font-size: 13px; padding: 8px 2px; }
+  .scale-legend .scale-item { font-size: 9px; }
+}
+
+@media print {
+  body { background: white; color: #111; }
+  .brand-bar, .export-actions, .toast { display: none !important; }
+  .container { max-width: none; padding: 0; }
+  .screen { display: none !important; }
+  #screen-results { display: block !important; }
+  .card, .result-hero {
+    box-shadow: none;
+    border: 1px solid #ddd;
+    break-inside: avoid;
+  }
+  .schema-bar-row .bar-fill { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<div class="brand-bar">
+  <div class="brand"><strong>C Concept&amp;Dev</strong> · YSQ-L3</div>
+  <div class="progress-wrap" id="progressWrap" style="display:none;">
+    <span id="progressTxt">0 / 232</span>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ═══════ SETUP ═══════ -->
+<div class="screen active" id="screen-setup">
+  <div class="hero">
+    <h1>Questionnaire des Schémas de Young</h1>
+    <div class="subtitle">YSQ-L3 — Long Form, 232 items</div>
+    <div class="divider"></div>
+    <div style="font-size:14px;color:var(--gris-light);max-width:560px;margin:0 auto;">
+      Inventaire de référence pour l'identification des 18 schémas précoces inadaptés selon la théorie de Jeffrey Young.
+    </div>
+    <div class="ref">YOUNG, J.E. (1998, 2005) · Adaptation française · Durée estimée 35–50 min</div>
+  </div>
+
+  <div class="card">
+    <h2>Comment passer le questionnaire</h2>
+    <p>Vous allez lire 232 phrases décrivant comment certaines personnes se perçoivent. Pour chacune, indiquez à quel point elle <em>vous décrit personnellement</em>, en utilisant l'échelle suivante :</p>
+    <ul>
+      <li><strong>1</strong> — Totalement faux pour moi</li>
+      <li><strong>2</strong> — Plutôt faux pour moi</li>
+      <li><strong>3</strong> — Plus vrai que faux</li>
+      <li><strong>4</strong> — Modérément vrai</li>
+      <li><strong>5</strong> — Vrai pour moi la plupart du temps</li>
+      <li><strong>6</strong> — Me décrit parfaitement</li>
+    </ul>
+    <p style="margin-top:12px;font-size:13px;color:var(--gris-light);"><em>Quand vous hésitez, fiez-vous à votre ressenti plutôt qu'à ce que vous pensez devoir répondre. Vos réponses sont sauvegardées automatiquement à chaque clic — vous pouvez fermer l'onglet et reprendre plus tard.</em></p>
+  </div>
+
+  <div class="card">
+    <h2>Cadre d'utilisation</h2>
+    <div class="notice">
+      <strong>Important avant de commencer.</strong>
+      <ul>
+        <li>Ce questionnaire éclaire des tendances de schémas précoces inadaptés ; il ne pose pas de diagnostic médical ou psychiatrique.</li>
+        <li>Les résultats doivent être interprétés avec prudence, idéalement avec un psychologue formé à la schémathérapie.</li>
+        <li>Les réponses sont stockées localement dans ce navigateur, sauf export volontaire de votre part.</li>
+        <li>Pour un usage professionnel, vérifiez les droits d'utilisation de l'instrument, de la traduction et de la grille de cotation officielle.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Vos informations</h2>
+    <div class="form-row">
+      <div class="field">
+        <label for="setupNom">Nom</label>
+        <input type="text" id="setupNom" placeholder="">
+      </div>
+      <div class="field">
+        <label for="setupPrenom">Prénom</label>
+        <input type="text" id="setupPrenom" placeholder="">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="field">
+        <label for="setupAge">Âge</label>
+        <input type="number" id="setupAge" placeholder="" min="16" max="99">
+      </div>
+      <div class="field">
+        <label for="setupGenre">Genre</label>
+        <select id="setupGenre">
+          <option value="">—</option>
+          <option value="H">Homme</option>
+          <option value="F">Femme</option>
+          <option value="X">Autre / non précisé</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row single">
+      <div class="field">
+        <label for="setupContexte">Contexte de passation (optionnel)</label>
+        <input type="text" id="setupContexte" placeholder="">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Reprendre une passation enregistrée <span style="font-size:11px;font-weight:400;color:var(--gris-light);font-style:italic;margin-left:8px;">optionnel</span></h2>
+    <p style="font-size:13px;color:var(--gris-light);">Si vous avez déjà commencé sur un autre appareil ou exporté un fichier de sauvegarde <code>.ysq-session</code>, vous pouvez le charger ici pour reprendre exactement là où vous en étiez.</p>
+    <div class="upload-zone" id="sessionUploadZone">
+      <div class="icon">↻</div>
+      <div><strong>Glisser un fichier .ysq-session</strong> ou cliquer pour parcourir</div>
+      <div class="hint">Vos réponses, profil et état d'avancement seront restaurés</div>
+      <input type="file" id="sessionFileInput" accept=".json,.ysq-session,application/json">
+    </div>
+    <div id="sessionUploadStatus"></div>
+  </div>
+
+  <div style="text-align:center;margin-top:8px;">
+    <button class="btn primary" id="btnStart">Commencer la passation →</button>
+    <button class="btn ghost" id="btnResume" style="display: none; margin-left: 8px;">↻ Reprendre une passation enregistrée</button>
+  </div>
+
+</div>
+
+<!-- ═══════ QUIZ ═══════ -->
+<div class="screen" id="screen-quiz">
+  <div class="quiz-context">
+    <span class="name" id="ctxName">—</span>
+    <span class="count" id="ctxCount">0 / 232 items répondus</span>
+  </div>
+
+  <div class="session-tools">
+    <span class="label">Sauvegarde automatique active · vous pouvez fermer la page et revenir</span>
+    <div class="session-buttons">
+      <button class="mini-btn" id="btnDownloadSession" title="Télécharger un fichier de sauvegarde pour le restaurer plus tard ou sur un autre appareil">↓ Télécharger sauvegarde</button>
+      <button class="mini-btn" id="btnToggleFontSize" title="Augmenter la taille du texte">A+ texte</button>
+      <div class="mode-toggle" title="Mode d&#39;affichage">
+        <button class="active" data-mode="continuous">Liste</button>
+        <button data-mode="focus">Un par un</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="scale-legend">
+    <h3>Échelle de réponse — pour chaque phrase</h3>
+    <div class="scale">
+      <div class="scale-item"><span class="num">1</span>Totalement faux</div>
+      <div class="scale-item"><span class="num">2</span>Plutôt faux</div>
+      <div class="scale-item"><span class="num">3</span>Plus vrai que faux</div>
+      <div class="scale-item"><span class="num">4</span>Modérément vrai</div>
+      <div class="scale-item"><span class="num">5</span>Vrai la plupart du temps</div>
+      <div class="scale-item"><span class="num">6</span>Me décrit parfaitement</div>
+    </div>
+  </div>
+
+  <div id="itemsList"></div>
+
+  <div class="nav-actions">
+    <div class="status">
+      <strong id="statusCount">0 / 232</strong> items répondus
+      <span id="statusMissing" style="margin-left:10px;color:var(--rouge);"></span>
+    </div>
+    <div>
+      <button class="btn secondary" id="btnSavePause">Sauvegarder et reprendre plus tard</button>
+      <button class="btn primary" id="btnSubmit">Voir les résultats →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ RESULTS ═══════ -->
+<div class="screen" id="screen-results">
+  <div class="result-hero">
+    <h1 id="resName">—</h1>
+    <div class="sub">Profil YSQ-L3 — 18 schémas précoces inadaptés</div>
+  </div>
+
+  <div class="card">
+    <h2>Synthèse de passation</h2>
+    <div id="profileSummary"></div>
+    <div class="notice">
+      Cette synthèse décrit des hypothèses de lecture à partir d'une auto-évaluation. Elle ne remplace ni un entretien clinique, ni une décision diagnostique, ni un avis médical.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Vue d'ensemble — moyennes par schéma</h2>
+    <p style="font-size:13px;color:var(--gris-light);margin-bottom:14px;">Chaque schéma est noté de 1 à 6 (moyenne des items qui le composent). Le seuil clinique de pertinence se situe à <strong>4.0</strong>. Au-delà de 5.0, le schéma est considéré comme fortement actif.</p>
+    <div id="schemaTable"></div>
+  </div>
+
+  <div class="card">
+    <h2>Visualisation — radar des 18 schémas</h2>
+    <div id="radarWrap" style="text-align:center;"></div>
+  </div>
+
+  <div class="card">
+    <h2>Visualisation — vue par domaines</h2>
+    <div id="domainsView"></div>
+  </div>
+
+  <div class="export-actions">
+    <button class="btn primary" id="btnExportJson">↓ Télécharger le JSON complet</button>
+    <button class="btn secondary" id="btnPrintReport">🖨 Imprimer la synthèse</button>
+    <button class="btn ghost" id="btnNewPass">Nouvelle passation</button>
+  </div>
+
+  <div class="footer-info">
+    Le JSON exporté contient l'intégralité des 232 réponses, item par item, ainsi que les scores par schéma et par domaine. Vous pourrez l'utiliser pour générer un rapport PDF détaillé.
+  </div>
+</div>
+
+</div>
+
+<script>
+/**
+ * YSQ-L3 — Young Schema Questionnaire Long Form, version 3
+ * 232 items, 18 schémas précoces inadaptés, 5 domaines
+ * Réf: Young, J.E. (1998, 2005) — Cognitive Therapy for Personality Disorders
+ * Texte français: adaptation de travail. Pour un usage professionnel,
+ * vérifier les droits d'utilisation, la traduction autorisée et la grille
+ * de cotation officielle.
+ *
+ * Échelle Likert 1-6:
+ *  1 = Totalement faux pour moi
+ *  2 = Plutôt faux pour moi
+ *  3 = Plus vrai que faux
+ *  4 = Modérément vrai
+ *  5 = Vrai pour moi la plupart du temps
+ *  6 = Me décrit parfaitement
+ *
+ * Scoring: moyenne par schéma. Seuil clinique généralement à 4 (modérément vrai).
+ * Items > 5 = schéma fortement actif. Compter aussi nombre d'items à 5-6.
+ */
+
+window.YSQ_L3 = {
+  meta: {
+    name: "YSQ-L3",
+    full_name: "Young Schema Questionnaire — Long Form, Version 3",
+    author: "Young, J.E. (1998, 2005)",
+    usage_note: "Prototype de passation et d'export. Ne constitue pas une validation psychométrique officielle. La liste des items inversés et l'attribution des items aux 18 schémas N'ONT PAS été auditées contre la grille Young 2003 officielle — usage clinique réel à conditionner à cet audit.",
+    items_count: 232,
+    schemas_count: 18,
+    domains_count: 5,
+    grid_version: "ysq-l3-fr-draft-1",
+    todo: [
+ "TODO/CRITIQUE : auditer les ~20-30 items potentiellement inversés non encore marqués reverse:true (cf. discussion v3.1).",
+ "TODO/CRITIQUE : vérifier item par item la composition des 18 schémas contre la grille Young 2003 ou Schmidt et al. 1995.",
+ "TODO/AMÉLIORATION : sélectionner 3-5 items-marqueurs par schéma (60-90 décisions cliniques)."
+    ],
+    scale: {
+      min: 1, max: 6,
+      labels: [
+ "Totalement faux pour moi",
+ "Plutôt faux pour moi",
+ "Plus vrai que faux",
+ "Modérément vrai",
+ "Vrai la plupart du temps",
+ "Me décrit parfaitement"
+      ],
+      short: ["1 Faux", "2", "3", "4", "5", "6 Parfait"]
+    },
+    interpretation_thresholds: {
+      bas: { min: 1.0, max: 2.49, label: "Schéma faible" },
+      modere: { min: 2.5, max: 3.99, label: "Schéma modéré" },
+      eleve: { min: 4.0, max: 4.99, label: "Schéma élevé — cliniquement notable" },
+      tres_eleve: { min: 5.0, max: 6.0, label: "Schéma très élevé — fortement actif" }
+    }
+  },
+
+  /* ─────────────────────────────────────────────────────────
+   * 18 SCHÉMAS × 5 DOMAINES — DÉFINITIONS
+   * ───────────────────────────────────────────────────────── */
+  domains: {
+    D1: {
+      code: "D1",
+      name: "Séparation et rejet",
+      need: "Sécurité, stabilité, attention, empathie, partage des sentiments, acceptation et respect",
+      schemas: ["ED", "AB", "MA", "SI", "DS"]
+    },
+    D2: {
+      code: "D2",
+      name: "Manque d'autonomie et de performance",
+      need: "Autonomie, compétence, sens de l'identité",
+      schemas: ["DI", "VH", "EM", "FA"]
+    },
+    D3: {
+      code: "D3",
+      name: "Limites déficientes",
+      need: "Limites réalistes, autocontrôle",
+      schemas: ["ET", "IS"]
+    },
+    D4: {
+      code: "D4",
+      name: "Orientation vers les autres",
+      need: "Liberté d'exprimer ses besoins et émotions valables",
+      schemas: ["SB", "SS", "AS"]
+    },
+    D5: {
+      code: "D5",
+      name: "Survigilance et inhibition",
+      need: "Spontanéité, jeu, expression des émotions",
+      schemas: ["NP", "EI", "US", "PU"]
+    }
+  },
+
+  schemas: {
+    ED: {
+      code: "ED", name: "Carence émotionnelle", short: "Carence",
+      domain: "D1", color: "#C1666B",
+      description: "Croyance que les besoins essentiels (soutien, empathie, protection, guidance) ne seront pas comblés par les autres.",
+      child_origin: "Parents froids, peu démonstratifs, peu disponibles émotionnellement.",
+      reverse_items: []
+    },
+    AB: {
+      code: "AB", name: "Abandon / Instabilité", short: "Abandon",
+      domain: "D1", color: "#D17865",
+      description: "Perception que les personnes significatives sont instables et finiront par partir, mourir, ou devenir imprévisibles.",
+      child_origin: "Séparation précoce, parent imprévisible, deuil non métabolisé.",
+      reverse_items: []
+    },
+    MA: {
+      code: "MA", name: "Méfiance / Abus", short: "Méfiance",
+      domain: "D1", color: "#B85450",
+      description: "Conviction que les autres vont nuire, humilier, mentir, manipuler, ou profiter.",
+      child_origin: "Maltraitance, humiliation, abus, trahison répétée par les figures parentales.",
+      reverse_items: [35]
+    },
+    SI: {
+      code: "SI", name: "Isolement social / Aliénation", short: "Isolement",
+      domain: "D1", color: "#A6594E",
+      description: "Sentiment d'être différent du reste du monde, de ne faire partie d'aucun groupe.",
+      child_origin: "Famille marginale, sentiment d'être un étranger dans son groupe d'appartenance.",
+      reverse_items: []
+    },
+    DS: {
+      code: "DS", name: "Imperfection / Honte", short: "Imperfection",
+      domain: "D1", color: "#955145",
+      description: "Sentiment d'être imparfait, mauvais, indésirable, inférieur dans des dimensions importantes.",
+      child_origin: "Critiques parentales sévères, rejet, comparaison défavorisante répétée.",
+      reverse_items: []
+    },
+    FA: {
+      code: "FA", name: "Échec", short: "Échec",
+      domain: "D2", color: "#9B8EC4",
+      description: "Croyance d'avoir échoué fondamentalement, d'être inférieur aux autres en termes de réussite.",
+      child_origin: "Comparaisons défavorisantes répétées avec frères/sœurs, échecs scolaires non soutenus.",
+      reverse_items: []
+    },
+    DI: {
+      code: "DI", name: "Dépendance / Incompétence", short: "Dépendance",
+      domain: "D2", color: "#8A7DB3",
+      description: "Sentiment d'incompétence à assumer les responsabilités quotidiennes sans aide importante des autres.",
+      child_origin: "Parents surprotecteurs qui ont fait à la place de l'enfant.",
+      reverse_items: [94]
+    },
+    VH: {
+      code: "VH", name: "Vulnérabilité au danger / à la maladie", short: "Vulnérabilité",
+      domain: "D2", color: "#796AAA",
+      description: "Peur exagérée qu'une catastrophe imminente arrive (médicale, financière, externe).",
+      child_origin: "Parent anxieux qui transmet la peur du monde extérieur.",
+      reverse_items: []
+    },
+    EM: {
+      code: "EM", name: "Fusionnement / Soi immature", short: "Fusionnement",
+      domain: "D2", color: "#6B5CA0",
+      description: "Implication émotionnelle excessive avec un proche au détriment du développement individuel.",
+      child_origin: "Parent envahissant, fusionnel, qui n'a pas permis l'individuation.",
+      reverse_items: []
+    },
+    SB: {
+      code: "SB", name: "Assujettissement", short: "Assujettissement",
+      domain: "D4", color: "#7BA38C",
+      description: "Soumission excessive au contrôle des autres, par peur de la colère ou de l'abandon.",
+      child_origin: "Parent dominant qui punit l'expression des besoins ou émotions de l'enfant.",
+      reverse_items: []
+    },
+    SS: {
+      code: "SS", name: "Sacrifice de soi / Abnégation", short: "Sacrifice",
+      domain: "D4", color: "#6B9275",
+      description: "Focalisation excessive sur les besoins des autres, au détriment de sa propre satisfaction.",
+      child_origin: "Enfant parentifié, qui a dû prendre soin émotionnellement de ses parents.",
+      reverse_items: []
+    },
+    AS: {
+      code: "AS", name: "Recherche d'approbation / Reconnaissance", short: "Approbation",
+      domain: "D4", color: "#5C8266",
+      description: "Recherche excessive d'approbation, de reconnaissance ou d'attention, au détriment du soi authentique.",
+      child_origin: "Conditionnel: amour accordé uniquement en cas de réussite ou de plaire.",
+      reverse_items: []
+    },
+    EI: {
+      code: "EI", name: "Inhibition émotionnelle", short: "Inhibition",
+      domain: "D5", color: "#6B9DAD",
+      description: "Inhibition de l'action, des sentiments ou de la communication spontanés pour éviter la désapprobation.",
+      child_origin: "Parents qui dévalorisaient l'expression émotionnelle, valorisaient le contrôle.",
+      reverse_items: []
+    },
+    US: {
+      code: "US", name: "Exigences élevées / Critique excessive", short: "Exigences",
+      domain: "D5", color: "#5A8E9F",
+      description: "Conviction qu'il faut atteindre des standards très élevés pour éviter la critique.",
+      child_origin: "Parents exigeants, performeurs, jamais satisfaits.",
+      reverse_items: []
+    },
+    PU: {
+      code: "PU", name: "Punition", short: "Punition",
+      domain: "D5", color: "#497F90",
+      description: "Conviction que les gens (soi inclus) doivent être sévèrement punis pour leurs erreurs.",
+      child_origin: "Parents punitifs, peu tolérants à l'erreur.",
+      reverse_items: []
+    },
+    NP: {
+      code: "NP", name: "Négativisme / Pessimisme", short: "Négativisme",
+      domain: "D5", color: "#3C7081",
+      description: "Focalisation envahissante sur les aspects négatifs de la vie, minimisation du positif.",
+      child_origin: "Parent pessimiste, environnement familial marqué par la plainte ou le malheur.",
+      reverse_items: []
+    },
+    ET: {
+      code: "ET", name: "Droits personnels exagérés / Grandeur", short: "Droits exagérés",
+      domain: "D3", color: "#D4A574",
+      description: "Conviction d'être supérieur, d'avoir droit à des privilèges particuliers, mépris des règles communes.",
+      child_origin: "Parents permissifs qui ont survalorisé l'enfant, absence de limites.",
+      reverse_items: []
+    },
+    IS: {
+      code: "IS", name: "Contrôle de soi / autodiscipline insuffisant(e)", short: "Auto-contrôle insuffisant",
+      domain: "D3", color: "#C49560",
+      description: "Difficulté persistante à exercer la maîtrise de soi et la tolérance à la frustration nécessaires.",
+      child_origin: "Parents qui n'ont pas posé de cadre, gratification immédiate non régulée.",
+      reverse_items: []
+    }
+  },
+
+  /* ─────────────────────────────────────────────────────────
+   * 232 ITEMS YSQ-L3 — texte français adapté
+   * Ordre = ordre standard de passation (les schémas sont entrelacés)
+   * Chaque item: { id, text, schema }
+   * ───────────────────────────────────────────────────────── */
+  items: [
+    // ED — Carence émotionnelle (9 items)
+    { id: 1, schema: "ED", text: "Pour la plupart, je n'ai eu personne pour me dorloter, partager des choses avec moi, ou se préoccuper de ce qui m'arrivait." },
+    { id: 2, schema: "ED", text: "Pour la plupart, je n'ai eu personne qui m'écoute vraiment, me comprenne, ou s'accorde à mes vrais besoins et sentiments." },
+    { id: 3, schema: "ED", text: "Pendant la plus grande partie de ma vie, je n'ai eu personne pour me donner de l'affection et de la chaleur, ou qui se soucie vraiment de ce qui m'arrive." },
+    { id: 4, schema: "ED", text: "Pendant la plupart du temps, je n'ai eu personne qui veuille bien se rapprocher de moi et passer beaucoup de temps avec moi." },
+    { id: 5, schema: "ED", text: "En général, les gens n'ont pas été là pour me donner de la chaleur, du soutien et de l'affection." },
+    { id: 6, schema: "ED", text: "Pour la plupart, je n'ai pas eu quelqu'un qui se soucie vraiment de moi ou qui m'aime profondément." },
+    { id: 7, schema: "ED", text: "Pour la plupart, je n'ai eu personne pour me guider, me conseiller — particulièrement sur les questions importantes." },
+    { id: 8, schema: "ED", text: "J'ai du mal à laisser les autres me diriger ou me guider, même quand cela serait dans mon intérêt." },
+    { id: 9, schema: "ED", text: "Il m'est très difficile de demander aux autres de combler mes besoins." },
+
+    // AB — Abandon / Instabilité (17 items)
+    { id: 10, schema: "AB", text: "Je m'inquiète à l'idée que les personnes que j'aime pourraient mourir bientôt, même si la raison médicale n'est pas évidente." },
+    { id: 11, schema: "AB", text: "Je m'accroche aux gens proches de moi parce que j'ai peur qu'ils me quittent." },
+    { id: 12, schema: "AB", text: "Je n'ai pas la sensation de stabilité dans mes relations proches." },
+    { id: 13, schema: "AB", text: "Je deviens bouleversé/e quand quelqu'un me laisse seul/e, même pour une courte période." },
+    { id: 14, schema: "AB", text: "Je ne peux pas compter sur les personnes qui me soutiennent : elles seront là pour moi de façon constante." },
+    { id: 15, schema: "AB", text: "Je vais finir seul/e." },
+    { id: 16, schema: "AB", text: "Quand je sens que quelqu'un que j'aime s'éloigne de moi, je deviens désespéré/e." },
+    { id: 17, schema: "AB", text: "Je suis quelquefois si inquiet/inquiète que les gens me quittent, que je les pousse à partir." },
+    { id: 18, schema: "AB", text: "Les personnes qui me sont chères sont imprévisibles : un moment disponibles et chaleureuses, le moment d'après en colère, ou ailleurs, ou retirées." },
+    { id: 19, schema: "AB", text: "J'ai besoin des autres tellement que je m'inquiète à l'idée de les perdre." },
+    { id: 20, schema: "AB", text: "Je ne peux pas me sentir bien sans le soutien constant des autres." },
+    { id: 21, schema: "AB", text: "Je suis tellement préoccupé/e à l'idée que les personnes que j'aime me trouvent un défaut, que je les pousse à partir." },
+    { id: 22, schema: "AB", text: "Les relations significatives dans ma vie ne durent pas." },
+    { id: 23, schema: "AB", text: "Je ne supporte pas qu'on me laisse seul/e." },
+    { id: 24, schema: "AB", text: "Quand quelqu'un que j'aime semble s'éloigner, je crains que ce soit pour toujours." },
+    { id: 25, schema: "AB", text: "Je m'inquiète à l'idée que les personnes proches m'abandonnent ou me quittent." },
+    { id: 26, schema: "AB", text: "J'ai souvent peur que les gens à qui je tiens trouvent quelqu'un d'autre qu'ils préfèrent à moi et me quittent." },
+
+    // MA — Méfiance / Abus (17 items)
+    { id: 27, schema: "MA", text: "J'ai l'impression que les gens en général profiteront de moi." },
+    { id: 28, schema: "MA", text: "Je sens souvent que je dois me protéger des autres." },
+    { id: 29, schema: "MA", text: "Je sens que je ne peux pas baisser ma garde en présence des autres, sinon ils me feront du mal intentionnellement." },
+    { id: 30, schema: "MA", text: "Si quelqu'un agit gentiment à mon égard, je suppose qu'il essaie d'obtenir quelque chose de moi." },
+    { id: 31, schema: "MA", text: "C'est seulement une question de temps avant que quelqu'un me trahisse." },
+    { id: 32, schema: "MA", text: "La plupart des gens ne pensent qu'à eux-mêmes." },
+    { id: 33, schema: "MA", text: "J'ai beaucoup de mal à faire confiance aux autres." },
+    { id: 34, schema: "MA", text: "Je deviens méfiant/e à l'égard des intentions des autres." },
+    { id: 35, schema: "MA", text: "Les autres me trahissent rarement.", reverse: true },
+    { id: 36, schema: "MA", text: "Je m'attends à ce que les gens à qui je tiens me fassent du mal ou me trahissent." },
+    { id: 37, schema: "MA", text: "Je sens que je dois être prudent/e avec les gens, sinon ils me blesseront intentionnellement." },
+    { id: 38, schema: "MA", text: "Si je ne reste pas vigilant/e, les gens vont profiter de moi." },
+    { id: 39, schema: "MA", text: "J'ai monté un mur pour me protéger des autres." },
+    { id: 40, schema: "MA", text: "Quelqu'un d'important dans ma vie m'a abusé/e physiquement, émotionnellement ou sexuellement." },
+    { id: 41, schema: "MA", text: "J'ai été torturé/e physiquement, émotionnellement ou sexuellement par des personnes en qui j'avais confiance." },
+    { id: 42, schema: "MA", text: "C'est seulement une question de temps avant que les gens me trahissent." },
+    { id: 43, schema: "MA", text: "J'ai l'impression que les personnes auxquelles j'étais le/la plus proche m'ont rabaissé/e ou humilié/e." },
+
+    // SI — Isolement social (10 items)
+    { id: 44, schema: "SI", text: "Je ne me sens à ma place nulle part — je ne sens pas vraiment d'appartenance." },
+    { id: 45, schema: "SI", text: "Je suis fondamentalement différent/e des autres." },
+    { id: 46, schema: "SI", text: "Je ne me sens à ma place dans aucun groupe." },
+    { id: 47, schema: "SI", text: "Je me sens en dehors des autres." },
+    { id: 48, schema: "SI", text: "Je me sens éloigné/e du reste du monde." },
+    { id: 49, schema: "SI", text: "Je me sens isolé/e et seul/e." },
+    { id: 50, schema: "SI", text: "Je sens toujours que je suis à l'extérieur des groupes." },
+    { id: 51, schema: "SI", text: "Personne ne me comprend vraiment." },
+    { id: 52, schema: "SI", text: "Ma famille a toujours été différente de celles qui nous entouraient." },
+    { id: 53, schema: "SI", text: "Je sens parfois que j'ai été un/e étranger/ère sur cette planète." },
+
+    // DS — Imperfection / Honte (15 items)
+    { id: 54, schema: "DS", text: "Aucun homme/aucune femme que je désire ne pourrait m'aimer une fois qu'il/elle saurait mes défauts." },
+    { id: 55, schema: "DS", text: "Personne que je désire ne pourrait rester proche de moi s'il/elle savait qui je suis vraiment." },
+    { id: 56, schema: "DS", text: "Je suis fondamentalement défectueux/se ou imparfait/e." },
+    { id: 57, schema: "DS", text: "Peu importe comment je me présente extérieurement, je sens qu'au fond je suis défectueux/se." },
+    { id: 58, schema: "DS", text: "Je suis indigne de l'amour, de l'attention et du respect des autres." },
+    { id: 59, schema: "DS", text: "Je me sens essentiellement non aimable." },
+    { id: 60, schema: "DS", text: "Je suis trop inacceptable, même à un niveau fondamental, pour me dévoiler aux autres." },
+    { id: 61, schema: "DS", text: "Si les autres me connaissaient vraiment, ils ne pourraient pas me respecter." },
+    { id: 62, schema: "DS", text: "Je me sens dégoûtant/e, à l'intérieur." },
+    { id: 63, schema: "DS", text: "Si les autres apprenaient quelque chose sur mes défauts essentiels, je ne pourrais pas leur faire face." },
+    { id: 64, schema: "DS", text: "Quand les gens m'aiment, j'ai l'impression que je les trompe." },
+    { id: 65, schema: "DS", text: "Je ne supporte pas que quelqu'un soit en colère contre moi ou me critique." },
+    { id: 66, schema: "DS", text: "Je me sens profondément honteux/se de moi-même." },
+    { id: 67, schema: "DS", text: "Un de mes plus grands défauts est mon problème avec mes besoins/émotions." },
+    { id: 68, schema: "DS", text: "Si quelqu'un voyait qui je suis vraiment, ne serait-ce que quelques minutes, il/elle me fuirait." },
+
+    // FA — Échec (12 items)
+    { id: 69, schema: "FA", text: "Presque rien de ce que j'accomplis au travail (ou à l'école) n'égale ce que les autres font." },
+    { id: 70, schema: "FA", text: "Je suis incompétent/e quand il s'agit d'accomplissement (travail/école)." },
+    { id: 71, schema: "FA", text: "La plupart des autres sont plus capables que moi dans les domaines du travail et des accomplissements." },
+    { id: 72, schema: "FA", text: "Je suis un/e raté/e." },
+    { id: 73, schema: "FA", text: "Je ne suis pas aussi talentueux/se que la plupart des gens dans leur travail." },
+    { id: 74, schema: "FA", text: "Je ne suis pas aussi intelligent/e que la plupart des gens dans le domaine du travail (ou des études)." },
+    { id: 75, schema: "FA", text: "Je me sens humilié/e par mes échecs et mon manque d'accomplissement." },
+    { id: 76, schema: "FA", text: "Je me sens souvent embarrassé/e en présence d'autres personnes, parce que je ne suis pas à leur niveau au plan des accomplissements." },
+    { id: 77, schema: "FA", text: "Je m'en sors souvent moins bien que les autres au travail (à l'école), parce que je manque de capacités fondamentales ou d'intelligence." },
+    { id: 78, schema: "FA", text: "Je ne crois pas que je sois capable de me débrouiller aussi bien que les autres au travail (à l'école)." },
+    { id: 79, schema: "FA", text: "Je crois que la plupart des autres personnes sont plus compétentes que moi dans le domaine du travail (ou des études)." },
+    { id: 80, schema: "FA", text: "Quand je me compare aux autres en ce qui concerne mes accomplissements, je me sens comme un/e raté/e." },
+
+    // DI — Dépendance / Incompétence (15 items)
+    { id: 81, schema: "DI", text: "Je ne me sens pas capable de me débrouiller seul/e dans la vie quotidienne." },
+    { id: 82, schema: "DI", text: "Je pense à moi comme à une personne dépendante, en ce qui concerne le fonctionnement quotidien." },
+    { id: 83, schema: "DI", text: "Je manque de bon sens." },
+    { id: 84, schema: "DI", text: "Mon jugement n'est pas fiable dans les situations de la vie quotidienne." },
+    { id: 85, schema: "DI", text: "Je ne me sens pas confiant/e dans mes capacités à résoudre les problèmes quotidiens qui surgissent." },
+    { id: 86, schema: "DI", text: "Je sens que j'ai besoin de quelqu'un en qui je puisse avoir confiance pour me donner des conseils sur les questions pratiques." },
+    { id: 87, schema: "DI", text: "Je sens que je n'ai pas de capacités pour mieux fonctionner par moi-même." },
+    { id: 88, schema: "DI", text: "Je vis ma vie quotidienne plus difficilement que la plupart des gens." },
+    { id: 89, schema: "DI", text: "Je m'inquiète de prendre des décisions toutes seules." },
+    { id: 90, schema: "DI", text: "Je n'ai pas confiance en moi quand il s'agit d'affronter les défis du quotidien." },
+    { id: 91, schema: "DI", text: "Les autres pensent que je suis trop dépendant/e d'eux." },
+    { id: 92, schema: "DI", text: "Je crains les situations dans lesquelles je suis obligé/e d'être autonome." },
+    { id: 93, schema: "DI", text: "J'ai parfois l'impression de ne pas savoir m'occuper de moi-même." },
+    { id: 94, schema: "DI", text: "Je pense souvent que je peux fonctionner seul/e dans la vie de tous les jours.", reverse: true },
+    { id: 95, schema: "DI", text: "J'imagine pour moi le pire dans les situations nouvelles que je dois traverser seul/e." },
+
+    // VH — Vulnérabilité au danger (12 items)
+    { id: 96, schema: "VH", text: "Je n'arrive pas à me débarrasser de la peur que quelque chose de terrible va m'arriver." },
+    { id: 97, schema: "VH", text: "Je sens qu'une catastrophe (naturelle, criminelle, financière ou médicale) pourrait survenir à tout moment." },
+    { id: 98, schema: "VH", text: "J'ai peur de devenir un mendiant ou un vagabond." },
+    { id: 99, schema: "VH", text: "J'ai peur d'être attaqué/e." },
+    { id: 100, schema: "VH", text: "Je m'inquiète constamment d'avoir des problèmes financiers." },
+    { id: 101, schema: "VH", text: "Je m'inquiète d'attraper des maladies graves, même si rien n'a été diagnostiqué par mon médecin." },
+    { id: 102, schema: "VH", text: "Je m'inquiète d'être affligé/e par une maladie mentale soudaine." },
+    { id: 103, schema: "VH", text: "Je m'inquiète d'être un sans-abri ou un vagabond." },
+    { id: 104, schema: "VH", text: "Je suis souvent inquiet/inquiète qu'un être proche puisse être en danger." },
+    { id: 105, schema: "VH", text: "Je suis trop préoccupé/e à propos d'une catastrophe imminente." },
+    { id: 106, schema: "VH", text: "Je suis très préoccupé/e par les bruits, virus, maladies et autres choses similaires." },
+    { id: 107, schema: "VH", text: "J'ai peur des trains, voitures, avions, et autres moyens de transport en commun." },
+
+    // EM — Fusionnement / Soi immature (11 items)
+    { id: 108, schema: "EM", text: "Je n'ai pas le sens de qui je suis vraiment, en dehors de quelques personnes proches de moi." },
+    { id: 109, schema: "EM", text: "Je me retrouve à imiter les personnes importantes dans ma vie." },
+    { id: 110, schema: "EM", text: "Mes parents et moi avons tendance à être trop impliqués dans nos vies respectives et nos problèmes." },
+    { id: 111, schema: "EM", text: "C'est très difficile pour moi de me séparer (mentalement ou physiquement) de mes parents." },
+    { id: 112, schema: "EM", text: "J'ai souvent l'impression que mes parents vivent à travers moi — je n'ai pas ma propre vie." },
+    { id: 113, schema: "EM", text: "Sans le soutien des autres, je sens que je ne pourrais pas survivre émotionnellement." },
+    { id: 114, schema: "EM", text: "J'ai du mal à savoir où s'arrêtent mes propres préférences et où commencent celles des personnes proches." },
+    { id: 115, schema: "EM", text: "Je n'ai pas de sens cohérent de qui je suis comme personne." },
+    { id: 116, schema: "EM", text: "Je n'arrive pas à m'engager dans ma propre direction dans la vie, parce que ce serait abandonner mes proches." },
+    { id: 117, schema: "EM", text: "Mes parents (ou un proche) et moi avons une tendance à nous mêler de la vie et des problèmes l'un de l'autre." },
+    { id: 118, schema: "EM", text: "Je sens parfois que mon identité a été tellement absorbée par mes parents/mon partenaire que je n'ai pas vraiment d'identité propre." },
+
+    // ET — Droits exagérés / Grandeur (11 items)
+    { id: 119, schema: "ET", text: "J'ai beaucoup de mal à accepter un Non quand je veux quelque chose des autres." },
+    { id: 120, schema: "ET", text: "Je me mets en colère lorsque je n'arrive pas à obtenir ce que je veux." },
+    { id: 121, schema: "ET", text: "Je suis quelqu'un de spécial et je ne devrais pas accepter beaucoup de restrictions placées sur les autres." },
+    { id: 122, schema: "ET", text: "Je déteste qu'on me restreigne ou qu'on m'empêche de faire ce que je veux." },
+    { id: 123, schema: "ET", text: "Je sens que je ne devrais pas avoir à suivre les règles ordinaires et conventions que les autres suivent." },
+    { id: 124, schema: "ET", text: "Je sens que ce que j'ai à offrir est de plus grande valeur que les contributions des autres." },
+    { id: 125, schema: "ET", text: "Je deviens irrité/e quand les autres ne font pas ce que je leur demande." },
+    { id: 126, schema: "ET", text: "Je ne supporte pas que les autres me disent quoi faire." },
+    { id: 127, schema: "ET", text: "Je me sens vraiment irrité/e quand les gens ne me laissent pas obtenir ce que j'ai demandé." },
+    { id: 128, schema: "ET", text: "Je dois avoir le contrôle dans mes relations avec les autres." },
+    { id: 129, schema: "ET", text: "C'est important pour moi d'être numéro un (par exemple le/la plus populaire, le/la plus performant/e, le/la plus riche, le/la plus admiré/e, etc.)." },
+
+    // IS — Auto-contrôle insuffisant (15 items)
+    { id: 130, schema: "IS", text: "J'ai beaucoup de mal à m'arrêter de boire, de fumer, de trop manger ou tout autre comportement à problème." },
+    { id: 131, schema: "IS", text: "Je n'arrive pas à me forcer à faire les choses qui ne sont pas plaisantes, même si je sais qu'elles sont pour mon propre bien." },
+    { id: 132, schema: "IS", text: "Si je ne peux pas atteindre un but, je deviens facilement frustré/e et j'abandonne." },
+    { id: 133, schema: "IS", text: "J'ai beaucoup de mal à sacrifier une gratification immédiate pour atteindre un but à long terme." },
+    { id: 134, schema: "IS", text: "Je n'arrive pas à me concentrer sur quoi que ce soit trop longtemps." },
+    { id: 135, schema: "IS", text: "Je n'arrive pas à me discipliner pour exécuter les tâches routinières ou ennuyeuses." },
+    { id: 136, schema: "IS", text: "Je fais souvent les choses impulsivement, et je le regrette par la suite." },
+    { id: 137, schema: "IS", text: "Quand des tâches deviennent difficiles, je n'arrive pas en général à persévérer pour les terminer." },
+    { id: 138, schema: "IS", text: "Je n'arrive pas à me contrôler quand mes émotions montent." },
+    { id: 139, schema: "IS", text: "Je laisse mes émotions me dépasser, et je perds tout contrôle." },
+    { id: 140, schema: "IS", text: "Je perds patience facilement avec les autres." },
+    { id: 141, schema: "IS", text: "Je n'arrive pas à contrôler ma colère envers les autres." },
+    { id: 142, schema: "IS", text: "Je ne peux pas me forcer à faire les choses que je n'aime pas, même quand je sais que c'est pour mon bien." },
+    { id: 143, schema: "IS", text: "Je deviens irrité/e ou en colère si je n'arrive pas à atteindre mes buts." },
+    { id: 144, schema: "IS", text: "J'ai une telle approche 'Je ne dois pas refuser à moi-même' que j'ai beaucoup de mal à atteindre des buts qui demandent de la discipline et du contrôle de soi." },
+
+    // SB — Assujettissement (10 items)
+    { id: 145, schema: "SB", text: "Je laisse les autres prendre les décisions à ma place, et ne peux pas en prendre la responsabilité." },
+    { id: 146, schema: "SB", text: "Je sens que je n'ai pas le choix : je dois donner aux autres ce qu'ils veulent, sinon ils me rejetteront ou feront preuve de représailles." },
+    { id: 147, schema: "SB", text: "Dans les relations, je laisse l'autre personne dominer." },
+    { id: 148, schema: "SB", text: "Je crois que si je fais ce que je veux, je vais avoir des ennuis." },
+    { id: 149, schema: "SB", text: "Je sens que les décisions importantes de ma vie n'étaient pas vraiment les miennes." },
+    { id: 150, schema: "SB", text: "Je m'inquiète énormément à l'idée de faire plaisir à l'autorité et de ne pas la mécontenter." },
+    { id: 151, schema: "SB", text: "Je dois céder face aux désirs de l'autre, sinon il/elle va se venger de quelque manière ou me rejeter." },
+    { id: 152, schema: "SB", text: "Dans mes relations, je suis très en colère intérieurement parce que je ne reçois pas ma part au niveau de l'expression de mes désirs et besoins." },
+    { id: 153, schema: "SB", text: "J'ai en général l'impression que les personnes qui détiennent l'autorité ont le droit de me dire quoi faire." },
+    { id: 154, schema: "SB", text: "Je trouve très difficile d'exiger que mes droits soient respectés ou de défendre mes sentiments." },
+
+    // SS — Sacrifice de soi (17 items)
+    { id: 155, schema: "SS", text: "C'est moi celui/celle qui finit habituellement par prendre soin des gens qui me sont proches." },
+    { id: 156, schema: "SS", text: "Je suis quelqu'un de bien, parce que je pense aux autres plus qu'à moi-même." },
+    { id: 157, schema: "SS", text: "Je suis tellement occupé/e à m'occuper de mes proches que j'ai peu de temps pour moi." },
+    { id: 158, schema: "SS", text: "Je suis le/la seul/e à pouvoir veiller à ce que les autres prennent soin de moi.", scoring_review: "Formulation ambigue : verifier avec la grille officielle avant usage clinique." },
+    { id: 159, schema: "SS", text: "Je me suis toujours trouvé/e à écouter les problèmes de tout le monde." },
+    { id: 160, schema: "SS", text: "Les autres me voient comme quelqu'un qui en fait trop pour les autres, mais pas assez pour soi-même." },
+    { id: 161, schema: "SS", text: "Peu importe à quel point je suis occupé/e, je peux toujours trouver du temps pour les autres." },
+    { id: 162, schema: "SS", text: "J'ai toujours été celui/celle qui écoute les problèmes des autres." },
+    { id: 163, schema: "SS", text: "Quand quelqu'un de proche est dans le besoin, je laisse en plan mes propres préoccupations pour m'occuper d'eux." },
+    { id: 164, schema: "SS", text: "Je me sens coupable lorsque je laisse les autres tomber, ou les déçois." },
+    { id: 165, schema: "SS", text: "Je vais souvent jusqu'à mes propres limites pour aider les autres." },
+    { id: 166, schema: "SS", text: "Je sens que je n'ai pas le droit de demander aux autres de prendre soin de moi." },
+    { id: 167, schema: "SS", text: "Si je fais ce que je veux, je me sens égoïste." },
+    { id: 168, schema: "SS", text: "Je porte plus que ma part de responsabilité au niveau de mon couple, famille, ou travail." },
+    { id: 169, schema: "SS", text: "J'aide tellement les autres, qu'il ne me reste pas beaucoup de temps pour moi." },
+    { id: 170, schema: "SS", text: "Je suis tellement occupé/e à faire pour les gens dont je me soucie qu'il ne me reste que peu de temps pour moi." },
+    { id: 171, schema: "SS", text: "On me dit que j'écoute trop bien les problèmes des autres." },
+
+    // EI — Inhibition émotionnelle (9 items)
+    { id: 172, schema: "EI", text: "Je suis trop contrôlé/e dans l'expression de mes émotions et impulsions." },
+    { id: 173, schema: "EI", text: "Les gens me voient comme émotionnellement raide." },
+    { id: 174, schema: "EI", text: "Je trouve embarrassant d'exprimer mes sentiments aux autres." },
+    { id: 175, schema: "EI", text: "Je trouve difficile d'être chaleureux/se et spontané/e." },
+    { id: 176, schema: "EI", text: "Je me contrôle tellement que les gens pensent que je n'ai pas d'émotions." },
+    { id: 177, schema: "EI", text: "Les gens me voient comme quelqu'un qui en fait trop dans tout." },
+    { id: 178, schema: "EI", text: "J'ai du mal à me permettre d'être enjoué/e ou rieur/se devant les autres." },
+    { id: 179, schema: "EI", text: "Je préfère ne pas laisser les autres savoir ce que je ressens." },
+    { id: 180, schema: "EI", text: "J'ai peur de me laisser aller et de perdre le contrôle de mes émotions." },
+
+    // US — Exigences élevées (16 items)
+    { id: 181, schema: "US", text: "Je dois être le/la meilleur/e dans la plupart de ce que je fais. Je ne peux pas accepter la deuxième place." },
+    { id: 182, schema: "US", text: "Je m'efforce de garder presque tout en ordre parfait." },
+    { id: 183, schema: "US", text: "Je dois faire mon mieux ; je ne peux pas me reposer sur 'assez bien'." },
+    { id: 184, schema: "US", text: "Mes relations souffrent parce que je m'exige beaucoup à moi-même." },
+    { id: 185, schema: "US", text: "Ma santé souffre parce que je me mets sous pression pour faire les choses de manière exceptionnelle." },
+    { id: 186, schema: "US", text: "Je sacrifie souvent le plaisir et le bonheur pour respecter mes propres standards." },
+    { id: 187, schema: "US", text: "Quand je commets une erreur, je mérite la critique sévère." },
+    { id: 188, schema: "US", text: "Je ne peux pas me permettre d'éviter mes responsabilités, ou d'utiliser des excuses pour mes erreurs." },
+    { id: 189, schema: "US", text: "Je sens beaucoup de pression à propos d'accomplir des choses." },
+    { id: 190, schema: "US", text: "Je ne peux pas me laisser aller et profiter parce que je suis trop occupé/e par les tâches que je dois accomplir." },
+    { id: 191, schema: "US", text: "Aucune chose que je fais n'est suffisamment bonne ; je peux toujours faire mieux." },
+    { id: 192, schema: "US", text: "Je dois rencontrer toutes mes responsabilités." },
+    { id: 193, schema: "US", text: "Je sens qu'il y a une pression constante pour faire et accomplir." },
+    { id: 194, schema: "US", text: "Mon travail (ou mes études) souffre parce que je m'attends à atteindre l'excellence dans tout." },
+    { id: 195, schema: "US", text: "Quand je m'aperçois que je n'ai pas fait quelque chose à la perfection, je me sens insatisfait/e." },
+    { id: 196, schema: "US", text: "J'ai du mal à apprécier ce que j'ai accompli, parce que je pense déjà à ce qu'il reste à faire." },
+
+    // NP — Négativisme / Pessimisme (11 items)
+    { id: 197, schema: "NP", text: "Même quand les choses semblent bien marcher, je sens que c'est seulement temporaire." },
+    { id: 198, schema: "NP", text: "Si quelque chose de bien arrive, je m'inquiète à l'idée qu'autre chose de mauvais arrive bientôt." },
+    { id: 199, schema: "NP", text: "On ne peut pas être trop prudent : quelque chose va presque toujours mal tourner." },
+    { id: 200, schema: "NP", text: "Peu importe combien j'ai travaillé fort, je m'inquiète que tout puisse s'écrouler." },
+    { id: 201, schema: "NP", text: "Je m'inquiète d'avoir pris une mauvaise décision qui mènera au désastre." },
+    { id: 202, schema: "NP", text: "Je m'attarde sur les côtés négatifs de la vie plus que les côtés positifs." },
+    { id: 203, schema: "NP", text: "Je deviens facilement pessimiste à propos des choses." },
+    { id: 204, schema: "NP", text: "Je ne peux pas profiter pleinement des bonnes choses parce que je m'inquiète qu'elles s'envolent." },
+    { id: 205, schema: "NP", text: "Si je n'envisage pas le pire, je risque d'être déçu/e." },
+    { id: 206, schema: "NP", text: "Je vois souvent un échec imminent là où les autres voient juste un défi." },
+    { id: 207, schema: "NP", text: "On ne sait jamais quand une catastrophe peut survenir : il faut être préparé/e." },
+
+    // PU — Punition (10 items)
+    { id: 208, schema: "PU", text: "Si je n'arrive pas à atteindre un but, je ne mérite ni excuse ni soulagement." },
+    { id: 209, schema: "PU", text: "Si je fais une erreur, je mérite d'être puni/e." },
+    { id: 210, schema: "PU", text: "Les gens qui ne fournissent pas leur part de travail devraient être punis d'une certaine manière." },
+    { id: 211, schema: "PU", text: "Quand les gens font des choses incorrectes, j'ai du mal à oublier et à pardonner." },
+    { id: 212, schema: "PU", text: "Je suis quelqu'un qui se déteste beaucoup quand je fais des erreurs." },
+    { id: 213, schema: "PU", text: "Je deviens en colère quand les autres ne respectent pas leurs engagements." },
+    { id: 214, schema: "PU", text: "Je suis très intolérant/e envers les autres quand ils ne font pas exactement ce qu'on attend d'eux." },
+    { id: 215, schema: "PU", text: "Je ne me laisse pas la possibilité de faire des excuses pour mes erreurs ou faiblesses." },
+    { id: 216, schema: "PU", text: "Les gens devraient subir les conséquences sévères de leurs erreurs." },
+    { id: 217, schema: "PU", text: "Je n'ai pas beaucoup de compassion pour moi-même quand je m'effondre." },
+
+    // AS — Recherche d'approbation (15 items)
+    { id: 218, schema: "AS", text: "Je donne beaucoup d'importance à ce que les autres pensent de moi." },
+    { id: 219, schema: "AS", text: "Mon estime de moi dépend principalement de la manière dont les autres me considèrent." },
+    { id: 220, schema: "AS", text: "C'est important pour moi que les autres pensent du bien de moi." },
+    { id: 221, schema: "AS", text: "Je sens que je dois faire mes preuves auprès des autres tout le temps." },
+    { id: 222, schema: "AS", text: "Je fais beaucoup pour impressionner les autres." },
+    { id: 223, schema: "AS", text: "J'ai pris des décisions importantes basées sur ce qui ferait plaisir aux autres ou aurait leur approbation." },
+    { id: 224, schema: "AS", text: "Je m'inquiète beaucoup à propos de comment les autres me perçoivent." },
+    { id: 225, schema: "AS", text: "Le statut social est très important pour moi." },
+    { id: 226, schema: "AS", text: "J'ai des accomplissements qui m'apportent beaucoup d'attention." },
+    { id: 227, schema: "AS", text: "Une partie importante de ce que j'aime chez moi, c'est de pouvoir impressionner les autres." },
+    { id: 228, schema: "AS", text: "Je passe beaucoup de temps à choisir mon apparence pour que les autres pensent du bien de moi." },
+    { id: 229, schema: "AS", text: "Mes accomplissements sont importants pour moi principalement à cause de la reconnaissance des autres qu'ils m'apportent." },
+    { id: 230, schema: "AS", text: "Mon humeur dépend de ce que les autres pensent ou disent de moi." },
+    { id: 231, schema: "AS", text: "Je passe beaucoup de temps à m'inquiéter à propos de la manière dont mon apparence ou mes accomplissements sont perçus par les autres." },
+    { id: 232, schema: "AS", text: "C'est très important pour moi de plaire et d'être aimé/e par les autres." }
+  ]
+};
+
+// Sanity check
+(function(){
+  const counts = {};
+  YSQ_L3.items.forEach(it => counts[it.schema] = (counts[it.schema]||0)+1);
+  console.log("[YSQ-L3] Items par schéma:", counts);
+  console.log("[YSQ-L3] Total:", YSQ_L3.items.length);
+  Object.keys(YSQ_L3.schemas).forEach(code => {
+    const schema = YSQ_L3.schemas[code];
+    (schema.reverse_items || []).forEach(itemId => {
+      const item = YSQ_L3.items.find(it => it.id === itemId);
+      if (!item || item.schema !== code || item.reverse !== true) {
+        console.warn("[YSQ-L3] Item inverse incoherent:", code, itemId);
+      }
+    });
+  });
+})();
+
+</script>
+<script>
+/* ─────────────────────────────────────────────────────────
+ * APPLICATION STATE
+ * ───────────────────────────────────────────────────────── */
+const STORAGE_KEY = 'ysq_l3_session_v2';
+const STORAGE_KEY_LEGACY = 'ysq_l3_session_v1';
+
+let state = {
+  profile: { nom: '', prenom: '', age: null, genre: '', contexte: '' },
+  answers: {}, // { itemId: 1..6 }
+  itemOrder: [], // randomized sequence of item ids
+  seed: null,   // for reproducible randomization on resume
+  startedAt: null,
+  lastSavedAt: null,
+  displayMode: 'continuous', // 'continuous' or 'focus'
+  currentFocusIdx: 0,
+  fontLarge: false
+};
+
+let currentItemEl = null; // DOM ref for keyboard shortcuts
+
+/* ─────────────────────────────────────────────────────────
+ * RANDOMIZATION (seedable mulberry32)
+ * ───────────────────────────────────────────────────────── */
+function mulberry32(seed) {
+  return function() {
+    seed = (seed + 0x6D2B79F5) | 0;
+    let t = seed;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function buildShuffledOrder(seed) {
+  const rng = mulberry32(seed);
+  const ids = YSQ_L3.items.map(it => it.id);
+  // Fisher-Yates with constraint: no more than 2 consecutive items
+  // from the same schema (avoid clusters even after shuffle)
+  for (let i = ids.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [ids[i], ids[j]] = [ids[j], ids[i]];
+  }
+  // post-process: smooth out 3+ consecutive from same schema
+  const schemaOf = id => YSQ_L3.items.find(it => it.id === id).schema;
+  for (let pass = 0; pass < 3; pass++) {
+    let changed = false;
+    for (let i = 2; i < ids.length; i++) {
+      if (schemaOf(ids[i]) === schemaOf(ids[i-1]) && schemaOf(ids[i]) === schemaOf(ids[i-2])) {
+        // find a swap partner further down with different schema
+        for (let k = i + 1; k < ids.length; k++) {
+          if (schemaOf(ids[k]) !== schemaOf(ids[i]) &&
+              (k+1 >= ids.length || schemaOf(ids[k+1]) !== schemaOf(ids[i]))) {
+            [ids[i], ids[k]] = [ids[k], ids[i]];
+            changed = true;
+            break;
+          }
+        }
+      }
+    }
+    if (!changed) break;
+  }
+  return ids;
+}
+
+/* ─────────────────────────────────────────────────────────
+ * PERSISTENCE
+ * ───────────────────────────────────────────────────────── */
+function saveState() {
+  state.lastSavedAt = new Date().toISOString();
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch(e) {
+    console.warn('localStorage error:', e);
+    showToast('Sauvegarde impossible (localStorage saturé)', 'warn');
+  }
+}
+
+function loadState() {
+  try {
+    let raw = localStorage.getItem(STORAGE_KEY);
+    // Migrate from v1 if needed
+    if (!raw) raw = localStorage.getItem(STORAGE_KEY_LEGACY);
+    if (!raw) return false;
+    const parsed = JSON.parse(raw);
+    if (parsed && parsed.profile && parsed.answers) {
+      state = Object.assign(state, parsed);
+      // If migrating from v1 (no itemOrder), build one with a fresh seed
+      if (!state.itemOrder || state.itemOrder.length === 0) {
+        state.seed = state.seed || Math.floor(Math.random() * 1e9);
+        state.itemOrder = buildShuffledOrder(state.seed);
+      }
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
+function answeredCount() { return Object.keys(state.answers).length; }
+
+/* ─────────────────────────────────────────────────────────
+ * TOAST
+ * ───────────────────────────────────────────────────────── */
+let toastTimer = null;
+function showToast(msg, kind) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (kind ? ' ' + kind : '');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = 'toast'; }, 2200);
+}
+
+/* ─────────────────────────────────────────────────────────
+ * SESSION FILE EXPORT / IMPORT
+ * ───────────────────────────────────────────────────────── */
+function downloadSessionFile() {
+  const payload = {
+    _format: 'ysq-l3-session-v2',
+    _exported_at: new Date().toISOString(),
+    state: state
+  };
+  const fileName = `YSQ-L3-sauvegarde_${(state.profile.nom||'session').replace(/\s+/g,'_')}_${new Date().toISOString().split('T')[0]}.ysq-session`;
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Sauvegarde téléchargée', 'success');
+}
+
+function importSessionFile(file, onDone) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      const restored = data.state || data; // accept both wrapped and raw
+      if (!restored.profile || !restored.answers) throw new Error('Format invalide');
+      state = Object.assign(state, restored);
+      if (!state.itemOrder || state.itemOrder.length === 0) {
+        state.seed = state.seed || Math.floor(Math.random() * 1e9);
+        state.itemOrder = buildShuffledOrder(state.seed);
+      }
+      saveState();
+      if (onDone) onDone(null);
+    } catch (err) {
+      if (onDone) onDone(err);
+    }
+  };
+  reader.onerror = () => onDone && onDone(new Error('Lecture impossible'));
+  reader.readAsText(file);
+}
+
+/* ─────────────────────────────────────────────────────────
+ * SETUP SCREEN
+ * ───────────────────────────────────────────────────────── */
+function initSetup() {
+  const hasExisting = loadState() && answeredCount() > 0;
+  const btn = document.getElementById('btnResume');
+  if (hasExisting) {
+    btn.style.display = 'inline-flex';
+    btn.textContent = `↻ Reprendre (${answeredCount()} / 232 répondus)`;
+  } else {
+    btn.style.display = 'none';
+  }
+
+  // Setup upload zones
+  setupDropZone('sessionUploadZone', 'sessionFileInput', (file) => {
+    importSessionFile(file, (err) => {
+      const st = document.getElementById('sessionUploadStatus');
+      if (err) {
+        st.className = 'upload-status error';
+        st.textContent = '✗ Sauvegarde invalide : ' + err.message;
+      } else {
+        st.className = 'upload-status success';
+        st.textContent = `✓ Sauvegarde restaurée. ${answeredCount()} / 232 items déjà répondus. Cliquez sur "Reprendre" pour continuer.`;
+        // Refresh the resume button
+        const btn = document.getElementById('btnResume');
+        btn.style.display = 'inline-flex';
+        btn.textContent = `↻ Reprendre (${answeredCount()} / 232 répondus)`;
+        // Pre-fill setup fields
+        if (state.profile.nom) document.getElementById('setupNom').value = state.profile.nom;
+        if (state.profile.prenom) document.getElementById('setupPrenom').value = state.profile.prenom;
+        if (state.profile.age) document.getElementById('setupAge').value = state.profile.age;
+        if (state.profile.genre) document.getElementById('setupGenre').value = state.profile.genre;
+        if (state.profile.contexte) document.getElementById('setupContexte').value = state.profile.contexte;
+      }
+    });
+  });
+
+  document.getElementById('btnStart').addEventListener('click', () => {
+    const nom = document.getElementById('setupNom').value.trim();
+    const prenom = document.getElementById('setupPrenom').value.trim();
+    if (!nom || !prenom) {
+      alert('Merci de renseigner au moins le nom et le prénom avant de commencer.');
+      return;
+    }
+    const seed = Math.floor(Math.random() * 1e9);
+    state = {
+      profile: {
+        nom: nom,
+        prenom: prenom,
+        age: parseInt(document.getElementById('setupAge').value) || null,
+        genre: document.getElementById('setupGenre').value,
+        contexte: document.getElementById('setupContexte').value.trim()
+      },
+      answers: {},
+      itemOrder: buildShuffledOrder(seed),
+      seed: seed,
+      startedAt: new Date().toISOString(),
+      lastSavedAt: null,
+      displayMode: 'continuous',
+      currentFocusIdx: 0,
+      fontLarge: false
+    };
+    saveState();
+    showScreen('quiz');
+    buildQuiz();
+  });
+
+  document.getElementById('btnResume').addEventListener('click', () => {
+    showScreen('quiz');
+    buildQuiz();
+  });
+}
+
+function setupDropZone(zoneId, inputId, onFile) {
+  const zone = document.getElementById(zoneId);
+  const input = document.getElementById(inputId);
+  zone.addEventListener('click', () => input.click());
+  input.addEventListener('change', (e) => {
+    if (e.target.files[0]) onFile(e.target.files[0]);
+  });
+  zone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    zone.classList.add('dragging');
+  });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragging'));
+  zone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    zone.classList.remove('dragging');
+    if (e.dataTransfer.files[0]) onFile(e.dataTransfer.files[0]);
+  });
+}
+
+/* ─────────────────────────────────────────────────────────
+ * QUIZ — render items in randomized order, no section dividers
+ * ───────────────────────────────────────────────────────── */
+function buildQuiz() {
+  document.getElementById('ctxName').textContent = `${state.profile.prenom} ${state.profile.nom}`;
+  document.getElementById('progressWrap').style.display = 'flex';
+
+  // Apply font preference
+  if (state.fontLarge) document.body.classList.add('font-large');
+
+  // Set mode toggle UI state
+  document.querySelectorAll('.mode-toggle button').forEach(b => {
+    b.classList.toggle('active', b.dataset.mode === state.displayMode);
+  });
+
+  const container = document.getElementById('itemsList');
+  container.innerHTML = '';
+
+  // Ensure itemOrder exists
+  if (!state.itemOrder || state.itemOrder.length === 0) {
+    state.seed = state.seed || Math.floor(Math.random() * 1e9);
+    state.itemOrder = buildShuffledOrder(state.seed);
+  }
+
+  // Insert milestone anchors
+  const milestonePositions = new Set([
+    Math.floor(state.itemOrder.length * 0.25),
+    Math.floor(state.itemOrder.length * 0.50),
+    Math.floor(state.itemOrder.length * 0.75)
+  ]);
+
+  state.itemOrder.forEach((itemId, idx) => {
+    const item = YSQ_L3.items.find(it => it.id === itemId);
+    if (!item) return;
+
+    const card = document.createElement('div');
+    card.className = 'item-card';
+    card.dataset.itemId = item.id;
+    card.dataset.idx = idx;
+    if (state.answers[item.id]) card.classList.add('answered');
+
+    let optsHtml = '';
+    for (let i = 1; i <= 6; i++) {
+      const selected = state.answers[item.id] === i ? 'selected' : '';
+      optsHtml += `<div class="opt ${selected}" data-val="${i}">${i}</div>`;
+    }
+
+    card.innerHTML = `
+      <div class="item-num">Item ${idx + 1} / 232</div>
+      <div class="item-text">${item.text}</div>
+      <div class="item-options">${optsHtml}</div>
+    `;
+
+    card.querySelectorAll('.opt').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const val = parseInt(opt.dataset.val);
+        selectAnswer(item.id, val, card);
+      });
+    });
+
+    card.addEventListener('click', () => setFocusedItem(card));
+
+    container.appendChild(card);
+
+    // Insert milestone after this card if position matches
+    if (milestonePositions.has(idx + 1)) {
+      const pct = Math.round(((idx + 1) / state.itemOrder.length) * 100);
+      const milestone = document.createElement('div');
+      milestone.className = 'milestone';
+      const messages = {
+        25: "Quart parcouru. Vous tenez un bon rythme.",
+        50: "Mi-parcours. Vous pouvez prendre une pause si besoin — vos réponses sont sauvegardées automatiquement.",
+        75: "Trois-quarts. Dernière ligne droite, gardez la même attention qu'au début."
+      };
+      milestone.innerHTML = `<div class="pct">${pct} %</div><div class="msg">${messages[pct]}</div>`;
+      container.appendChild(milestone);
+    }
+  });
+
+  updateProgress();
+  applyDisplayMode();
+  setupKeyboardShortcuts();
+  setupScrollFocusTracking();
+}
+
+function selectAnswer(itemId, val, card) {
+  state.answers[itemId] = val;
+  card.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+  card.querySelector(`.opt[data-val="${val}"]`).classList.add('selected');
+  card.classList.add('answered');
+  card.classList.remove('missing-highlight');
+  saveState();
+  updateProgress();
+  // In focus mode, auto-advance to next unanswered
+  if (state.displayMode === 'focus') {
+    setTimeout(() => advanceFocus(1, true), 220);
+  }
+}
+
+function updateProgress() {
+  const c = answeredCount();
+  const total = YSQ_L3.items.length;
+  const pct = (c / total) * 100;
+  document.getElementById('progressTxt').textContent = `${c} / ${total}`;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('ctxCount').textContent = `${c} / ${total} items répondus`;
+  document.getElementById('statusCount').textContent = `${c} / ${total}`;
+  const missing = total - c;
+  document.getElementById('statusMissing').textContent =
+    missing > 0 ? `(${missing} restants)` : '✓ tout complet';
+}
+
+/* ─────────────────────────────────────────────────────────
+ * DISPLAY MODES
+ * ───────────────────────────────────────────────────────── */
+function applyDisplayMode() {
+  const cards = document.querySelectorAll('.item-card');
+  if (state.displayMode === 'focus') {
+    cards.forEach((c, i) => {
+      c.style.display = i === state.currentFocusIdx ? 'block' : 'none';
+    });
+    document.querySelectorAll('.milestone').forEach(m => m.style.display = 'none');
+    // Find first unanswered if currentFocus is already answered
+    const cur = cards[state.currentFocusIdx];
+    if (cur && state.answers[parseInt(cur.dataset.itemId)]) {
+      advanceFocus(1, true);
+    } else if (cur) {
+      cur.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setFocusedItem(cur);
+    }
+  } else {
+    cards.forEach(c => c.style.display = 'block');
+    document.querySelectorAll('.milestone').forEach(m => m.style.display = 'block');
+  }
+}
+
+function advanceFocus(dir, skipAnswered) {
+  const cards = document.querySelectorAll('.item-card');
+  let idx = state.currentFocusIdx + dir;
+  if (skipAnswered) {
+    while (idx >= 0 && idx < cards.length && state.answers[parseInt(cards[idx].dataset.itemId)]) {
+      idx += dir;
+    }
+  }
+  if (idx < 0) idx = 0;
+  if (idx >= cards.length) idx = cards.length - 1;
+  state.currentFocusIdx = idx;
+  if (state.displayMode === 'focus') {
+    cards.forEach((c, i) => c.style.display = i === idx ? 'block' : 'none');
+  }
+  const targetCard = cards[idx];
+  if (targetCard) {
+    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setFocusedItem(targetCard);
+  }
+  saveState();
+}
+
+/* ─────────────────────────────────────────────────────────
+ * KEYBOARD SHORTCUTS (1-6, arrows)
+ * ───────────────────────────────────────────────────────── */
+function setFocusedItem(card) {
+  if (currentItemEl) currentItemEl.classList.remove('focused');
+  currentItemEl = card;
+  if (card) {
+    card.classList.add('focused');
+    state.currentFocusIdx = parseInt(card.dataset.idx);
+  }
+}
+
+function setupKeyboardShortcuts() {
+  document.removeEventListener('keydown', keyboardHandler);
+  document.addEventListener('keydown', keyboardHandler);
+}
+
+function keyboardHandler(e) {
+  if (!document.getElementById('screen-quiz').classList.contains('active')) return;
+  if (document.activeElement && /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return;
+
+  if (e.key >= '1' && e.key <= '6') {
+    if (!currentItemEl) {
+      // pick the first visible
+      const cards = document.querySelectorAll('.item-card');
+      for (const c of cards) {
+        if (c.offsetParent !== null) { setFocusedItem(c); break; }
+      }
+    }
+    if (currentItemEl) {
+      const itemId = parseInt(currentItemEl.dataset.itemId);
+      const val = parseInt(e.key);
+      selectAnswer(itemId, val, currentItemEl);
+      if (state.displayMode === 'continuous') {
+        // advance to next item in DOM
+        setTimeout(() => advanceFocus(1, false), 200);
+      }
+      e.preventDefault();
+    }
+  } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+    advanceFocus(1, false);
+    e.preventDefault();
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    advanceFocus(-1, false);
+    e.preventDefault();
+  }
+}
+
+/* In continuous mode, track which item is centered on screen */
+function setupScrollFocusTracking() {
+  if (state.displayMode !== 'continuous') return;
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const center = window.innerHeight / 2;
+      const cards = document.querySelectorAll('.item-card');
+      let closest = null, closestDist = Infinity;
+      cards.forEach(c => {
+        if (c.offsetParent === null) return;
+        const rect = c.getBoundingClientRect();
+        const cardCenter = rect.top + rect.height / 2;
+        const dist = Math.abs(cardCenter - center);
+        if (dist < closestDist) { closestDist = dist; closest = c; }
+      });
+      if (closest && closest !== currentItemEl) {
+        setFocusedItem(closest);
+      }
+      ticking = false;
+    });
+  }, { passive: true });
+}
+
+/* ─────────────────────────────────────────────────────────
+ * EVENT BINDINGS
+ * ───────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  initSetup();
+
+  document.getElementById('btnSavePause').addEventListener('click', () => {
+    saveState();
+    showToast(`✓ ${answeredCount()} réponses sauvegardées localement`, 'success');
+  });
+
+  document.getElementById('btnDownloadSession').addEventListener('click', downloadSessionFile);
+
+  document.getElementById('btnToggleFontSize').addEventListener('click', () => {
+    state.fontLarge = !state.fontLarge;
+    document.body.classList.toggle('font-large', state.fontLarge);
+    saveState();
+    showToast(state.fontLarge ? 'Texte agrandi' : 'Taille normale');
+  });
+
+  document.querySelectorAll('.mode-toggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.displayMode = btn.dataset.mode;
+      document.querySelectorAll('.mode-toggle button').forEach(b => b.classList.toggle('active', b === btn));
+      applyDisplayMode();
+      saveState();
+    });
+  });
+
+  document.getElementById('btnSubmit').addEventListener('click', () => {
+    const missing = YSQ_L3.items.filter(it => !state.answers[it.id]);
+    if (missing.length > 0) {
+      // Switch to continuous mode to make missing visible
+      if (state.displayMode === 'focus') {
+        state.displayMode = 'continuous';
+        document.querySelectorAll('.mode-toggle button').forEach(b => b.classList.toggle('active', b.dataset.mode === 'continuous'));
+        applyDisplayMode();
+      }
+      // highlight all missing
+      missing.forEach(it => {
+        const card = document.querySelector(`.item-card[data-item-id="${it.id}"]`);
+        if (card) card.classList.add('missing-highlight');
+      });
+      // scroll to first missing in display order
+      const cards = document.querySelectorAll('.item-card');
+      for (const c of cards) {
+        if (c.classList.contains('missing-highlight')) {
+          c.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          break;
+        }
+      }
+      showToast(`${missing.length} items non répondus — surlignés en rouge`, 'warn');
+      return;
+    }
+    showScreen('results');
+    computeAndShowResults();
+  });
+
+  document.getElementById('btnExportJson').addEventListener('click', exportJson);
+  document.getElementById('btnPrintReport').addEventListener('click', () => window.print());
+  document.getElementById('btnNewPass').addEventListener('click', () => {
+    if (confirm('Démarrer une nouvelle passation effacera la passation actuelle. Confirmer ?')) {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(STORAGE_KEY_LEGACY);
+      location.reload();
+    }
+  });
+
+  // Auto-save on window unload (safety)
+  window.addEventListener('beforeunload', () => saveState());
+});
+
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ─────────────────────────────────────────────────────────
+ * SCORING + RESULTS
+ * ───────────────────────────────────────────────────────── */
+function isReverseItem(item) {
+  const schema = YSQ_L3.schemas[item.schema];
+  return item.reverse === true || (schema.reverse_items || []).includes(item.id);
+}
+
+function scoreAnswer(item, rawValue) {
+  if (rawValue == null) return null;
+  return isReverseItem(item) ? (YSQ_L3.meta.scale.max + YSQ_L3.meta.scale.min - rawValue) : rawValue;
+}
+
+function computeScores() {
+  const schemaScores = {};
+  const schemaStats = {};
+
+  Object.keys(YSQ_L3.schemas).forEach(code => {
+    const items = YSQ_L3.items.filter(it => it.schema === code);
+    const values = items.map(it => scoreAnswer(it, state.answers[it.id])).filter(v => v != null);
+    const sum = values.reduce((a, b) => a + b, 0);
+    const mean = values.length > 0 ? sum / values.length : 0;
+    const high = values.filter(v => v >= 5).length;
+    const veryHigh = values.filter(v => v >= 6).length;
+    schemaScores[code] = parseFloat(mean.toFixed(2));
+    schemaStats[code] = {
+      mean: parseFloat(mean.toFixed(2)),
+      sum: sum,
+      n: values.length,
+      n_expected: items.length,
+      reverse_items: items.filter(isReverseItem).map(it => it.id),
+      items_at_5_or_6: high,
+      items_at_6: veryHigh
+    };
+  });
+
+  // Domain scores = average of schema means within domain
+  // + intra-domain std + contrast label (homogene/contraste) — v3.1 point 5
+  const domainScores = {};
+  const domainStats = {};
+  Object.keys(YSQ_L3.domains).forEach(dcode => {
+    const d = YSQ_L3.domains[dcode];
+    const means = d.schemas.map(s => schemaScores[s]);
+    const avg = means.reduce((a, b) => a + b, 0) / means.length;
+    const variance = means.reduce((sum, v) => sum + (v - avg) ** 2, 0) / means.length;
+    const std = Math.sqrt(variance);
+    const range = Math.max(...means) - Math.min(...means);
+    let contrast_label;
+    if (std < 0.5) contrast_label = 'homogene';
+    else if (std < 1.0) contrast_label = 'modere';
+    else contrast_label = 'contraste';
+    const above_threshold = d.schemas.filter(s => schemaScores[s] >= 4.0);
+    domainScores[dcode] = parseFloat(avg.toFixed(2));
+    domainStats[dcode] = {
+      mean: parseFloat(avg.toFixed(2)),
+      std: parseFloat(std.toFixed(2)),
+      range: parseFloat(range.toFixed(2)),
+      contrast_label: contrast_label,
+      schemas: d.schemas.map(s => ({ code: s, score: schemaScores[s] })),
+      schemas_above_threshold: above_threshold,
+      n_schemas_above_threshold: above_threshold.length
+    };
+  });
+
+  return { schemaScores, schemaStats, domainScores, domainStats };
+}
+
+function levelOf(score) {
+  const t = YSQ_L3.meta.interpretation_thresholds;
+  if (score < t.bas.max + 0.01) return { class: 'bas', label: 'Faible' };
+  if (score < t.modere.max + 0.01) return { class: 'modere', label: 'Modéré' };
+  if (score < t.eleve.max + 0.01) return { class: 'eleve', label: 'Élevé' };
+  return { class: 'tres-eleve', label: 'Très élevé' };
+}
+
+function getReverseItemIds() {
+  return YSQ_L3.items.filter(isReverseItem).map(it => it.id).sort((a, b) => a - b);
+}
+
+function computeReliability(responseQuality) {
+  if (!responseQuality) return 'non disponible';
+  const completionRate = answeredCount() / YSQ_L3.items.length;
+  if (completionRate < 0.8 || responseQuality.max_consecutive_identical >= 15 || responseQuality.response_variability_std < 0.5) {
+    return 'faible';
+  }
+  if (completionRate < 0.95 || responseQuality.extreme_response_rate > 0.5 || responseQuality.neutral_response_rate > 0.7) {
+    return 'modérée';
+  }
+  return 'élevée';
+}
+
+function computeAndShowResults() {
+  const { schemaScores, schemaStats, domainScores, domainStats } = computeScores();
+  const rq = computeResponseQuality();
+  const escalationFlags = detectEscalationFlags(state.answers, schemaScores, domainScores);
+
+  document.getElementById('resName').textContent = `${state.profile.prenom} ${state.profile.nom}`;
+  document.getElementById('profileSummary').innerHTML = buildProfileSummary(schemaScores, domainScores, rq, escalationFlags);
+
+  // Schemas table, sorted by score desc
+  const sorted = Object.entries(schemaScores).sort((a, b) => b[1] - a[1]);
+  let html = `
+    <div class="schema-bar-row head">
+      <div class="lbl">Schéma</div>
+      <div>Score (1–6)</div>
+      <div class="score">Moy.</div>
+      <div class="lvl">Niveau</div>
+    </div>`;
+  sorted.forEach(([code, score]) => {
+    const sch = YSQ_L3.schemas[code];
+    const lvl = levelOf(score);
+    const pct = (score / 6) * 100;
+    html += `
+      <div class="schema-bar-row">
+        <div class="lbl"><span class="code">${code}</span>${sch.name}</div>
+        <div class="bar-wrap">
+          <div class="bar-fill" style="width:${pct}%;background:${sch.color};"></div>
+          <div class="bar-threshold" style="left:66.7%;"></div>
+        </div>
+        <div class="score">${score.toFixed(2)}</div>
+        <div class="lvl ${lvl.class}">${lvl.label}</div>
+      </div>`;
+  });
+  document.getElementById('schemaTable').innerHTML = html;
+
+  // Radar
+  document.getElementById('radarWrap').innerHTML = buildRadarSvg(schemaScores);
+
+  // Domains
+  let dHtml = '';
+  Object.keys(YSQ_L3.domains).forEach(dcode => {
+    const d = YSQ_L3.domains[dcode];
+    const dscore = domainScores[dcode];
+    const lvl = levelOf(dscore);
+    const pct = (dscore / 6) * 100;
+    dHtml += `
+      <div style="margin-bottom:16px;padding:12px;border:1px solid var(--beige-sable);border-radius:8px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+          <strong style="font-family:'Lora',serif;">${d.name}</strong>
+          <span class="lvl ${lvl.class}" style="display:inline-block;font-size:11px;padding:3px 8px;border-radius:4px;">${dscore.toFixed(2)} — ${lvl.label}</span>
+        </div>
+        <div style="font-size:12px;color:var(--gris-light);margin-bottom:6px;font-style:italic;">Besoin sous-jacent : ${d.need}</div>
+        <div style="height:8px;background:var(--gris-bg);border-radius:4px;overflow:hidden;">
+          <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--mer),var(--mer-dark));"></div>
+        </div>
+        <div style="margin-top:8px;font-size:12px;">Schémas : ${d.schemas.map(s => YSQ_L3.schemas[s].name).join(', ')}</div>
+      </div>`;
+  });
+  document.getElementById('domainsView').innerHTML = dHtml;
+}
+
+function buildProfileSummary(schemaScores, domainScores, responseQuality, escalationFlags) {
+  const active = Object.entries(schemaScores).filter(e => e[1] >= 4).sort((a, b) => b[1] - a[1]);
+  const moderate = Object.entries(schemaScores).filter(e => e[1] >= 2.5 && e[1] < 4);
+  const dominantDomain = Object.entries(domainScores).sort((a, b) => b[1] - a[1])[0];
+  const duration = state.startedAt ? formatDuration(Math.round((new Date() - new Date(state.startedAt)) / 1000)) : 'Non disponible';
+  const reliability = computeReliability(responseQuality);
+
+  const topSchemas = active.length > 0
+    ? active.slice(0, 5).map(([code, score]) => `
+        <div class="result-chip">
+          <span><strong>${code}</strong> ${YSQ_L3.schemas[code].name}</span>
+          <span>${score.toFixed(2)} · ${levelOf(score).label}</span>
+        </div>`).join('')
+    : '<div class="result-chip"><span>Aucun schéma au-dessus du seuil 4.0</span><span>Profil à dominante faible/modérée</span></div>';
+
+  const flagsHtml = escalationFlags.length > 0
+    ? `<div class="warning"><strong>Points de vigilance clinique.</strong> ${escalationFlags.map(f => f.description).join(' ')}</div>`
+    : '<div class="small-note">Aucun point de vigilance automatique majeur détecté par les règles internes.</div>';
+
+  return `
+    <div class="summary-grid">
+      <div class="summary-metric"><div class="value">${answeredCount()}</div><div class="label">Réponses</div></div>
+      <div class="summary-metric"><div class="value">${active.length}</div><div class="label">Schémas actifs</div></div>
+      <div class="summary-metric"><div class="value">${moderate.length}</div><div class="label">Schémas modérés</div></div>
+      <div class="summary-metric"><div class="value">${reliability}</div><div class="label">Fiabilité</div></div>
+    </div>
+    <p><strong>Domaine dominant :</strong> ${YSQ_L3.domains[dominantDomain[0]].name} (${dominantDomain[1].toFixed(2)}). <strong>Durée :</strong> ${duration}.</p>
+    <h3 style="font-family:'Lora',serif;font-size:15px;margin:14px 0 8px;color:var(--noir);">Schémas les plus saillants</h3>
+    <div class="result-list">${topSchemas}</div>
+    ${flagsHtml}
+    <div class="small-note">Les items inversés actuellement cotés en sens inverse sont : ${getReverseItemIds().join(', ') || 'aucun'}. L'item 158 reste marqué comme à vérifier contre la grille officielle.</div>
+  `;
+}
+
+function buildRadarSvg(schemaScores) {
+  const size = 560;
+  const cx = size / 2;
+  const cy = size / 2;
+  const radius = size * 0.34;
+  const codes = Object.keys(YSQ_L3.schemas);
+  const n = codes.length;
+
+  // Build domain-grouped order
+  const order = [];
+  Object.keys(YSQ_L3.domains).forEach(dcode => {
+    YSQ_L3.domains[dcode].schemas.forEach(s => order.push(s));
+  });
+
+  let rings = '';
+  for (let k = 1; k <= 6; k++) {
+    const r = (k / 6) * radius;
+    const stroke = k === 4 ? '#C1666B' : '#E0DCD3';
+    const strokeWidth = k === 4 ? 1 : 0.5;
+    const dash = k === 4 ? '3 3' : '';
+    rings += `<circle cx="${cx}" cy="${cy}" r="${r.toFixed(1)}" fill="none" stroke="${stroke}" stroke-width="${strokeWidth}" stroke-dasharray="${dash}"/>`;
+  }
+
+  let spokes = '';
+  let points = [];
+  let labels = '';
+  order.forEach((code, i) => {
+    const angle = -Math.PI / 2 + i * (2 * Math.PI / n);
+    const x2 = cx + radius * Math.cos(angle);
+    const y2 = cy + radius * Math.sin(angle);
+    spokes += `<line x1="${cx}" y1="${cy}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#E0DCD3" stroke-width="0.5"/>`;
+    const score = schemaScores[code];
+    const r = (score / 6) * radius;
+    const px = cx + r * Math.cos(angle);
+    const py = cy + r * Math.sin(angle);
+    points.push({ x: px, y: py, code, score, angle });
+    // labels
+    const lx = cx + (radius + 22) * Math.cos(angle);
+    const ly = cy + (radius + 22) * Math.sin(angle);
+    let anchor = 'middle';
+    if (Math.cos(angle) > 0.3) anchor = 'start';
+    else if (Math.cos(angle) < -0.3) anchor = 'end';
+    const sch = YSQ_L3.schemas[code];
+    const isHigh = score >= 4;
+    const fill = isHigh ? sch.color : '#666';
+    const weight = isHigh ? '700' : '400';
+    labels += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${anchor}" font-family="Lora,serif" font-size="11" font-weight="${weight}" fill="${fill}">${code}</text>`;
+    labels += `<text x="${lx.toFixed(1)}" y="${(ly + 11).toFixed(1)}" text-anchor="${anchor}" font-family="Inter,sans-serif" font-size="9" fill="#888">${score.toFixed(2)}</text>`;
+  });
+
+  const polyPts = points.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+  const poly = `<polygon points="${polyPts}" fill="#8FAFB1" fill-opacity="0.18" stroke="#6A9496" stroke-width="1.5"/>`;
+  const dots = points.map(p => {
+    const sch = YSQ_L3.schemas[p.code];
+    const isHigh = p.score >= 4;
+    const fill = isHigh ? sch.color : '#8FAFB1';
+    const r = isHigh ? 4.5 : 2.8;
+    return `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r}" fill="${fill}" stroke="white" stroke-width="1"/>`;
+  }).join('');
+
+  return `<svg viewBox="0 0 ${size} ${size}" width="100%" height="auto" style="max-width:600px;" xmlns="http://www.w3.org/2000/svg">
+    ${rings}${spokes}${poly}${dots}${labels}
+    <text x="${cx}" y="${cy - radius - 40}" text-anchor="middle" font-family="Lora,serif" font-size="11" font-style="italic" fill="#666">Cercle rouge = seuil clinique 4.0</text>
+  </svg>`;
+}
+
+/* ─────────────────────────────────────────────────────────
+ * DERIVED PATTERNS & INFERRED MODES
+ * Detect clinically meaningful configurations across schemas
+ * ───────────────────────────────────────────────────────── */
+function detectDerivedPatterns(schemaScores, schemasDetail) {
+  // v3.1 point 3 — adds confidence (0-1) and contributing_items (top items >=5)
+  // schemasDetail is optional; if provided, contributing items are computed.
+  const patterns = [];
+  const s = schemaScores;
+  const high = (code) => s[code] >= 4.0;
+  const veryHigh = (code) => s[code] >= 5.0;
+  const low = (code) => s[code] < 2.5;
+
+  // Helper: compute confidence as average normalized excess over threshold 4.0
+  // among the schemas involved. Max possible = 1.0 if all involved schemas are at 6.0.
+  function computeConfidence(schemas_involved) {
+    if (!schemas_involved || schemas_involved.length === 0) return 0;
+    const excesses = schemas_involved.map(c => {
+      const score = s[c] || 0;
+      return Math.max(0, (score - 4.0) / 2.0); // 4.0 -> 0, 6.0 -> 1.0
+    });
+    const avg = excesses.reduce((a, b) => a + b, 0) / excesses.length;
+    return parseFloat(avg.toFixed(2));
+  }
+
+  // Helper: top contributing items (response >= 5) across involved schemas, max 5
+  function getContributingItems(schemas_involved) {
+    if (!schemasDetail) return [];
+    const items = [];
+    schemas_involved.forEach(code => {
+      const detail = schemasDetail.find(d => d.code === code);
+      if (!detail) return;
+      detail.items
+        .filter(it => (it.response_scored != null && it.response_scored >= 5))
+        .forEach(it => items.push({
+          id: it.id,
+          schema: code,
+          response_scored: it.response_scored,
+          text: (it.text || '').substring(0, 120)
+        }));
+    });
+    items.sort((a, b) => b.response_scored - a.response_scored);
+    return items.slice(0, 5);
+  }
+
+  function buildPattern(code, label, description, clinical_risk, schemas_involved) {
+    return {
+      code, label, schemas_involved, description, clinical_risk,
+      confidence: computeConfidence(schemas_involved),
+      contributing_items: getContributingItems(schemas_involved)
+    };
+  }
+
+  // 1. Donneur silencieux
+  if (high('SS') && (high('EI') || high('US')) && low('ET')) {
+    const involved = ['SS', 'EI', 'US'].filter(c => s[c] != null && high(c));
+    patterns.push(buildPattern('P_DONNEUR_SILENCIEUX',
+      'Configuration sacrificielle ("donneur silencieux")',
+ "Le sacrifice de soi se combine à une inhibition de l'expression émotionnelle et/ou à des exigences personnelles élevées. La personne donne massivement sans formuler ce que cela lui coûte, et tend à intérioriser tensions et frustrations.",
+ "Peut orienter vers un coût d'épuisement, de tensions internalisées ou de baisse durable de l'élan, à explorer en entretien.",
+      involved));
+  }
+
+  // 2. Triade dépressogène
+  const dep_components = ['ED', 'DS', 'NP', 'FA'].filter(c => high(c));
+  if (dep_components.length >= 3) {
+    patterns.push(buildPattern('P_TRIADE_DEPRESSOGENE',
+      'Configuration dépressogène',
+ "Plusieurs schémas convergent vers une perception négative de soi, du monde et de l'avenir. Cette configuration peut évoquer une tonalité affective basse ou autocritique, sans constituer un diagnostic.",
+ "À explorer avec prudence si la personne rapporte une souffrance persistante, une perte d'élan ou une auto-dévalorisation marquée.",
+      dep_components));
+  }
+
+  // 3. Hyper-vigilance anxieuse
+  if (high('VH') && (high('NP') || high('AB'))) {
+    const involved = ['VH', 'NP', 'AB'].filter(c => high(c));
+    patterns.push(buildPattern('P_HYPERVIGILANCE',
+      'Configuration anxieuse hypervigilante',
+ "Anticipation chronique du danger, du pire ou de la perte. Le système psychique est en vigilance permanente même en situation objectivement sécurisée.",
+ "Peut s'accompagner d'une charge anxieuse, d'une fatigue d'attention ou de difficultés de repos, à confirmer cliniquement.",
+      involved));
+  }
+
+  // 4. Insécurité d'attachement
+  const attach_components = ['ED', 'AB', 'MA', 'DS'].filter(c => high(c));
+  if (attach_components.length >= 2) {
+    patterns.push(buildPattern('P_INSECURITE_ATTACHEMENT',
+ "Configuration d'insécurité d'attachement",
+ "Plusieurs schémas du domaine séparation/rejet sont actifs. La sécurité relationnelle de base n'a pas été pleinement intériorisée — la personne aborde le lien avec une vigilance ou une méfiance de fond.",
+ "Peut fragiliser la sécurité relationnelle et favoriser des mouvements de rapprochement/distance.",
+      attach_components));
+  }
+
+  // 5. Perfectionnisme
+  if (high('US') && (high('PU') || high('AS'))) {
+    const involved = ['US', 'PU', 'AS'].filter(c => high(c));
+    patterns.push(buildPattern('P_PERFECTIONNISME',
+      'Configuration perfectionniste',
+ "Exigences personnelles élevées combinées à une sévérité envers l'erreur ou à une recherche d'approbation. La performance devient une condition d'estime de soi.",
+ "Peut soutenir une pression interne élevée, une peur de l'erreur ou une difficulté à récupérer.",
+      involved));
+  }
+
+  // 6. Difficulté d'autonomie
+  const auto_high = ['DI', 'EM', 'FA'].filter(c => high(c));
+  if (auto_high.length >= 2) {
+    patterns.push(buildPattern('P_DIFFICULTE_AUTONOMIE',
+ "Configuration de difficulté d'autonomie",
+ "La construction d'un soi autonome et compétent n'est pas pleinement aboutie. La personne peut chercher du soutien externe pour des décisions ou tâches qu'elle pourrait théoriquement assumer.",
+ "Peut favoriser l'évitement des défis, la recherche excessive de réassurance ou une autonomie vécue comme coûteuse.",
+      auto_high));
+  }
+
+  // 7. Tension assujettissement / droits exagérés
+  if (high('SB') && high('ET')) {
+    patterns.push(buildPattern('P_TENSION_SOUMISSION_REVENDICATION',
+      'Tension entre assujettissement et droits exagérés',
+ "Coexistence d'une tendance à céder face aux autres et d'un sentiment de droit à des privilèges. Souvent un compense l'autre par oscillation : soumission prolongée puis explosion revendicatrice.",
+ "Peut contribuer à des limites relationnelles instables, entre retrait, conformité et revendication.",
+      ['SB', 'ET']));
+  }
+
+  // 8. Faible contrôle de soi
+  if (high('IS')) {
+    patterns.push(buildPattern('P_FAIBLE_AUTOCONTROLE',
+      'Difficultés de régulation et de discipline',
+ "Difficultés à différer la gratification, à tenir des engagements contraignants ou à réguler les émotions intenses.",
+ "Peut compliquer la régulation émotionnelle, la persévérance et la tenue d'engagements contraignants.",
+      ['IS']));
+  }
+
+  return patterns;
+}
+
+function inferModes(schemaScores, patterns) {
+  // v3.1 point 4 — extended to 9 modes incl. Angry Child, Bully/Attack,
+  // Self-Aggrandizer, Healthy Adult as therapeutic target.
+  const modes = [];
+  const s = schemaScores;
+
+  // Capitulant compliant
+  if ((s['SS'] >= 4) || (s['SB'] >= 4) || (s['AS'] >= 4)) {
+    modes.push({
+      code: 'M_CAPITULANT',
+      name: 'Capitulant compliant (Compliant Surrenderer)',
+      family: 'coping',
+      description: "Mode de coping par soumission : la personne abdique ses besoins/positions pour préserver le lien ou éviter le conflit. S'active particulièrement face à une figure perçue comme dominante.",
+      triggering_schemas: ['SS', 'SB', 'AS'].filter(c => s[c] >= 4)
+    });
+  }
+
+  // Protecteur détaché
+  if (s['EI'] >= 4) {
+    modes.push({
+      code: 'M_PROTECTEUR_DETACHE',
+      name: 'Protecteur détaché (Detached Protector)',
+      family: 'coping',
+      description: "Mode d'évitement par mise à distance émotionnelle. La personne 'coupe' l'accès à ses émotions pour ne pas être submergée, ce qui peut être perçu de l'extérieur comme de la froideur ou de l'indisponibilité.",
+      triggering_schemas: ['EI']
+    });
+  }
+
+  // Parent exigeant intériorisé
+  if (s['US'] >= 4 || s['PU'] >= 4) {
+    modes.push({
+      code: 'M_PARENT_EXIGEANT',
+      name: 'Parent exigeant intériorisé (Demanding Parent)',
+      family: 'parent_introject',
+      description: "Voix interne qui presse, juge, exige plus. La personne s'impose des standards très élevés et se critique sévèrement en cas d'écart, comme si elle reproduisait en interne une figure parentale exigeante.",
+      triggering_schemas: ['US', 'PU'].filter(c => s[c] >= 4)
+    });
+  }
+
+  // Parent punitif
+  if (s['PU'] >= 4.5 || s['DS'] >= 4.5) {
+    modes.push({
+      code: 'M_PARENT_PUNITIF',
+      name: 'Parent punitif intériorisé (Punitive Parent)',
+      family: 'parent_introject',
+      description: "Voix interne qui rabaisse, blâme, condamne. Plus sévère que le Parent exigeant : la personne se traite avec une dureté qui peut produire un sentiment d'indignité.",
+      triggering_schemas: ['PU', 'DS'].filter(c => s[c] >= 4.5)
+    });
+  }
+
+  // Enfant vulnérable
+  if (s['AB'] >= 4 || s['ED'] >= 4 || s['DS'] >= 4) {
+    modes.push({
+      code: 'M_ENFANT_VULNERABLE',
+      name: 'Enfant vulnérable (Vulnerable Child)',
+      family: 'child',
+      description: "État émotionnel d'enfant éprouvé, qui se sent seul, non aimé, défectueux, ou en danger. Souvent caché derrière les modes de coping mais constitue le 'noyau' affectif sur lequel les schémas se sont construits.",
+      triggering_schemas: ['AB', 'ED', 'DS'].filter(c => s[c] >= 4)
+    });
+  }
+
+  // Enfant en colère (v3.1 nouveau)
+  if ((s['AB'] >= 4 && s['ED'] >= 4) || s['ET'] >= 4.5 || (s['ED'] >= 4 && s['MA'] >= 4)) {
+    const triggers = [];
+    if (s['AB'] >= 4) triggers.push('AB');
+    if (s['ED'] >= 4) triggers.push('ED');
+    if (s['ET'] >= 4.5) triggers.push('ET');
+    if (s['MA'] >= 4) triggers.push('MA');
+    modes.push({
+      code: 'M_ENFANT_COLERE',
+      name: 'Enfant en colère (Angry Child)',
+      family: 'child',
+      description: "État d'enfant en révolte face à la frustration de besoins fondamentaux non satisfaits (sécurité, lien, autonomie, expression de soi). Peut se manifester par des colères qui paraissent disproportionnées au regard de la situation présente, parce qu'elles puisent dans un fond de frustration ancien.",
+      triggering_schemas: triggers
+    });
+  }
+
+  // Surcompensateur (générique)
+  if (s['ET'] >= 4 || (s['AS'] >= 5 && s['US'] >= 5)) {
+    modes.push({
+      code: 'M_SURCOMPENSATEUR',
+      name: 'Surcompensateur',
+      family: 'coping',
+      description: "Mode de coping par renversement : la personne adopte un comportement opposé au schéma sous-jacent (par exemple, se montrer dominant pour masquer un sentiment d'imperfection).",
+      triggering_schemas: ['ET', 'AS', 'US'].filter(c => s[c] >= 4)
+    });
+  }
+
+  // Bully and Attack (v3.1 nouveau) — surcompensateur agressif
+  if (s['ET'] >= 4.5 && s['US'] < 4) {
+    modes.push({
+      code: 'M_BULLY_ATTACK',
+      name: 'Intimidation/Attaque (Bully and Attack)',
+      family: 'coping',
+      description: "Forme agressive de surcompensation : la personne attaque, intimide ou rabaisse les autres pour devancer un sentiment d'imperfection, d'injustice ou de vulnérabilité. Distinct du surcompensateur perfectionniste car ne s'appuie pas sur des standards élevés mais sur un sentiment de droit à dominer.",
+      triggering_schemas: ['ET']
+    });
+  }
+
+  // Self-Aggrandizer (v3.1 nouveau) — surcompensateur narcissique
+  if (s['ET'] >= 4 && s['AS'] >= 5) {
+    modes.push({
+      code: 'M_SELF_AGGRANDIZER',
+      name: 'Soi grandiose (Self-Aggrandizer)',
+      family: 'coping',
+      description: "Surcompensation par mise en avant grandiose : la personne s'attribue une valeur, des compétences ou une importance supérieures, recherche admiration et statut. Peut coexister avec un fond d'imperfection ou de honte qu'elle masque.",
+      triggering_schemas: ['ET', 'AS'].filter(c => s[c] >= 4)
+    });
+  }
+
+  // Adulte sain — objectif thérapeutique, toujours présent comme cible
+  modes.push({
+    code: 'M_ADULTE_SAIN',
+    name: 'Adulte sain (Healthy Adult) — cible thérapeutique',
+    family: 'target',
+    description: "Mode intégrateur, à renforcer en thérapie. Reconnaît l'activation des autres modes, apaise l'enfant vulnérable, met des limites aux modes parentaux exigeants/punitifs, désamorce les coping rigides. Ne dépend d'aucun schéma : c'est la ressource à construire ou consolider.",
+    triggering_schemas: []
+  });
+
+  return modes;
+}
+
+// v3.1 point 14 — matrice pattern × mode pré-calculée
+// Pour chaque pattern, indique les modes typiquement activés et la stratégie de coping dominante.
+const PATTERN_MODE_MATRIX = {
+  'P_DONNEUR_SILENCIEUX': {
+    likely_modes: ['M_CAPITULANT', 'M_PROTECTEUR_DETACHE', 'M_PARENT_EXIGEANT', 'M_ENFANT_VULNERABLE'],
+    dominant_coping: 'capitulation',
+    coping_manifestation: "Se rendre indispensable, anticiper les besoins des autres, contenir ses propres frustrations."
+  },
+  'P_TRIADE_DEPRESSOGENE': {
+    likely_modes: ['M_ENFANT_VULNERABLE', 'M_PARENT_PUNITIF', 'M_PROTECTEUR_DETACHE'],
+    dominant_coping: 'capitulation',
+    coping_manifestation: "Adhérer aux croyances négatives sur soi, se replier, éviter les situations qui sollicitent l'estime de soi."
+  },
+  'P_HYPERVIGILANCE': {
+    likely_modes: ['M_ENFANT_VULNERABLE', 'M_PROTECTEUR_DETACHE', 'M_PARENT_EXIGEANT'],
+    dominant_coping: 'evitement',
+    coping_manifestation: "Anticiper le danger, contrôler l'environnement, éviter les situations imprévisibles."
+  },
+  'P_INSECURITE_ATTACHEMENT': {
+    likely_modes: ['M_ENFANT_VULNERABLE', 'M_ENFANT_COLERE', 'M_CAPITULANT'],
+    dominant_coping: 'mixte',
+    coping_manifestation: "Osciller entre rapprochement (capitulation) et distance protectrice ; peur d'éloignement durable."
+  },
+  'P_PERFECTIONNISME': {
+    likely_modes: ['M_PARENT_EXIGEANT', 'M_ENFANT_VULNERABLE', 'M_SURCOMPENSATEUR'],
+    dominant_coping: 'surcompensation',
+    coping_manifestation: "Maintenir des standards très élevés, critique interne, peur de l'erreur, recherche d'approbation."
+  },
+  'P_DIFFICULTE_AUTONOMIE': {
+    likely_modes: ['M_CAPITULANT', 'M_ENFANT_VULNERABLE'],
+    dominant_coping: 'capitulation',
+    coping_manifestation: "Chercher du soutien externe, éviter les défis qui solliciteraient l'autonomie, déférer aux autres."
+  },
+  'P_TENSION_SOUMISSION_REVENDICATION': {
+    likely_modes: ['M_CAPITULANT', 'M_ENFANT_COLERE', 'M_BULLY_ATTACK'],
+    dominant_coping: 'oscillation',
+    coping_manifestation: "Soumission prolongée puis explosion revendicatrice ; limites relationnelles instables."
+  },
+  'P_FAIBLE_AUTOCONTROLE': {
+    likely_modes: ['M_ENFANT_IMPULSIF', 'M_SURCOMPENSATEUR'],
+    dominant_coping: 'evitement',
+    coping_manifestation: "Difficulté à différer la gratification, abandon de projets, régulation émotionnelle fragile."
+  }
+};
+
+/* ─────────────────────────────────────────────────────────
+ * INSTRUMENT HASH — v3.1 point 8 — SHA-256 incluant items + reverse + grid version
+ * Renvoie une Promise (SHA-256 async). Fallback synchrone basique si crypto absent.
+ * ───────────────────────────────────────────────────────── */
+async function computeInstrumentHashAsync() {
+  let payload = 'grid:' + (YSQ_L3.meta.grid_version || 'unknown') + '|';
+  YSQ_L3.items.forEach(it => {
+    payload += it.id + ':' + it.schema + ':' + it.text + ':rev=' + (isReverseItem(it) ? '1' : '0') + '|';
+  });
+  if (window.crypto && window.crypto.subtle) {
+    const enc = new TextEncoder();
+    const buf = await window.crypto.subtle.digest('SHA-256', enc.encode(payload));
+    const arr = Array.from(new Uint8Array(buf));
+    return 'sha256:' + arr.map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 16);
+  }
+  // Fallback déterministe non cryptographique
+  let h = 0;
+  for (let i = 0; i < payload.length; i++) { h = ((h << 5) - h) + payload.charCodeAt(i); h |= 0; }
+  return 'fallback:' + (h >>> 0).toString(16);
+}
+
+// Synchronous fallback wrapper kept for compatibility
+function computeInstrumentHash() {
+  let s = '';
+  YSQ_L3.items.forEach(it => { s += it.id + ':' + it.schema + ':' + it.text + '|'; });
+  let h = 0;
+  for (let i = 0; i < s.length; i++) { h = ((h << 5) - h) + s.charCodeAt(i); h |= 0; }
+  return (h >>> 0).toString(16);
+}
+
+/* ─────────────────────────────────────────────────────────
+ * JSON EXPORT v3
+ * Architecture analysis_contract / render_instructions / robustness
+ * Export structuré C Concept&Dev, conçu pour alimenter un générateur
+ * de rapport clinique avec garde-fous et contrôles de cohérence.
+ * ───────────────────────────────────────────────────────── */
+// v3.1.1 — Scramble DÉSACTIVÉ en phase test (export JSON en clair).
+// La fonction reste disponible pour réactivation future si besoin.
+// XOR + Base64 — clé publique, anti-curieux, pas du chiffrement.
+const SCRAMBLE_KEY = 'C-Concept-Dev-2026';
+
+function scramblePayload(jsonString) {
+  const key = SCRAMBLE_KEY;
+  const encoded = new TextEncoder().encode(jsonString);
+  const xored = new Uint8Array(encoded.length);
+  for (let i = 0; i < encoded.length; i++) {
+    xored[i] = encoded[i] ^ key.charCodeAt(i % key.length);
+  }
+  // Base64 encode
+  let binary = '';
+  for (let i = 0; i < xored.length; i++) binary += String.fromCharCode(xored[i]);
+  return btoa(binary);
+}
+
+// v3.1 point 6 — self_audit calculé à l'export
+function computeSelfAudit(schemasDetail, schemaScores, domainScores, patterns, modes, escalation_flags) {
+  const audit = {
+    audit_timestamp: new Date().toISOString(),
+    checks_passed: [],
+    checks_warnings: [],
+    checks_failed: []
+  };
+
+  // 1. Items contradictoires intra-schéma
+  const contradictions = [];
+  schemasDetail.forEach(sch => {
+    const responses = sch.items
+      .map(it => ({ id: it.id, scored: it.response_scored }))
+      .filter(x => x.scored != null);
+    if (responses.length < 4) return;
+    const high_items = responses.filter(r => r.scored >= 5);
+    const low_items = responses.filter(r => r.scored <= 2);
+    if (high_items.length >= 1 && low_items.length >= 1 && sch.score_mean >= 4.0) {
+      contradictions.push({
+        schema: sch.code,
+        schema_mean: sch.score_mean,
+        high_items: high_items.map(r => r.id),
+        low_items: low_items.map(r => r.id),
+        note: 'Schéma actif avec items très contrastés — à explorer comme nuance interne.'
+      });
+    }
+  });
+  if (contradictions.length > 0) {
+    audit.checks_warnings.push({
+      check: 'intra_schema_contradictions',
+      count: contradictions.length,
+      detail: contradictions
+    });
+  } else {
+    audit.checks_passed.push('intra_schema_contradictions');
+  }
+
+  // 2. Domaines actifs sans schémas actifs
+  Object.keys(domainScores).forEach(dcode => {
+    if (domainScores[dcode] >= 4.0) {
+      const domain = YSQ_L3.domains[dcode];
+      const has_active = domain.schemas.some(sc => schemaScores[sc] >= 4.0);
+      if (!has_active) {
+        audit.checks_warnings.push({
+          check: 'domain_active_no_schema_active',
+          domain: dcode,
+          domain_score: domainScores[dcode],
+          note: 'Domaine au-dessus du seuil mais aucun schéma individuel actif — élévation par accumulation, pas par activation focale.'
+        });
+      }
+    }
+  });
+
+  // 3. Cohérence patterns / scores
+  patterns.forEach(p => {
+    const all_present = p.schemas_involved.every(c => schemaScores[c] != null);
+    if (!all_present) {
+      audit.checks_failed.push({
+        check: 'pattern_schema_missing',
+        pattern: p.code,
+        note: 'Pattern fait référence à un schéma sans score.'
+      });
+    }
+  });
+  if (audit.checks_failed.filter(c => c.check === 'pattern_schema_missing').length === 0) {
+    audit.checks_passed.push('pattern_schema_consistency');
+  }
+
+  // 4. Modes inférés vs schémas
+  const active_schemas = Object.keys(schemaScores).filter(c => schemaScores[c] >= 4.0);
+  if (active_schemas.length === 0 && modes.length > 1) {
+    audit.checks_warnings.push({
+      check: 'modes_inferred_without_active_schemas',
+      note: 'Modes inférés sans schéma actif — à valider.'
+    });
+  } else {
+    audit.checks_passed.push('modes_schema_consistency');
+  }
+
+  // 5. Escalation flags couverture
+  if (escalation_flags.length > 0) {
+    audit.checks_warnings.push({
+      check: 'escalation_flags_present',
+      count: escalation_flags.length,
+      flags: escalation_flags.map(f => f.code),
+      note: 'Drapeaux d\'escalade détectés — à mentionner avec tact dans le rapport.'
+    });
+  }
+
+  audit.summary = {
+    total_passed: audit.checks_passed.length,
+    total_warnings: audit.checks_warnings.length,
+    total_failed: audit.checks_failed.length,
+    status: audit.checks_failed.length > 0 ? 'failed' :
+            (audit.checks_warnings.length > 0 ? 'warnings' : 'clean')
+  };
+
+  return audit;
+}
+
+function exportJson() {
+  const { schemaScores, schemaStats, domainScores, domainStats } = computeScores();
+  const now = new Date();
+
+  const itemsDetail = YSQ_L3.items.map(it => {
+    const orderIndex = state.itemOrder ? state.itemOrder.indexOf(it.id) : -1;
+    const raw = state.answers[it.id] || null;
+    const scored = scoreAnswer(it, raw);
+    return {
+      id: it.id,
+      passation_order: orderIndex >= 0 ? orderIndex + 1 : null,
+      schema: it.schema,
+      schema_name: YSQ_L3.schemas[it.schema].name,
+      text: it.text,
+      reverse_scored: isReverseItem(it),
+      scoring_review: it.scoring_review || null,
+      response_raw: raw,
+      response_scored: scored
+    };
+  });
+
+  const schemasDetail = Object.keys(YSQ_L3.schemas).map(code => {
+    const sch = YSQ_L3.schemas[code];
+    const stats = schemaStats[code];
+    const score = schemaScores[code];
+    const lvl = levelOf(score);
+    return {
+      code,
+      name: sch.name,
+      short: sch.short,
+      domain: sch.domain,
+      domain_name: YSQ_L3.domains[sch.domain].name,
+      developmental_need: YSQ_L3.domains[sch.domain].need,
+      description: sch.description,
+      child_origin: sch.child_origin,
+      color: sch.color,
+      score_mean: score,
+      level_class: lvl.class,
+      level_label: lvl.label,
+      stats: stats,
+      items: YSQ_L3.items
+        .filter(it => it.schema === code)
+        .map(it => ({
+          id: it.id,
+          text: it.text,
+          reverse_scored: isReverseItem(it),
+          scoring_review: it.scoring_review || null,
+          response_raw: state.answers[it.id] || null,
+          response_scored: scoreAnswer(it, state.answers[it.id] || null)
+        }))
+    };
+  });
+
+  const derivedPatterns = detectDerivedPatterns(schemaScores, schemasDetail);
+  const inferredModes = inferModes(schemaScores, derivedPatterns);
+  const rq = computeResponseQuality();
+
+  let duration_seconds = null;
+  if (state.startedAt) duration_seconds = Math.round((now - new Date(state.startedAt)) / 1000);
+
+  const escalation_flags = detectEscalationFlags(state.answers, schemaScores, domainScores);
+  const reliability = computeReliability(rq);
+
+  // v3.1 — partial passation detection
+  const completion_rate_pct = answeredCount() / YSQ_L3.items.length;
+  const is_partial = completion_rate_pct < 0.95;
+
+  // v3.1 — escalation flags now also receive domainScores
+  // (already patched: detectEscalationFlags signature already accepts them)
+
+  // v3.1 — self_audit
+  const selfAudit = computeSelfAudit(
+    schemasDetail, schemaScores, domainScores,
+    derivedPatterns, inferredModes, escalation_flags
+  );
+
+  // v3.1.1 — Pré-calcul des métadonnées watermark (valeurs prêtes à l'emploi pour le LLM)
+  const _wm_prenom = (state.profile && state.profile.prenom) || '';
+  const _wm_nom = (state.profile && state.profile.nom) || '';
+  const _wm_date = now.toISOString().split('T')[0];
+  const _wm_session_id = state.sessionId || ('ysq-l3-' + Date.now().toString(36));
+  const _wm_grid = YSQ_L3.meta.grid_version || 'unknown';
+  const _wm_hash = computeInstrumentHash();
+  const WATERMARK_VALUES = {
+    title: `Restitution YSQ-L3 — ${_wm_prenom} ${_wm_nom} — ${_wm_date}`.trim(),
+    author: "C Concept&Dev — Intelligence Psychométrique & Orientation",
+    subject: "Rapport de restitution YSQ-L3 — usage clinique exploratoire",
+    keywords: `YSQ-L3, schémathérapie, ${_wm_session_id}, ${_wm_grid}, ${_wm_hash}`,
+    creator: "C Concept&Dev YSQ-L3 v3.1",
+    producer: "C Concept&Dev — Pipeline YSQ-L3 automatisé",
+    session_id: _wm_session_id,
+    grid_version: _wm_grid,
+    instrument_hash: _wm_hash,
+    contract_version: "3.2",
+    generation_date: _wm_date
+  };
+
+  // Build inner payload
+  const innerPayload = {
+    meta: {
+      outil: 'YSQ-L3',
+      outil_nom_complet: 'Young Schema Questionnaire — Long Form, Version 3',
+      reference: 'Young, J.E. (1998, 2005)',
+      traduction: "Adaptation française de travail - droits et grille officielle à vérifier avant usage professionnel",
+      items_count: 232,
+      schemas_count: 18,
+      domains_count: 5,
+      echelle: '1 (Totalement faux) à 6 (Me décrit parfaitement)',
+      version_schema: '3.1.0',
+      version_contrat: '3.1',
+      contract_changelog: [
+ "v3.1 : Scramble export JSON (anti-curieux, le LLM déchiffre seul)",
+ "v3.1 : Patterns avec confidence + items contributeurs",
+ "v3.1 : Contraste intra-domaine (mean + std + label)",
+ "v3.1 : Modes étendus (Angry Child, Bully/Attack, Self-Aggrandizer, Healthy Adult cible)",
+ "v3.1 : Matrice pattern × mode pré-calculée",
+ "v3.1 : Fatigue index sur ordre de passation",
+ "v3.1 : SHA-256 instrument hash (async)",
+ "v3.1 : reverse_consistency_details exporté",
+ "v3.1 : self_audit calculé à l'export",
+ "v3.1 : Contrat : branche passation partielle, output_format_negotiation, ce que ne mesure pas l'instrument, biais culturels"
+      ],
+      contract_compatibility: {
+        produces_pdf_with_tools: "Si l'environnement permet l'exécution de code (Claude avec code execution, ChatGPT avec Python), produire un vrai PDF téléchargeable.",
+        produces_html_fallback: "Sinon, produire un HTML autonome avec @media print et le donner à imprimer/sauver en PDF par le navigateur.",
+        produces_markdown_fallback: "En dernier recours (LLM sans outils), produire un Markdown structuré indiquant clairement qu'un format final reste à produire."
+      },
+      generateur: 'C Concept&Dev — YSQ-L3 v3.1',
+      instrument_hash: computeInstrumentHash(),
+      grid_version: YSQ_L3.meta.grid_version,
+      date_passation: now.toISOString().split('T')[0],
+      audit_caveat: "ATTENTION : ce JSON provient d'un prototype dont la grille (items inversés + composition des schémas) n'a pas été auditée contre la source primaire Young 2003. Vérifier avant usage clinique."
+    },
+    session: {
+      session_id: state.sessionId || ('ysq-l3-' + Date.now().toString(36)),
+      started_at: state.startedAt || null,
+      ended_at: now.toISOString(),
+      duration_seconds: duration_seconds,
+      completion_status: is_partial ? 'partial' : 'complete',
+      items_answered: answeredCount(),
+      items_total: YSQ_L3.items.length,
+      completion_rate: parseFloat(completion_rate_pct.toFixed(3))
+    },
+    profile: state.profile || {},
+    input: {
+      responses_by_item: itemsDetail
+    },
+    derived_data: {
+      scores: schemaScores,
+      schema_stats: schemaStats,
+      domain_scores: domainScores,
+      domain_stats: domainStats,
+      schemas_detail: schemasDetail,
+      derived_patterns: derivedPatterns,
+      pattern_mode_matrix: PATTERN_MODE_MATRIX,
+      inferred_modes: inferredModes,
+      escalation_flags: escalation_flags,
+      response_quality: rq,
+      interpretation_reliability: reliability,
+      self_audit: selfAudit
+    },
+    interpretation_reference: {
+      domains_definition: YSQ_L3.domains,
+      schemas_definition: YSQ_L3.schemas,
+      interpretation_thresholds: YSQ_L3.meta.interpretation_thresholds,
+      score_scale: YSQ_L3.meta.scale,
+      scoring: {
+        principe: 'Moyenne par schéma sur réponses scorées.',
+        reverse_items: getReverseItemIds(),
+        reverse_rule: 'score = 7 - reponse brute pour les items inverses sur echelle 1-6',
+        items_a_verifier: YSQ_L3.items.filter(it => it.scoring_review).map(it => ({ id: it.id, schema: it.schema, note: it.scoring_review })),
+        audit_status: "PARTIEL — seuls quelques items sont marqués reverse:true. La liste complète des items à scorer en sens inverse n'a pas été auditée contre la grille Young officielle."
+      },
+      modes_principaux: {
+        capitulant: "Coping par soumission — abdication des besoins pour préserver le lien.",
+        protecteur_detache: "Coping par évitement émotionnel.",
+        parent_exigeant: "Voix interne exigeante, standards élevés, autocritique.",
+        parent_punitif: "Voix interne sévère, rabaissante, condamnante.",
+        enfant_vulnerable: "Noyau émotionnel d'enfant éprouvé (seul, non aimé, défectueux).",
+        enfant_colere: "État de révolte face à la frustration de besoins fondamentaux.",
+        surcompensateur: "Coping par renversement — adopter l'opposé du schéma.",
+        bully_attack: "Surcompensation agressive — attaquer pour devancer la vulnérabilité.",
+        self_aggrandizer: "Surcompensation narcissique — mise en avant grandiose.",
+        adulte_sain: "Mode intégrateur cible — reconnaît, apaise, met des limites."
+      }
+    },
+    analysis_contract: {
+      preambule_clinique_non_negociable: {
+        nature_de_l_instrument: "Le YSQ-L3 mesure les EARLY MALADAPTIVE SCHEMAS (EMS) de Jeffrey Young — littéralement, en français de référence (Cousineau & Côté, Pratiquer la thérapie des schémas) : SCHÉMAS PRÉCOCES INADAPTÉS. Ce ne sont pas des 'traits de personnalité intéressants', ce ne sont pas des 'sensibilités', ce ne sont pas des 'particularités'. Ce sont des STRUCTURES COGNITIVO-ÉMOTIONNELLES DYSFONCTIONNELLES qui se sont formées dans l'enfance face à des besoins fondamentaux non satisfaits, et qui CAUSENT AUJOURD'HUI souffrance, répétition et limitation. C'est la définition fondatrice de Young, Klosko & Weishaar (2003), reprise et déployée dans le champ francophone par Cousineau, Côté, Pascal et Mehran.",
+
+        articulation_avec_corpus_clinique: "Le YSQ-L3 s'inscrit dans la lignée internationale de la schémathérapie (Young, Behary, Roediger, Arntz, Farrell) et trouve dans le champ francophone des relais cliniques importants : (a) Pierre Cousineau & Sophie Côté — Pratiquer la thérapie des schémas (référence francophone canonique) ; (b) Firouzeh Mehran — Thérapie des schémas et émotions pour les couples ; (c) Chiara Simeone-Difrancesco — Schema therapy with couples (pour la dimension dyadique). Pour la dimension TRAUMA précoce qui SOUS-TEND les schémas, le YSQ-L3 dialogue avec l'IEV (Inventaire des Empreintes de Vie) du même pipeline : l'IEV cartographie les origines biographiques, le YSQ identifie les schémas qui en ont résulté.",
+
+        ce_que_cela_implique: "Un schéma actif (score ≥ 4.0) est un MARQUEUR DE SOUFFRANCE PASSÉE ET PRÉSENTE. Il ne se 'célèbre' pas. Il se reconnaît, il se nomme, il se valide dans son origine, et il s'adresse thérapeutiquement. Le rapport doit NOMMER la souffrance sous-jacente avant de proposer une issue. Sans cette reconnaissance, le rapport trahit la fonction même de l'instrument.",
+
+        erreur_a_eviter_absolument: "L'erreur cardinale est d'aborder un schéma comme un NEO-PI-R aborde un trait : 'vous êtes haut en Sacrifice de Soi, c'est merveilleux pour les métiers d'aide'. NON. Sacrifice de Soi élevé signifie : 'cette personne place systématiquement les besoins d'autrui avant les siens au prix de son équilibre, parce qu'elle a appris dans l'enfance que sa valeur dépendait de cette posture, et elle en souffre aujourd'hui'. Comme le formulent Cousineau & Côté (Pratiquer la thérapie des schémas, chap. introduction), le schéma est un FAUX PROTECTEUR : ce qui a permis de survivre dans l'enfance LIMITE désormais l'épanouissement adulte.",
+
+        posture_attendue: "CONFRONTATION EMPATHIQUE (terme français de référence — traduction de empathic confrontation établie par Cousineau & Côté ; Young 2003 dans la version originale anglaise) — concept central de la schémathérapie. C'est l'art de NOMMER ce qui fait mal avec une tendresse exigeante. Ni complaisance (qui trahit le patient en évitant la vérité), ni cassant (qui blesse sans aider). Le ton d'un thérapeute formé : il dit la vérité, mais il la dit AVEC le patient, pas CONTRE lui.",
+
+        regle_d_or: "Avant chaque section, te poser cette question : 'Est-ce que Jeffrey Young, Wendy Behary, Pierre Cousineau, ou Firouzeh Mehran signerait cette page ?' Si la réponse est non parce que c'est trop complaisant, recommence. Si la réponse est non parce que c'est trop pathologisant, recommence aussi."
+      },
+
+      collectif_d_experts_consultants: {
+        principe: "Tu rédiges ce rapport COMME SI tu avais consulté ce collectif d'experts en schémathérapie internationale et francophone. Le collectif est HYBRIDE : il combine (a) des experts dont les œuvres sont indexées dans la bibliothèque RAG du pipeline et peuvent être citées avec précision (ouvrage, page), et (b) des références internationales fondatrices non disponibles dans le RAG local mais incontournables.",
+
+        mentor_principal: {
+          nom: "Jeffrey Young, Ph.D.",
+          source: "RAG_LOCAL — Je réinvente ma vie (321 chunks) + La thérapie des schémas (363 chunks)",
+          role: "Fondateur de la schémathérapie. Co-auteur de Schema Therapy: A Practitioner's Guide (Young, Klosko, Weishaar, 2003) — référence fondatrice. Inspire la définition rigoureuse des EMS et l'approche par phases (assessment, change, behavioral pattern-breaking).",
+          apport_specifique: "Te rappelle que les schémas sont DOULOUREUX par nature, qu'ils se forment dans l'enfance face à un besoin émotionnel non satisfait, et qu'ils méritent d'être nommés avec gravité avant d'être travaillés. Sa version Je réinvente ma vie offre des formulations grand public utilisables pour rendre le rapport accessible sans le banaliser."
+        },
+
+        co_mentor_francophone_canonique: {
+          nom: "Pierre Cousineau & Sophie Côté",
+          source: "RAG_LOCAL — Pratiquer la thérapie des schémas (587 chunks via indexation 'Bernard Pascal') + La thérapie des schémas (490 chunks)",
+          role: "Co-traducteurs francophones du YSQ-L3 et auteurs de référence en schémathérapie de langue française (Québec/France). Leur ouvrage Pratiquer la thérapie des schémas est LA référence francophone pour la pratique clinique.",
+          apport_specifique: "Posent le vocabulaire francophone établi : Schéma Précoce Inadapté, Carence Affective (et non 'Privation Émotionnelle' qui circule parfois en mauvaise traduction), Sacrifice de Soi, Mode Enfant Vulnérable, Mode Protecteur Détaché, reparentage en imagerie, CONFRONTATION EMPATHIQUE. Donnent aussi la dimension de RECONSOLIDATION DE LA MÉMOIRE (chap. dédié) qui articule schémathérapie et neurosciences contemporaines. Le rapport doit utiliser leur vocabulaire de référence."
+        },
+
+        experts_co_consultants_RAG_local: [
+          {
+            nom: "Firouzeh Mehran",
+            source: "RAG_LOCAL — Thérapie des schémas et émotions pour les couples (209 chunks)",
+            role: "Psychologue clinicienne française, schémathérapeute. Spécialiste de l'articulation schémas et émotions, particulièrement dans la dyade.",
+            apport_specifique: "Précieuse pour articuler schémas du domaine 'Centration sur les autres' (Soumission, Sacrifice de Soi, Recherche d'Approbation) et leurs incidences relationnelles. Permet de formuler les schémas dans leur dimension émotionnelle vécue, pas seulement cognitive."
+          },
+          {
+            nom: "Chiara Simeone-Difrancesco",
+            source: "RAG_LOCAL — Schema therapy with couples (250 chunks)",
+            role: "Schémathérapeute spécialisée dans le travail conjugal. Référence pour la chimera schématique dans le couple.",
+            apport_specifique: "Si le rapport doit aborder la dimension conjugale ou relationnelle adulte des schémas, fournit le cadre conceptuel pour formuler comment les schémas se rejouent et s'activent réciproquement dans les liens proches."
+          }
+        ],
+
+        references_internationales_NON_RAG: {
+          mention_de_methode: "Ces auteurs sont des références fondatrices internationalement reconnues mais leurs ouvrages ne sont PAS indexés dans la bibliothèque RAG du pipeline. Tu peux les MENTIONNER comme cadres théoriques quand c'est pertinent, mais SANS CITATION DIRECTE DE PAGE (tu ne disposes pas du matériau). Cette transparence épistémique est exigée.",
+          experts: [
+            {
+              nom: "Wendy Behary, LCSW",
+              role: "Présidente de l'International Society of Schema Therapy. Auteure de Disarming the Narcissist. Spécialiste de la posture du thérapeute face aux patients résistants et de la confrontation empathique avancée.",
+              apport_general: "T'aide à formuler la limite entre validation et complaisance. Te rappelle qu'un schéma de Exigences Élevées n'est pas 'un goût du travail bien fait' mais une tyrannie intérieure qui épuise. À mentionner comme cadre, sans citation de page."
+            },
+            {
+              nom: "Eckhard Roediger, M.D.",
+              role: "Schémathérapeute allemand, Past-President ISST. Co-auteur de Contextual Schema Therapy (Roediger, Stevens, Brockman, 2018). Spécialiste de l'intégration schématique avec ACT.",
+              apport_general: "T'aide à articuler schéma, mode et coping sans confusion. Te rappelle que le rapport doit donner au lecteur des CARTES utilisables, pas des étiquettes flatteuses. Mention sans citation."
+            },
+            {
+              nom: "Arnoud Arntz, Ph.D.",
+              role: "Chercheur néerlandais, leader des essais cliniques randomisés sur la schémathérapie pour TPB. Spécialiste de l'imagery rescripting.",
+              apport_general: "Te rappelle que la schémathérapie n'est pas une 'philosophie sympathique' mais une thérapie validée empiriquement pour des souffrances structurelles, parfois sévères. Le ton doit refléter ce sérieux."
+            },
+            {
+              nom: "Joan Farrell & Ida Shaw",
+              role: "Co-créatrices de la Group Schema Therapy. Auteures de Group Schema Therapy for Borderline Personality Disorder (2012).",
+              apport_general: "T'aident à reconnaître que les schémas se vivent dans le RELATIONNEL. Le rapport doit faire sentir comment chaque schéma actif affecte les liens de la personne aujourd'hui."
+            },
+            {
+              nom: "George Lockwood, Ph.D.",
+              role: "Co-développeur du Young Positive Schema Questionnaire (Louis, Wood, Lockwood, Ho, Ferguson, 2018). Spécialiste de la dimension positive et adaptative.",
+              apport_general: "Te rappelle que NOMMER LES FORCES n'est pas du remplissage : c'est ce qui permet au patient de tolérer la lecture de ses vulnérabilités. Mais nommer les forces n'est jamais une EXCUSE pour ne pas nommer les schémas."
+            },
+            {
+              nom: "Ozgur Yalcin, Ph.D.",
+              role: "Auteur du YSQ-R (révision Rasch 2022). Spécialiste de l'analyse psychométrique moderne des schémas.",
+              apport_general: "Te rappelle les limites psychométriques de la version L3 et les questions de validation à transmettre en consultation."
+            }
+          ]
+        },
+
+        pont_avec_IEV_traumatologie: {
+          principe: "Si le rapport est généré conjointement avec un IEV (iev_integration.present == true, ou si le pipeline propose les deux outils en cartographie pré-thérapeutique), le collectif s'élargit aux référents de traumatologie développementale et le rapport articule explicitement schémas YSQ ↔ empreintes IEV. Les schémas précoces inadaptés ne tombent pas du ciel : ils se forment sur un TERRAIN biographique que l'IEV permet de cartographier.",
+          experts_complementaires_si_IEV_present: [
+            {
+              nom: "Bessel van der Kolk",
+              source: "RAG_LOCAL — Le corps n'oublie rien (444 chunks)",
+              apport: "Pour la dimension corporelle et neurodéveloppementale des schémas formés dans un terrain traumatique."
+            },
+            {
+              nom: "Olivier Piedfort-Marin & Luise Reddemann",
+              source: "RAG_LOCAL — Psychothérapie des traumatismes complexes (212 chunks)",
+              apport: "Pour les schémas qui s'enracinent dans un trauma complexe (Méfiance/Abus, Imperfection sévère, Dépendance/Incompétence sévère). Référence francophone."
+            }
+          ],
+          tables_d_articulation_schemas_vers_empreintes: {
+            ED_carence_emotionnelle: "Souvent : désert affectif intégral IEV M7 (transparences). À nommer si IEV M7 est bas et ED est haut.",
+            AB_abandon_instabilite: "Souvent : événements de rupture précoce IEV M2 (perte parent, déménagements répétés, séparations) + climat développemental instable M3.",
+            MA_mefiance_abus: "Souvent : événements traumatiques relationnels IEV M2 (violences, harcèlement, climat de critique chronique M3).",
+            IS_isolement_social: "Souvent : contexte socioculturel difficile IEV M5 + déracinement M2 (migrations, ruptures de tissu social).",
+            DI_dependance_incompetence: "Souvent : surprotection ou inverse (négligence) en M3, parentification précoce M2 événement 36.",
+            VH_vulnerabilite_au_danger: "Souvent : climat parental anxieux M3 + événements de précarité ou maladie grave M2.",
+            EM_enchevetrement: "Souvent : limites floues dans la famille d'origine M3.",
+            EC_echec: "Souvent : critique chronique M3 ou pression intense de réussite, harcèlement scolaire M2.",
+            DR_droits_personnels: "Souvent : surcontrole parental ou inverse (absence totale de limites) M3.",
+            CS_controle_de_soi_insuffisant: "Souvent : absence de structure éducative cohérente M3.",
+            AS_assujettissement: "Souvent : parent contrôlant ou colérique M3 + parentification émotionnelle M2.",
+            SS_sacrifice_de_soi: "Souvent : parentification chronique IEV M2 événement 36 + critique conditionnelle M3.",
+            RA_recherche_d_approbation: "Souvent : amour conditionnel à la performance M3 + invisibilisation M1.10.",
+            NP_negativite_pessimisme: "Souvent : climat développemental négatif/critique chronique M3.",
+            SD_surcontrole_emotionnel: "Souvent : modèles parentaux d'expression absents M7 + climat de retenue émotionnelle M3.",
+            EE_exigences_elevees: "Souvent : amour conditionnel à la performance M3 + pression intense de réussite M2.",
+            PU_punition: "Souvent : critique chronique sans réparation M3 + climat de honte familial."
+          },
+          note_de_method: "Ces articulations sont des HYPOTHÈSES cliniques fréquentes, jamais des certitudes. Le rapport les formule au conditionnel ('pourrait trouver son origine dans...', 'résonne probablement avec...') et invite à les explorer en consultation."
+        },
+
+        protocole_de_consultation: "Pour chaque section majeure du rapport, demande-toi : (1) Que dirait Young de cette formulation ? (2) Cousineau & Côté trouveraient-ils que le vocabulaire francophone est juste, pas anglicisé ? (3) Behary jugerait-elle cela trop conciliant ? (4) Mehran trouverait-elle que la dimension émotionnelle est honorée ? (5) Si iev_integration : van der Kolk / Piedfort-Marin trouveraient-ils que le terrain biographique est respecté ? Si tu ressens un 'oui' partagé, la formulation tient. Sinon, retravaille."
+      },
+
+            rag_orientation: {
+        principe: "Le pipeline de génération du rapport est susceptible d'être enrichi par une couche RAG (Retrieval-Augmented Generation) qui interrogera, au moment de la rédaction, la bibliothèque clinique indexée (~22 000 chunks, 233 ouvrages, 18 approches dont schema_therapy, trauma, attachment, icv). Cette directive guide cet enrichissement.",
+        sources_RAG_a_privilegier_par_section: {
+          generalites_schemas: ["Jeffrey Young — La thérapie des schémas", "Jeffrey Young — Je réinvente ma vie", "Pierre Cousineau & Sophie Côté — Pratiquer la thérapie des schémas"],
+          schemas_du_domaine_separation_rejet: ["Cousineau & Côté chap. Carence affective + Abandon + Méfiance + Imperfection", "Young — La thérapie des schémas, sections correspondantes"],
+          schemas_du_domaine_autonomie_alteree: ["Cousineau & Côté chap. Dépendance + Vulnérabilité au danger + Enchevêtrement + Échec"],
+          schemas_du_domaine_limites_alterees: ["Cousineau & Côté chap. Droits personnels exagérés + Contrôle de soi insuffisant"],
+          schemas_du_domaine_centration_autres: ["Cousineau & Côté chap. Assujettissement + Sacrifice de soi + Recherche d'approbation", "Firouzeh Mehran — Thérapie des schémas et émotions pour les couples"],
+          schemas_du_domaine_survigilance: ["Cousineau & Côté chap. Négativité + Surcontrôle + Exigences élevées + Punition"],
+          modes_young: ["Young — La thérapie des schémas (chap. Modes)", "Cousineau & Côté chap. Modes"],
+          articulation_avec_couple_si_pertinent: ["Chiara Simeone-Difrancesco — Schema therapy with couples", "Firouzeh Mehran"],
+          articulation_avec_trauma_si_IEV: ["Bessel van der Kolk — Le corps n'oublie rien", "Olivier Piedfort-Marin & Luise Reddemann — Psychothérapie des traumatismes complexes"],
+          reconsolidation_de_la_memoire: ["Cousineau & Côté — Pratiquer la thérapie des schémas (chap. dédié à la reconsolidation)"]
+        },
+        regles_citation: "Quand un chunk RAG est utilisé pour appuyer une formulation, citer l'auteur + l'ouvrage + le n° de page si disponible (ex: 'Comme le formulent Cousineau & Côté (Pratiquer la thérapie des schémas, p. XX)...'). Les auteurs hors RAG (Behary, Roediger, Arntz, Farrell, Lockwood, Yalcin) sont mentionnés comme cadres théoriques SANS citation de page. La transparence épistémique sur la source est exigée."
+      },
+
+            role: "Tu es un psychologue clinicien formé à la schémathérapie selon le modèle de Jeffrey Young (Young, Klosko, Weishaar 2003). Tu rédiges un rapport de restitution destiné à la personne ayant passé le YSQ-L3, sous la supervision tacite du collectif d'experts ci-dessus. Ta posture est la CONFRONTATION EMPATHIQUE (terme français de référence, traduction de empathic confrontation établie par Cousineau & Côté) : nommer la vérité clinique avec tendresse, sans complaisance ni dureté. Tu n'es ni un coach motivationnel, ni un psychologue NEO-PI-R, ni un rédacteur bienveillant : tu es un schémathérapeute qui restitue.",
+      mission_principale: "Produire un rapport professionnel auto-suffisant à partir de ce JSON, sans demander d'information complémentaire à l'utilisateur. Le contenu, la mise en page, le ton et la structure sont entièrement définis par ce contrat. Le rapport DOIT refléter la nature dysfonctionnelle des schémas actifs (souffrance, répétition, limitation) avant de proposer toute issue thérapeutique.",
+
+      output_format_negotiation: {
+        principe: "Adapter le format de sortie aux capacités de l'environnement d'exécution.",
+        priorite_1_pdf: "Si tu peux exécuter du code (Python + ReportLab/WeasyPrint) : produire un vrai .pdf téléchargeable. C'est le format cible. IMPÉRATIF : appliquer les métadonnées watermark définies dans pdf_metadata_watermark AVANT de finaliser le PDF. Pas de PDF généré sans métadonnées.",
+        priorite_2_html: "Sinon : produire un HTML autonome avec CSS @media print, l'utilisateur l'imprimera en PDF depuis son navigateur. Inclure les métadonnées watermark dans les balises <meta> du <head> (title, author via DC.creator, subject via DC.subject, keywords).",
+        priorite_3_markdown: "En dernier recours : Markdown très structuré, annoncer en ouverture qu'un format final reste à produire. Inclure les métadonnées watermark dans un frontmatter YAML en tête.",
+        annonce_obligatoire: "Au début de ta réponse, annoncer brièvement quel format tu produiras et pourquoi.",
+        verification_finale: "Avant de présenter le PDF, vérifier que reader.metadata.title, .author, .subject, .keywords sont tous renseignés. Si l'un manque, repasser une étape de post-traitement pypdf."
+      },
+
+      pdf_metadata_watermark: {
+        principe: "OBLIGATOIRE — Si tu génères un PDF, tu DOIS appliquer ces métadonnées au document. Elles ne s'affichent NULLE PART à l'écran, seulement dans les propriétés du fichier (clic droit > Propriétés > Détails). Aucune intervention manuelle ne doit être nécessaire après génération.",
+        statut: "PRÉ-CALCULÉ — les valeurs ci-dessous sont prêtes à l'emploi, ne pas les modifier.",
+        values: {
+          title: WATERMARK_VALUES.title,
+          author: WATERMARK_VALUES.author,
+          subject: WATERMARK_VALUES.subject,
+          keywords: WATERMARK_VALUES.keywords,
+          creator: WATERMARK_VALUES.creator,
+          producer: WATERMARK_VALUES.producer,
+          custom_fields: {
+ "/YSQ_Session_ID": WATERMARK_VALUES.session_id,
+ "/YSQ_Grid_Version": WATERMARK_VALUES.grid_version,
+ "/YSQ_Instrument_Hash": WATERMARK_VALUES.instrument_hash,
+ "/YSQ_Contract_Version": WATERMARK_VALUES.contract_version,
+ "/YSQ_Generation_Date": WATERMARK_VALUES.generation_date
+          }
+        },
+        implementation_reportlab_basedoctemplate: "from reportlab.platypus import BaseDocTemplate\\nfrom reportlab.lib.pagesizes import A4\\n\\ndoc = BaseDocTemplate(\\n    output_path,\\n    pagesize=A4,\\n    title=metadata['title'],\\n    author=metadata['author'],\\n    subject=metadata['subject'],\\n    keywords=metadata['keywords'],\\n    creator=metadata['creator']\\n)\\n# Build normally with doc.build(story)",
+        implementation_reportlab_canvas: "c = canvas.Canvas(output_path, pagesize=A4)\\nc.setTitle(metadata['title'])\\nc.setAuthor(metadata['author'])\\nc.setSubject(metadata['subject'])\\nc.setKeywords(metadata['keywords'])\\nc.setCreator(metadata['creator'])\\n# ...draw...\\nc.save()",
+        implementation_post_processing_pypdf: "# Si le PDF est déjà généré sans métadonnées :\\nfrom pypdf import PdfReader, PdfWriter\\nreader = PdfReader(pdf_path)\\nwriter = PdfWriter()\\nfor page in reader.pages: writer.add_page(page)\\nwriter.add_metadata({\\n    '/Title': metadata['title'],\\n    '/Author': metadata['author'],\\n    '/Subject': metadata['subject'],\\n    '/Keywords': metadata['keywords'],\\n    '/Creator': metadata['creator'],\\n    '/Producer': metadata['producer'],\\n    '/YSQ_Session_ID': metadata['custom_fields']['/YSQ_Session_ID'],\\n    '/YSQ_Grid_Version': metadata['custom_fields']['/YSQ_Grid_Version'],\\n    '/YSQ_Instrument_Hash': metadata['custom_fields']['/YSQ_Instrument_Hash'],\\n    '/YSQ_Contract_Version': metadata['custom_fields']['/YSQ_Contract_Version'],\\n    '/YSQ_Generation_Date': metadata['custom_fields']['/YSQ_Generation_Date']\\n})\\nwith open(pdf_path, 'wb') as f: writer.write(f)",
+        verification_obligatoire: "Après génération, vérifier que les métadonnées sont bien présentes : reader = PdfReader(pdf_path); print(reader.metadata). Au minimum /Title, /Author, /Subject, /Keywords doivent être renseignés."
+      },
+
+      diagnostic_dentree_obligatoire: {
+        description: "AVANT de générer le rapport, produire un bref diagnostic d'entrée (5-10 lignes en chat, pas dans le PDF) résumant : (1) qui est la personne, (2) quels schémas sont actifs et quelles configurations cliniques se dessinent, (3) quel est le niveau de fiabilité de la passation, (4) y a-t-il des drapeaux d'escalade à signaler, (5) la passation est-elle complète ou partielle.",
+        format: "Texte libre court, en chat avant le PDF.",
+        but: "Détecter une mauvaise passation, un dossier mal renseigné, ou un signal d'escalade avant de générer 20-30 pages."
+      },
+
+      partial_passation_branch: {
+        condition: "Si session.completion_status == 'partial' (completion_rate < 0.95).",
+        regle: "Refuser de générer 25-30 pages. Produire à la place un rapport intermédiaire de 5-8 pages, axé sur : (a) ce qui se dessine déjà dans les items répondus, (b) les zones non couvertes par la passation actuelle, (c) une recommandation explicite de compléter la passation avant tout rapport définitif. Marquer en page de garde : 'Rapport intermédiaire — passation partielle (X / 232 items répondus)'."
+      },
+
+      allowed_tasks: [
+ "Interpréter les scores YSQ-L3 en termes de tendances cognitivo-émotionnelles",
+ "Identifier les schémas actifs et les configurations cliniques formées",
+ "Inférer les modes Young probablement actifs et les stratégies de coping typiques",
+ "Décrire les origines développementales typiques des schémas (à formuler comme hypothèses)",
+ "Proposer un plan thérapeutique en phases adapté aux schémas actifs",
+ "Suggérer des techniques pertinentes (cognitives, expérientielles, comportementales, relationnelles)",
+ "Identifier les forces et versants adaptatifs",
+ "Recommander des lectures et types de praticiens à consulter",
+ "Citer les théoriciens reconnus du champ (Young, Behary, Roediger, Arntz, Farrell, Shaw, Lockwood, Loose)"
+      ],
+
+      forbidden_tasks: [
+ "Ne JAMAIS poser de diagnostic psychiatrique (dépression, TPB, TOC, anxiété généralisée, etc.) — le YSQ-L3 mesure des schémas, pas des troubles",
+ "Ne JAMAIS pathologiser un score élevé — un schéma actif n'est ni une maladie ni un défaut",
+ "Ne JAMAIS inventer d'événements biographiques (abus, traumatismes, histoire familiale) absents des données",
+ "Ne JAMAIS présenter l'analyse comme vérité définitive — toujours formuler en hypothèses",
+ "Ne JAMAIS affirmer qu'un schéma 'cause' un comportement spécifique de manière déterministe",
+ "Ne JAMAIS recommander de médicament ou de traitement médicamenteux",
+ "Ne JAMAIS minimiser des signaux d'escalade (items 40, 41 sur abus ; items VH élevés)",
+ "Ne JAMAIS utiliser de tutoiement",
+ "Ne JAMAIS inventer de référence bibliographique (auteur, ouvrage, année) inexistante",
+ "Ne JAMAIS conclure 'vous devez' — préférer 'vous pourriez', 'il serait utile de'",
+ "Ne JAMAIS afficher le JSON brut au bénéficiaire — seul le rapport généré lui est destiné"
+      ],
+
+      forbidden_phrases_and_patterns: {
+        principe: "Le rapport décrit des TENDANCES et formule des HYPOTHÈSES. Les formulations absolues, diagnostiques ou pathologisantes sont proscrites.",
+        mots_interdits_absolus: [
+ "toujours", "jamais (sauf dans les règles déontologiques)", "certainement", "définitivement",
+ "vous êtes [trait]", "vous n'êtes pas [trait]", "votre personnalité est",
+ "vous souffrez de", "vous présentez les symptômes de", "vous avez un trouble",
+ "vous devez absolument", "il faut que vous", "votre problème est"
+        ],
+        patterns_de_complaisance_a_proscrire: {
+          principe: "Ces formulations transforment un schéma dysfonctionnel en compliment. Elles sont la signature d'un rapport qui a oublié la nature de l'instrument.",
+          exemples_a_eviter: [
+ "Votre profil reflète une grande sensibilité [au lieu de : votre profil signale un schéma de carence qui fait souffrir]",
+ "C'est une qualité appréciée dans les métiers de [au lieu de : nommer ce que cela coûte à la personne]",
+ "Vous faites partie des personnes qui [phrase valorisante générique]",
+ "Vous avez un talent naturel pour [confondre schéma et compétence]",
+ "Votre score élevé montre [adjectif positif] [au lieu de : signale une tendance qui pèse]",
+ "C'est ce qui fait votre force [appliqué à un schéma dysfonctionnel]",
+ "Votre richesse intérieure [vague poétique évitant le clinique]",
+ "Vous êtes quelqu'un de [adjectif moral positif, type 'généreux', 'consciencieux', 'profond']",
+ "Profil de [archétype valorisé : 'donneuse', 'guerrière', 'sage', 'créatif']",
+ "Cela fait de vous [phrase qui célèbre un schéma]",
+ "Heureusement vous avez aussi [minimisation par opposition à du positif]",
+ "La poésie de votre [esthétisation d'une souffrance]"
+          ],
+          regle_de_detection: "Si en relisant un paragraphe le lecteur pourrait se sentir flatté de l'élévation d'un schéma plutôt que pris au sérieux dans sa souffrance, le paragraphe est à reformuler."
+        },
+        formulations_attendues: [
+ "votre profil suggère", "vos résultats indiquent une tendance à", "cela peut indiquer",
+ "vraisemblablement", "il est probable que", "votre score signale",
+ "ce résultat oriente vers", "cette configuration évoque", "on observe",
+ "vous pourriez", "il serait utile de", "il pourrait être pertinent de"
+        ],
+        verifications_avant_envoi: [
+ "Aucune phrase ne diagnostique ni ne pathologise",
+ "Aucun jugement de valeur (bon / mauvais profil)",
+ "Aucune affirmation absolue déguisée en interprétation",
+ "Le vouvoiement est respecté partout",
+ "Les références bibliographiques sont réelles et correctement citées",
+ "Les chiffres cités correspondent à derived_data.scores"
+        ]
+      },
+
+      formulations_exemplaires_par_schema: {
+        principe: "Pour les schémas susceptibles d'être MAL FORMULÉS (lecture trop positive), voici les contrastes mauvaise/bonne formulation. Le rapport doit s'aligner sur la colonne 'BONNE'.",
+        note_de_methode: "La 'mauvaise' formulation n'est pas inexacte sur le plan du contenu — elle est cliniquement INVALIDE parce qu'elle trahit la définition Young du schéma comme structure dysfonctionnelle. La 'bonne' formulation nomme la souffrance, l'origine probable, et la répétition actuelle.",
+
+        SS_sacrifice_de_soi: {
+          definition_young: "Croyance qu'on doit volontairement satisfaire les besoins des autres au détriment des siens, par culpabilité, anticipation de la peine d'autrui, ou peur de l'égoïsme. Origine : enfant ayant dû prendre soin d'un parent souffrant ou exigeant.",
+          MAUVAISE_formulation: "Votre score élevé en Sacrifice de Soi (SS) reflète une grande sensibilité aux besoins d'autrui. C'est une qualité précieuse, particulièrement dans les métiers d'aide où votre attention aux autres fait la différence.",
+          pourquoi_mauvaise: "Confond le schéma (structure rigide auto-dévalorisante) avec un trait Big Five Agréabilité. Manque la souffrance. Manque la répétition. Manque l'origine. C'est exactement le piège à éviter.",
+          BONNE_formulation: "Votre score en Sacrifice de Soi (SS) signale une tendance forte à placer systématiquement les besoins d'autrui avant les vôtres, souvent au prix de votre équilibre. Ce schéma se forme typiquement chez l'enfant qui a appris très tôt que sa valeur passait par ce qu'il donnait — soin à un parent fragile, médiation dans les conflits familiaux, anticipation des besoins d'un adulte débordé. À l'âge adulte, il se rejoue : difficulté à dire non, sentiment de culpabilité face à toute attention reçue, épuisement chronique masqué par le sens du devoir. La générosité que vous offrez aux autres est réelle. La question clinique est : à quel coût pour vous ? Et que se passerait-il si vous receviez avec la même légèreté que vous donnez ?"
+        },
+
+        ED_carence_emotionnelle: {
+          definition_young: "Croyance que ses besoins émotionnels normaux d'attention, de nurturance, d'empathie et de guidance ne seront jamais comblés. Origine : froideur émotionnelle parentale, indisponibilité chronique.",
+          MAUVAISE_formulation: "Votre élévation en Carence Émotionnelle indique une grande sensibilité relationnelle et un besoin de connexion profonde, ce qui fait souvent de vous quelqu'un d'attentif aux émotions des autres.",
+          pourquoi_mauvaise: "Romantise un schéma de manque chronique en 'sensibilité'. Manque l'élément central : la croyance d'IMPOSSIBILITÉ à être nourri.",
+          BONNE_formulation: "Votre élévation en Carence Émotionnelle (ED) reflète une conviction profonde, souvent inconsciente : que vos besoins émotionnels essentiels — être écouté, compris, soutenu, protégé, guidé — ne seront jamais vraiment comblés. Cette croyance ne vient pas de nulle part : elle se forme typiquement chez l'enfant dont les figures parentales étaient physiquement présentes mais émotionnellement indisponibles, ou dont les émotions n'étaient ni nommées ni accueillies. À l'âge adulte, ce schéma se manifeste souvent par un paradoxe douloureux : on attend de l'autre quelque chose qu'on n'ose pas demander, et on confirme alors qu'on n'est pas entendu. La schémathérapie permet précisément de désactiver ce mécanisme — non pas en 'apprenant à se suffire à soi-même', mais en réapprenant à recevoir."
+        },
+
+        US_exigences_elevees: {
+          definition_young: "Croyance qu'il faut atteindre des standards intériorisés très élevés pour éviter la critique ou conserver sa valeur. Origine : amour conditionnel, parents exigeants, valorisation de la performance.",
+          MAUVAISE_formulation: "Votre élévation en Exigences Élevées montre un perfectionnisme orienté vers l'excellence, une rigueur dans le travail et un engagement personnel fort — qualités très appréciées dans les milieux professionnels exigeants.",
+          pourquoi_mauvaise: "Transforme une tyrannie intérieure en compétence professionnelle. Le perfectionnisme schématique N'EST PAS de la rigueur, c'est une peur de l'effondrement déguisée en standards.",
+          BONNE_formulation: "Votre élévation en Exigences Élevées (US) signale une voix intérieure exigeante qui ne se tait jamais vraiment — celle qui dit qu'il faut faire mieux, faire plus, ne pas se reposer, ne pas se réjouir trop vite. Cette voix s'est formée probablement face à un amour parental conditionnel (à la réussite, au comportement, à la performance) ou à un climat de critique chronique. Elle vous a peut-être permis d'accomplir beaucoup. Mais à quel prix intérieur ? Le perfectionnisme schématique n'est pas une rigueur professionnelle bien placée — c'est une stratégie défensive qui dit, en sous-texte : 'si je m'arrête, je m'effondre, je suis nulle.' Le travail thérapeutique consiste à séparer la compétence (réelle, légitime) de la tyrannie (épuisante, jamais satisfaite)."
+        },
+
+        AS_recherche_approbation: {
+          definition_young: "Recherche excessive de reconnaissance, d'attention ou d'approbation, au détriment d'un sens stable de soi. Origine : amour conditionné à l'image projetée.",
+          MAUVAISE_formulation: "Votre élévation en Recherche d'Approbation indique une bonne intelligence sociale et une capacité à lire les attentes d'autrui.",
+          pourquoi_mauvaise: "Confond hypervigilance défensive avec intelligence sociale. La personne avec AS élevé NE LIT PAS les attentes — elle les PRÉSUME et s'y soumet.",
+          BONNE_formulation: "Votre score en Recherche d'Approbation (AS) signale une attention chronique au regard d'autrui, qui peut faire perdre le contact avec ce que VOUS ressentez, voulez, êtes. Ce schéma se construit souvent dans des environnements où l'enfant n'était valorisé que pour ce qu'il montrait — résultats, comportement, image — et pas pour ce qu'il était. À l'âge adulte, cela donne des décisions prises 'pour faire bonne impression', des relations où l'on se modèle à l'autre, un sentiment diffus d'imposture y compris dans les réussites. La question thérapeutique : qu'est-ce qui resterait de vous si plus personne ne vous regardait ? Cette question fait peur, mais c'est elle qui ouvre la porte."
+        },
+
+        EI_inhibition_emotionnelle: {
+          definition_young: "Inhibition excessive de l'expression spontanée d'émotions, d'impulsions naturelles ou de communication, généralement pour éviter la honte ou la perte de contrôle. Origine : environnement familial où l'expression émotionnelle était minimisée, moquée ou interdite.",
+          MAUVAISE_formulation: "Votre élévation en Inhibition Émotionnelle reflète une maturité émotionnelle, une bonne maîtrise de soi appréciée socialement.",
+          pourquoi_mauvaise: "Confond un blocage défensif avec une maturité. L'inhibition schématique est une COUPURE, pas une régulation.",
+          BONNE_formulation: "Votre élévation en Inhibition Émotionnelle (EI) signale une difficulté à laisser advenir vos émotions, vos colères, vos désirs spontanés — comme s'il y avait toujours un veilleur intérieur qui surveille et corrige. Ce schéma se forme typiquement dans des familles où l'expression émotionnelle était mal accueillie : moquée, minimisée, considérée comme dangereuse ou vulgaire. À l'âge adulte, cela donne une vie où l'on 'fonctionne bien' mais où l'on se sent loin de soi, où les émotions arrivent en différé ou par à-coups, où la spontanéité fait peur. Ce que les autres appellent parfois 'votre calme' est en fait une vigilance épuisante. Le travail thérapeutique : redécouvrir que vos émotions ne sont pas dangereuses, et qu'elles peuvent être dites."
+        }
+      },
+
+      contrat_de_reconnaissance_de_la_souffrance: {
+        principe_absolu: "Pour CHAQUE schéma actif (score ≥ 4.0) abordé dans le rapport, le développement doit obligatoirement contenir : (a) la NOMINATION DE LA SOUFFRANCE associée — ce qui fait mal aujourd'hui, (b) l'HYPOTHÈSE D'ORIGINE — l'environnement précoce probable qui a façonné ce schéma, (c) la RÉPÉTITION ACTUELLE — comment le schéma se rejoue maintenant, (d) une PISTE THÉRAPEUTIQUE — ce que le travail consisterait à dénouer.",
+        verification: "À la relecture, pour chaque schéma traité, vérifier que les 4 éléments (a)(b)(c)(d) sont présents. Si l'un manque, le schéma est mal traité. Particulièrement (a) — sans nomination de la souffrance, le rapport trahit la fonction même de l'instrument.",
+        exception_legitime: "Les schémas en zone modérée (2.5-4.0) peuvent être traités plus brièvement, mais doivent quand même mentionner la dimension de tension/inconfort associée. Aucun schéma modéré ou élevé ne doit être présenté comme purement adaptatif."
+      },
+
+      ce_que_ne_mesure_pas: {
+        principe: "Un encadré dédié dans le PDF (annexe ou fin de synthèse) doit lister explicitement ce que le YSQ-L3 NE mesure PAS, pour calibrer les attentes du lecteur.",
+        dimensions_non_couvertes: [
+          {
+            dimension: "Intelligence émotionnelle",
+            outil_complementaire: "TEIQue-SF (Petrides, 153 items, libre académique) ou MSCEIT (Mayer-Salovey-Caruso, mesure d'aptitude, sous licence)"
+          },
+          {
+            dimension: "Capacité d'insight (introspection clinique)",
+            outil_complementaire: "Beck Cognitive Insight Scale (15 items) ou entretien clinique structuré — gold standard en schémathérapie"
+          },
+          {
+            dimension: "Trauma complexe non-encore-schématisé",
+            outil_complementaire: "ITQ (International Trauma Questionnaire, 18 items, libre) ou ACE Score (10 items, libre)"
+          },
+          {
+            dimension: "Forces de caractère et ressources positives",
+            outil_complementaire: "VIA-IS (Values In Action, 120 ou 24 items, gratuit sur viacharacter.org)"
+          },
+          {
+            dimension: "Style d'attachement adulte (au sens Bartholomew)",
+            outil_complementaire: "ECR-R (Experiences in Close Relationships - Revised, libre) ou AAI (Adult Attachment Interview, gold standard mais entretien)"
+          },
+          {
+            dimension: "Fonctionnement cognitif (mémoire, attention, fonctions exécutives)",
+            outil_complementaire: "Bilan neuropsychologique en consultation spécialisée"
+          },
+          {
+            dimension: "Symptomatologie clinique actuelle (anxiété, dépression, etc.)",
+            outil_complementaire: "Échelles dédiées (BDI-II pour dépression, BAI pour anxiété, etc.) en consultation"
+          }
+        ],
+        formulation_encadre: "Présenter cet encadré dans un ton non-défensif : 'Le YSQ-L3 mesure les schémas précoces inadaptés. Il ne couvre pas tout le fonctionnement psychique. Si vous souhaitez explorer d'autres dimensions, voici les instruments complémentaires reconnus : [liste]. Ils sont à passer avec un professionnel formé.'"
+      },
+
+      cultural_bias_note: {
+        principe: "Certains items YSQ-L3 ont une formulation culturellement marquée (rapport à la famille, à l'autorité, à l'expression émotionnelle). Le rapport doit en tenir compte si le profil de la personne suggère un parcours interculturel.",
+        items_potentiellement_charges: "Items du domaine D4 (orientation vers les autres, en particulier SS et SB) chargés différemment selon les cultures familialistes vs individualistes. Items du domaine D2 (DI, EM, FA) chargés différemment selon les cultures où l'autonomie est valorisée vs celles où l'interdépendance est la norme.",
+        recommandation: "Si le profil ou le contexte indique un parcours migratoire, biculturel, ou une appartenance à une communauté où les normes diffèrent du référentiel français/occidental, signaler dans le rapport que certaines élévations peuvent refléter une norme culturelle plutôt qu'un schéma pathologique au sens Young. Recommander un échange direct avec un clinicien sensibilisé."
+      },
+
+      interpretation_rules: {
+        tone: "Thérapeutique au sens schémathérapique strict : précis, posé, vrai. La bienveillance ne signifie PAS la complaisance. La douceur ne signifie PAS l'édulcoration. Lorsqu'un schéma est actif, le rapport NOMME la souffrance que cela représente — pas une 'sensibilité', pas une 'qualité orientée vers les autres', pas une 'belle personnalité'. La force du rapport tient à sa capacité à dire la vérité clinique avec tendresse (Young — empathic confrontation, traduit en français 'confrontation empathique' par Cousineau & Côté). Reconnaître les forces RÉELLES (pas inventées) à côté des vulnérabilités, jamais à leur place. Toujours présenter une issue thérapeutique possible, en spécifiant ce qu'elle exige de travail.",
+        anti_complaisance_rule: "Si une formulation du rapport pourrait passer dans un magazine de développement personnel grand public, elle est probablement trop complaisante pour un rapport clinique. Reformuler. Le rapport doit pouvoir être lu par un schémathérapeute formé sans qu'il fronce les sourcils.",
+        critere_du_test_de_signature: "Pour chaque paragraphe interprétatif, te poser : Wendy Behary signerait-elle cette page ? Si elle dirait 'c'est trop gentil, ça ne sert pas le patient', reformuler.",
+        nuance: "Distinguer clairement : schéma (structure stable précoce), mode (état émotionnel actuel activé), coping (stratégie d'adaptation au schéma), trait (tendance comportementale globale). Ne pas confondre.",
+        confidence_policy: {
+          fiabilite_elevee: "Interprétation normale, formulations standard.",
+          fiabilite_moderee: "Réduire légèrement les affirmations, ajouter 'sous réserve d'une passation représentative'.",
+          fiabilite_faible: "Signaler explicitement les limites de l'interprétation et recommander une nouvelle passation ou un entretien clinique direct."
+        },
+        confidence_pattern_policy: {
+          principe: "Chaque pattern porte un champ 'confidence' (0-1). Plus la confidence est haute, plus la formulation peut être affirmée. Confidence < 0.3 : ne pas développer le pattern, le mentionner comme 'éventuel'. Confidence 0.3-0.6 : développer avec nuance ('configuration qui se dessine'). Confidence > 0.6 : développer pleinement ('configuration clairement marquée')."
+        },
+        cross_reference_obligatoire: "Toujours croiser : schémas actifs × configurations détectées × modes inférés × stratégies de coping probables. Utiliser pattern_mode_matrix pour relier patterns et modes au lieu de réinférer.",
+        contributing_items_usage: "Pour étayer la narration d'un pattern, citer 1-2 items contributeurs (champ contributing_items) en les paraphrasant. Ne pas les citer verbatim si le contrat interdit certaines formulations."
+      },
+
+      clinical_guardrails: {
+        required_cautions: [
+ "Rappeler que le YSQ-L3 mesure des SCHÉMAS (tendances cognitivo-émotionnelles), pas des troubles psychiatriques",
+ "Souligner que les résultats reflètent l'état au moment de la passation et peuvent évoluer",
+ "Indiquer que l'analyse est un outil d'éclairage clinique, à croiser avec un échange thérapeutique",
+ "Mentionner qu'aucune décision thérapeutique majeure ne doit être prise sur la seule base de ce rapport",
+ "Inclure l'encadré 'ce que ne mesure pas l'instrument' avec les outils complémentaires"
+        ],
+        escalation_protocol: "Si derived_data.escalation_flags contient des éléments, les mentionner avec tact dans le rapport (sans alarmer ni détailler) et recommander un échange direct avec un psychologue clinicien formé. Si l'item 41 est à 5 ou 6, recommander explicitement une consultation.",
+        zones_sensibles: [
+ "Items 40-41 (Méfiance/Abus) avec scores 5-6 — peut indiquer un vécu traumatique réel",
+ "Cluster VH élevé + AB élevé + NP élevé — souffrance anxieuse-dépressive de fond",
+ "Cluster DS élevé + PU élevé — risque d'auto-dévalorisation forte",
+ "Schéma SS très élevé chez un soignant — risque épuisement professionnel"
+        ]
+      },
+
+      validation_questions_directive: "Inclure une section 'Questions de validation' avec 5-8 questions ouvertes formulées en vous, à laisser travailler entre la lecture du rapport et la consultation. Chaque question accompagnée d'un court paragraphe explicatif sur ce qu'elle permettrait de clarifier.",
+
+      audit_caveat_directive: "Mentionner discrètement (dans les mentions légales finales) que le rapport repose sur un instrument dont la grille n'a pas été auditée contre la source primaire Young 2003, et qu'une vérification psychométrique formelle reste à conduire avant usage clinique réel."
+    },
+    render_instructions: {
+      brand: {
+        nom: "C Concept&Dev",
+        positionnement_complet: "C Concept&Dev — Intelligence Psychométrique & Orientation",
+        pied_de_page: "Conception : C Concept&Dev © — Intelligence Psychométrique & Orientation",
+        couleurs_charte: {
+          mer: "#8FAFB1",
+          mer_dark: "#6A9496",
+          vert_sauge: "#C8D0C3",
+          beige_sable: "#D8CDBB",
+          rouge_seuil: "#C1666B"
+        },
+        typographie: {
+          titres: "Lora ou Georgia",
+          corps: "Inter ou DejaVu Sans",
+          taille_corps: "10pt",
+          interligne: "1.4-1.5"
+        }
+      },
+format_general: {
+        format_pdf: "A4 portrait",
+        nb_pages_cible: "20 à 30 pages selon le nombre de schémas actifs (cf. analysis_contract.partial_passation_branch si applicable)",
+        regle_longueur: "Adapter à la richesse du profil. Un profil avec 0-1 schéma actif = 20 pages. Un profil 4-7 schémas actifs = 25-30 pages. Ne pas étirer artificiellement.",
+        accents: "IMPÉRATIF : tous les accents français présents (é, è, ê, à, ù, ç, î, ô, etc.). Vérifier systématiquement.",
+        vouvoiement: true
+      },
+      structure_pdf: [
+ "1. Page de garde — fond blanc, infos clés, mention 'document confidentiel'",
+ "2. Préambule — comment lire ce rapport",
+ "3. Synthèse narrative globale (3-5 pages)",
+ "4. Cartographie des 18 schémas (radar + barres + domaines avec contrast_label)",
+ "5. Lecture par domaine (utiliser domain_stats.contrast_label)",
+ "6. Configurations cliniques (utiliser confidence + contributing_items + pattern_mode_matrix)",
+ "7. Modes Young + stratégies de coping (utiliser modes étendus + Adulte sain comme cible)",
+ "8. Forces et ressources (face adaptative des schémas activés + schémas faibles comme protection)",
+ "9. Pistes thérapeutiques (3 phases + techniques par schéma)",
+ "10. Recommandations pratiques quotidiennes",
+ "11. Questions de validation",
+ "12. Pour aller plus loin (bibliographie + AFTS + ISST)",
+ "13. Encadré 'Ce que ne mesure pas le YSQ-L3' avec outils complémentaires (utiliser analysis_contract.ce_que_ne_mesure_pas)",
+ "14. Annexe technique (scores complets, qualité de passation, fatigue_index si pertinent)",
+ "15. Mentions légales (RGPD, , audit_caveat)"
+      ]
+    },
+    robustness: {
+      missing_data_policy: {
+        principe: "Si un champ est manquant ou null, ne pas inventer. Soit signaler 'information non renseignée', soit poser une hypothèse marquée comme telle.",
+        champs_critiques_si_manquants: ["identity.age", "identity.prenom", "identity.nom"],
+        si_age_manquant: "Adopter un ton neutre, ne pas faire d'hypothèse sur la tranche de vie.",
+        si_passation_incomplete: "Cf. analysis_contract.partial_passation_branch."
+      },
+      reliability_thresholds: {
+        elevee: "interpretation_reliability == 'élevée'",
+        moderee: "interpretation_reliability == 'modérée'",
+        faible: "interpretation_reliability == 'faible'"
+      },
+      coherence_checks_avant_pdf: [
+ "Les schémas mentionnés correspondent à derived_data.scores",
+ "Les configurations citées sont dans derived_data.derived_patterns avec leur confidence",
+ "Les modes inférés correspondent à derived_data.inferred_modes",
+ "Aucun diagnostic psychiatrique n'a été posé",
+ "Le vouvoiement est respecté partout",
+ "Les drapeaux d'escalation_flags ont été pris en compte",
+ "La mention figure en page de garde",
+ "Le pied de page C Concept&Dev figure sur chaque page sauf garde",
+ "Les références bibliographiques sont réelles",
+ "Aucun mot interdit utilisé",
+ "L'encadré 'ce que ne mesure pas le YSQ-L3' est présent",
+ "Si fatigue_index > 0.3, mention dans la section qualité de passation",
+ "Si self_audit.summary.status != 'clean', les warnings ont été pris en compte",
+ "Les métadonnées PDF (title, author, subject, keywords, custom /YSQ_*) sont renseignées selon pdf_metadata_watermark.values — vérifié via reader.metadata après génération"
+      ]
+    }
+  };
+
+  // ─── Export JSON en clair (phase test — pas de scramble) ───
+  const exportObj = innerPayload;
+
+  const fileName = ('YSQ-L3_' + (state.profile.nom || 'anon') + '_' + (state.profile.prenom || '') + '_' + now.toISOString().split('T')[0] + '.json').replace(/\s+/g, '_');
+  const blob = new Blob([JSON.stringify(exportObj, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('JSON v3.1 téléchargé', 'success');
+}
+
+/* ─────────────────────────────────────────────────────────
+ * ESCALATION FLAGS — détecter les signaux à mentionner avec tact
+ * ───────────────────────────────────────────────────────── */
+function detectEscalationFlags(answers, schemaScores, domainScores) {
+  const flags = [];
+  if (answers[40] && answers[40] >= 4) {
+    flags.push({
+      code: 'F_ITEM_40_ABUS',
+      severity: answers[40] >= 5 ? 'élevée' : 'modérée',
+      description: "L'item 40 (vécu d'abus par une personne importante) est à un niveau qui mérite d'être pris au sérieux dans un échange clinique.",
+      action_recommandee: "Mentionner avec tact dans le rapport, recommander une consultation avec un psychologue formé au psychotrauma."
+    });
+  }
+  if (answers[41] && answers[41] >= 4) {
+    flags.push({
+      code: 'F_ITEM_41_TRAUMA',
+      severity: answers[41] >= 5 ? 'très élevée' : 'élevée',
+      description: "L'item 41 (vécu de torture/abus grave par personnes de confiance) est à un niveau qui requiert un accompagnement clinique spécialisé.",
+      action_recommandee: "Recommander explicitement une consultation avec un psychologue clinicien formé au psychotrauma (EMDR, TCC trauma, schémathérapie)."
+    });
+  }
+  if (schemaScores && schemaScores.DS >= 5 && schemaScores.PU >= 4.5) {
+    flags.push({
+      code: 'F_AUTOCRITIQUE_FORTE',
+      severity: 'modérée',
+      description: "La combinaison Imperfection/Honte très élevée et Punition élevée peut signaler une autocritique intense à explorer avec tact.",
+      action_recommandee: "Recommander une restitution clinique prudente, centrée sur la sécurité, la nuance et les ressources."
+    });
+  }
+  if (schemaScores && schemaScores.VH >= 5 && schemaScores.AB >= 4 && schemaScores.NP >= 4) {
+    flags.push({
+      code: 'F_ALERTE_HYPERVIGILANCE',
+      severity: 'modérée',
+      description: "La combinaison Vulnérabilité, Abandon et Négativisme peut signaler une forte activation du système d'alerte.",
+      action_recommandee: "Recommander un échange clinique pour distinguer schéma, stress actuel et contexte de vie."
+    });
+  }
+  if (domainScores && domainScores.D1 >= 4.5 && domainScores.D2 >= 4.5) {
+    flags.push({
+      code: 'F_CLUSTER_D1_D2_ELEVE',
+      severity: 'modérée',
+      description: "Les domaines Séparation/Rejet et Manque d'autonomie sont simultanément élevés, ce qui mérite une lecture clinique intégrée.",
+      action_recommandee: "Ne pas interpréter schéma par schéma isolément ; explorer l'attachement, l'autonomie et les ressources actuelles."
+    });
+  }
+  return flags;
+}
+
+function formatDuration(seconds) {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m} min ${s} s`;
+}
+
+function computeResponseQuality() {
+  // v3.1 — adds fatigue_index (point 17) + reverse_consistency_details (point 9)
+  const responses = Object.values(state.answers);
+  if (responses.length === 0) return null;
+  const counts = { '1': 0, '2': 0, '3': 0, '4': 0, '5': 0, '6': 0 };
+  responses.forEach(r => counts[r]++);
+  const total = responses.length;
+  const extremeRate = (counts['1'] + counts['6']) / total;
+  const neutralRate = (counts['3'] + counts['4']) / total;
+
+  // straightlining over the actual passation order
+  let maxRun = 1, curRun = 1, lastVal = null;
+  const order = state.itemOrder && state.itemOrder.length > 0 ? state.itemOrder : YSQ_L3.items.map(it => it.id);
+  order.forEach(id => {
+    const v = state.answers[id];
+    if (v == null) { lastVal = null; curRun = 1; return; }
+    if (v === lastVal) { curRun++; if (curRun > maxRun) maxRun = curRun; }
+    else curRun = 1;
+    lastVal = v;
+  });
+
+  const mean = responses.reduce((a, b) => a + b, 0) / total;
+  const variance = responses.reduce((sum, v) => sum + (v - mean) ** 2, 0) / total;
+  const std = Math.sqrt(variance);
+
+  // v3.1 point 17 — fatigue_index : variance premier tiers vs dernier tiers
+  // dans l'ordre RÉEL de passation
+  let fatigue_index = null;
+  let fatigue_detail = null;
+  const ordered_values = order.map(id => state.answers[id]).filter(v => v != null);
+  if (ordered_values.length >= 30) {
+    const third = Math.floor(ordered_values.length / 3);
+    const first_third = ordered_values.slice(0, third);
+    const last_third = ordered_values.slice(-third);
+    const v_first = computeVariance(first_third);
+    const v_last = computeVariance(last_third);
+    const m_first = first_third.reduce((a, b) => a + b, 0) / first_third.length;
+    const m_last = last_third.reduce((a, b) => a + b, 0) / last_third.length;
+    // fatigue = baisse de variance OU dérive vers neutre OU vers extrêmes
+    const variance_drop = v_first > 0 ? (v_first - v_last) / v_first : 0;
+    const mean_drift = Math.abs(m_first - m_last);
+    fatigue_index = parseFloat(Math.max(0, variance_drop).toFixed(3));
+    fatigue_detail = {
+      first_third_mean: parseFloat(m_first.toFixed(2)),
+      last_third_mean: parseFloat(m_last.toFixed(2)),
+      first_third_variance: parseFloat(v_first.toFixed(3)),
+      last_third_variance: parseFloat(v_last.toFixed(3)),
+      variance_drop_pct: parseFloat((variance_drop * 100).toFixed(1)),
+      mean_drift: parseFloat(mean_drift.toFixed(2)),
+      interpretation: fatigue_index > 0.3 ? 'fatigue probable' : (fatigue_index > 0.15 ? 'légère baisse' : 'stable')
+    };
+  }
+
+  // v3.1 point 9 — détail de la cohérence des items inversés
+  const reverse_items_list = YSQ_L3.items.filter(it => isReverseItem(it));
+  let reverse_details = {
+    n_reverse_items: reverse_items_list.length,
+    audit_status: 'NON_AUDITÉ : la liste des items inversés est partielle (cf. meta.todo).',
+    items: reverse_items_list.map(it => ({
+      id: it.id,
+      schema: it.schema,
+      response_raw: state.answers[it.id] || null,
+      response_scored: scoreAnswer(it, state.answers[it.id])
+    }))
+  };
+  // Cohérence : pour chaque item inversé, comparer son score scoré à la moyenne du schéma
+  if (reverse_items_list.length >= 1) {
+    const consistencies = reverse_items_list.map(it => {
+      const otherItems = YSQ_L3.items.filter(o => o.schema === it.schema && o.id !== it.id);
+      const otherScores = otherItems.map(o => scoreAnswer(o, state.answers[o.id])).filter(v => v != null);
+      if (otherScores.length === 0) return null;
+      const otherMean = otherScores.reduce((a, b) => a + b, 0) / otherScores.length;
+      const itScored = scoreAnswer(it, state.answers[it.id]);
+      if (itScored == null) return null;
+      // Cohérence = 1 - |diff normalisée|
+      return 1 - Math.min(1, Math.abs(itScored - otherMean) / 5);
+    }).filter(v => v != null);
+    if (consistencies.length > 0) {
+      const meanConsistency = consistencies.reduce((a, b) => a + b, 0) / consistencies.length;
+      reverse_details.mean_consistency = parseFloat(meanConsistency.toFixed(3));
+      reverse_details.consistency_warning = consistencies.length < 5 ?
+        'Échantillon trop petit (< 5 items inversés) — indicateur non fiable.' :
+        null;
+    }
+  }
+
+  const concerns = [];
+  if (extremeRate > 0.5) concerns.push('Taux de réponses extrêmes très élevé (>50%)');
+  if (maxRun > 15) concerns.push(`Séquence identique consécutive longue (${maxRun})`);
+  if (std < 0.5) concerns.push('Variabilité très faible (réponses peu différenciées)');
+  if (neutralRate > 0.7) concerns.push('Forte tendance neutre/centrale (>70%)');
+  if (fatigue_index != null && fatigue_index > 0.3) concerns.push('Fatigue probable en fin de passation');
+
+  return {
+    distribution: counts,
+    distribution_pct: Object.fromEntries(Object.entries(counts).map(([k, v]) => [k, parseFloat((v / total * 100).toFixed(1))])),
+    extreme_response_rate: parseFloat(extremeRate.toFixed(3)),
+    neutral_response_rate: parseFloat(neutralRate.toFixed(3)),
+    max_consecutive_identical: maxRun,
+    response_variability_std: parseFloat(std.toFixed(3)),
+    response_mean: parseFloat(mean.toFixed(2)),
+    fatigue_index: fatigue_index,
+    fatigue_detail: fatigue_detail,
+    reverse_consistency_details: reverse_details,
+    quality_concerns: concerns
+  };
+}
+
+function computeVariance(arr) {
+  if (!arr || arr.length === 0) return 0;
+  const m = arr.reduce((a, b) => a + b, 0) / arr.length;
+  return arr.reduce((sum, v) => sum + (v - m) ** 2, 0) / arr.length;
+}
+</script>
+
+</body></html>
