@@ -936,19 +936,19 @@ window.YSQ_L3 = {
     domains_count: 5,
     grid_version: "ysq-l3-fr-draft-1",
     todo: [
-      "TODO/CRITIQUE : auditer les ~20-30 items potentiellement inversés non encore marqués reverse:true (cf. discussion v3.1).",
-      "TODO/CRITIQUE : vérifier item par item la composition des 18 schémas contre la grille Young 2003 ou Schmidt et al. 1995.",
-      "TODO/AMÉLIORATION : sélectionner 3-5 items-marqueurs par schéma (60-90 décisions cliniques)."
+ "TODO/CRITIQUE : auditer les ~20-30 items potentiellement inversés non encore marqués reverse:true (cf. discussion v3.1).",
+ "TODO/CRITIQUE : vérifier item par item la composition des 18 schémas contre la grille Young 2003 ou Schmidt et al. 1995.",
+ "TODO/AMÉLIORATION : sélectionner 3-5 items-marqueurs par schéma (60-90 décisions cliniques)."
     ],
     scale: {
       min: 1, max: 6,
       labels: [
-        "Totalement faux pour moi",
-        "Plutôt faux pour moi",
-        "Plus vrai que faux",
-        "Modérément vrai",
-        "Vrai la plupart du temps",
-        "Me décrit parfaitement"
+ "Totalement faux pour moi",
+ "Plutôt faux pour moi",
+ "Plus vrai que faux",
+ "Modérément vrai",
+ "Vrai la plupart du temps",
+ "Me décrit parfaitement"
       ],
       short: ["1 Faux", "2", "3", "4", "5", "6 Parfait"]
     },
@@ -2284,8 +2284,8 @@ function detectDerivedPatterns(schemaScores, schemasDetail) {
     const involved = ['SS', 'EI', 'US'].filter(c => s[c] != null && high(c));
     patterns.push(buildPattern('P_DONNEUR_SILENCIEUX',
       'Configuration sacrificielle ("donneur silencieux")',
-      "Le sacrifice de soi se combine à une inhibition de l'expression émotionnelle et/ou à des exigences personnelles élevées. La personne donne massivement sans formuler ce que cela lui coûte, et tend à intérioriser tensions et frustrations.",
-      "Peut orienter vers un coût d'épuisement, de tensions internalisées ou de baisse durable de l'élan, à explorer en entretien.",
+ "Le sacrifice de soi se combine à une inhibition de l'expression émotionnelle et/ou à des exigences personnelles élevées. La personne donne massivement sans formuler ce que cela lui coûte, et tend à intérioriser tensions et frustrations.",
+ "Peut orienter vers un coût d'épuisement, de tensions internalisées ou de baisse durable de l'élan, à explorer en entretien.",
       involved));
   }
 
@@ -2294,8 +2294,8 @@ function detectDerivedPatterns(schemaScores, schemasDetail) {
   if (dep_components.length >= 3) {
     patterns.push(buildPattern('P_TRIADE_DEPRESSOGENE',
       'Configuration dépressogène',
-      "Plusieurs schémas convergent vers une perception négative de soi, du monde et de l'avenir. Cette configuration peut évoquer une tonalité affective basse ou autocritique, sans constituer un diagnostic.",
-      "À explorer avec prudence si la personne rapporte une souffrance persistante, une perte d'élan ou une auto-dévalorisation marquée.",
+ "Plusieurs schémas convergent vers une perception négative de soi, du monde et de l'avenir. Cette configuration peut évoquer une tonalité affective basse ou autocritique, sans constituer un diagnostic.",
+ "À explorer avec prudence si la personne rapporte une souffrance persistante, une perte d'élan ou une auto-dévalorisation marquée.",
       dep_components));
   }
 
@@ -2304,8 +2304,8 @@ function detectDerivedPatterns(schemaScores, schemasDetail) {
     const involved = ['VH', 'NP', 'AB'].filter(c => high(c));
     patterns.push(buildPattern('P_HYPERVIGILANCE',
       'Configuration anxieuse hypervigilante',
-      "Anticipation chronique du danger, du pire ou de la perte. Le système psychique est en vigilance permanente même en situation objectivement sécurisée.",
-      "Peut s'accompagner d'une charge anxieuse, d'une fatigue d'attention ou de difficultés de repos, à confirmer cliniquement.",
+ "Anticipation chronique du danger, du pire ou de la perte. Le système psychique est en vigilance permanente même en situation objectivement sécurisée.",
+ "Peut s'accompagner d'une charge anxieuse, d'une fatigue d'attention ou de difficultés de repos, à confirmer cliniquement.",
       involved));
   }
 
@@ -2313,9 +2313,9 @@ function detectDerivedPatterns(schemaScores, schemasDetail) {
   const attach_components = ['ED', 'AB', 'MA', 'DS'].filter(c => high(c));
   if (attach_components.length >= 2) {
     patterns.push(buildPattern('P_INSECURITE_ATTACHEMENT',
-      "Configuration d'insécurité d'attachement",
-      "Plusieurs schémas du domaine séparation/rejet sont actifs. La sécurité relationnelle de base n'a pas été pleinement intériorisée — la personne aborde le lien avec une vigilance ou une méfiance de fond.",
-      "Peut fragiliser la sécurité relationnelle et favoriser des mouvements de rapprochement/distance.",
+ "Configuration d'insécurité d'attachement",
+ "Plusieurs schémas du domaine séparation/rejet sont actifs. La sécurité relationnelle de base n'a pas été pleinement intériorisée — la personne aborde le lien avec une vigilance ou une méfiance de fond.",
+ "Peut fragiliser la sécurité relationnelle et favoriser des mouvements de rapprochement/distance.",
       attach_components));
   }
 
@@ -2324,8 +2324,8 @@ function detectDerivedPatterns(schemaScores, schemasDetail) {
     const involved = ['US', 'PU', 'AS'].filter(c => high(c));
     patterns.push(buildPattern('P_PERFECTIONNISME',
       'Configuration perfectionniste',
-      "Exigences personnelles élevées combinées à une sévérité envers l'erreur ou à une recherche d'approbation. La performance devient une condition d'estime de soi.",
-      "Peut soutenir une pression interne élevée, une peur de l'erreur ou une difficulté à récupérer.",
+ "Exigences personnelles élevées combinées à une sévérité envers l'erreur ou à une recherche d'approbation. La performance devient une condition d'estime de soi.",
+ "Peut soutenir une pression interne élevée, une peur de l'erreur ou une difficulté à récupérer.",
       involved));
   }
 
@@ -2333,9 +2333,9 @@ function detectDerivedPatterns(schemaScores, schemasDetail) {
   const auto_high = ['DI', 'EM', 'FA'].filter(c => high(c));
   if (auto_high.length >= 2) {
     patterns.push(buildPattern('P_DIFFICULTE_AUTONOMIE',
-      "Configuration de difficulté d'autonomie",
-      "La construction d'un soi autonome et compétent n'est pas pleinement aboutie. La personne peut chercher du soutien externe pour des décisions ou tâches qu'elle pourrait théoriquement assumer.",
-      "Peut favoriser l'évitement des défis, la recherche excessive de réassurance ou une autonomie vécue comme coûteuse.",
+ "Configuration de difficulté d'autonomie",
+ "La construction d'un soi autonome et compétent n'est pas pleinement aboutie. La personne peut chercher du soutien externe pour des décisions ou tâches qu'elle pourrait théoriquement assumer.",
+ "Peut favoriser l'évitement des défis, la recherche excessive de réassurance ou une autonomie vécue comme coûteuse.",
       auto_high));
   }
 
@@ -2343,8 +2343,8 @@ function detectDerivedPatterns(schemaScores, schemasDetail) {
   if (high('SB') && high('ET')) {
     patterns.push(buildPattern('P_TENSION_SOUMISSION_REVENDICATION',
       'Tension entre assujettissement et droits exagérés',
-      "Coexistence d'une tendance à céder face aux autres et d'un sentiment de droit à des privilèges. Souvent un compense l'autre par oscillation : soumission prolongée puis explosion revendicatrice.",
-      "Peut contribuer à des limites relationnelles instables, entre retrait, conformité et revendication.",
+ "Coexistence d'une tendance à céder face aux autres et d'un sentiment de droit à des privilèges. Souvent un compense l'autre par oscillation : soumission prolongée puis explosion revendicatrice.",
+ "Peut contribuer à des limites relationnelles instables, entre retrait, conformité et revendication.",
       ['SB', 'ET']));
   }
 
@@ -2352,14 +2352,13 @@ function detectDerivedPatterns(schemaScores, schemasDetail) {
   if (high('IS')) {
     patterns.push(buildPattern('P_FAIBLE_AUTOCONTROLE',
       'Difficultés de régulation et de discipline',
-      "Difficultés à différer la gratification, à tenir des engagements contraignants ou à réguler les émotions intenses.",
-      "Peut compliquer la régulation émotionnelle, la persévérance et la tenue d'engagements contraignants.",
+ "Difficultés à différer la gratification, à tenir des engagements contraignants ou à réguler les émotions intenses.",
+ "Peut compliquer la régulation émotionnelle, la persévérance et la tenue d'engagements contraignants.",
       ['IS']));
   }
 
   return patterns;
 }
-
 
 function inferModes(schemaScores, patterns) {
   // v3.1 point 4 — extended to 9 modes incl. Angry Child, Bully/Attack,
@@ -2769,10 +2768,10 @@ function exportJson() {
   const WATERMARK_VALUES = {
     title: `Restitution YSQ-L3 — ${_wm_prenom} ${_wm_nom} — ${_wm_date}`.trim(),
     author: "C Concept&Dev — Intelligence Psychométrique & Orientation",
-    subject: "Rapport de restitution YSQ-L3 — usage clinique sous responsabilité ADELI 10009953539",
+    subject: "Rapport de restitution YSQ-L3 — usage clinique exploratoire",
     keywords: `YSQ-L3, schémathérapie, ${_wm_session_id}, ${_wm_grid}, ${_wm_hash}`,
     creator: "C Concept&Dev YSQ-L3 v3.1",
-    producer: "Pipeline automatisé sous supervision Psychologue ADELI 10009953539",
+    producer: "C Concept&Dev — Pipeline YSQ-L3 automatisé",
     session_id: _wm_session_id,
     grid_version: _wm_grid,
     instrument_hash: _wm_hash,
@@ -2794,16 +2793,16 @@ function exportJson() {
       version_schema: '3.1.0',
       version_contrat: '3.1',
       contract_changelog: [
-        "v3.1 : Scramble export JSON (anti-curieux, le LLM déchiffre seul)",
-        "v3.1 : Patterns avec confidence + items contributeurs",
-        "v3.1 : Contraste intra-domaine (mean + std + label)",
-        "v3.1 : Modes étendus (Angry Child, Bully/Attack, Self-Aggrandizer, Healthy Adult cible)",
-        "v3.1 : Matrice pattern × mode pré-calculée",
-        "v3.1 : Fatigue index sur ordre de passation",
-        "v3.1 : SHA-256 instrument hash (async)",
-        "v3.1 : reverse_consistency_details exporté",
-        "v3.1 : self_audit calculé à l'export",
-        "v3.1 : Contrat : branche passation partielle, output_format_negotiation, ce que ne mesure pas l'instrument, biais culturels"
+ "v3.1 : Scramble export JSON (anti-curieux, le LLM déchiffre seul)",
+ "v3.1 : Patterns avec confidence + items contributeurs",
+ "v3.1 : Contraste intra-domaine (mean + std + label)",
+ "v3.1 : Modes étendus (Angry Child, Bully/Attack, Self-Aggrandizer, Healthy Adult cible)",
+ "v3.1 : Matrice pattern × mode pré-calculée",
+ "v3.1 : Fatigue index sur ordre de passation",
+ "v3.1 : SHA-256 instrument hash (async)",
+ "v3.1 : reverse_consistency_details exporté",
+ "v3.1 : self_audit calculé à l'export",
+ "v3.1 : Contrat : branche passation partielle, output_format_negotiation, ce que ne mesure pas l'instrument, biais culturels"
       ],
       contract_compatibility: {
         produces_pdf_with_tools: "Si l'environnement permet l'exécution de code (Claude avec code execution, ChatGPT avec Python), produire un vrai PDF téléchargeable.",
@@ -2948,11 +2947,11 @@ function exportJson() {
           creator: WATERMARK_VALUES.creator,
           producer: WATERMARK_VALUES.producer,
           custom_fields: {
-            "/YSQ_Session_ID": WATERMARK_VALUES.session_id,
-            "/YSQ_Grid_Version": WATERMARK_VALUES.grid_version,
-            "/YSQ_Instrument_Hash": WATERMARK_VALUES.instrument_hash,
-            "/YSQ_Contract_Version": WATERMARK_VALUES.contract_version,
-            "/YSQ_Generation_Date": WATERMARK_VALUES.generation_date
+ "/YSQ_Session_ID": WATERMARK_VALUES.session_id,
+ "/YSQ_Grid_Version": WATERMARK_VALUES.grid_version,
+ "/YSQ_Instrument_Hash": WATERMARK_VALUES.instrument_hash,
+ "/YSQ_Contract_Version": WATERMARK_VALUES.contract_version,
+ "/YSQ_Generation_Date": WATERMARK_VALUES.generation_date
           }
         },
         implementation_reportlab_basedoctemplate: "from reportlab.platypus import BaseDocTemplate\\nfrom reportlab.lib.pagesizes import A4\\n\\ndoc = BaseDocTemplate(\\n    output_path,\\n    pagesize=A4,\\n    title=metadata['title'],\\n    author=metadata['author'],\\n    subject=metadata['subject'],\\n    keywords=metadata['keywords'],\\n    creator=metadata['creator']\\n)\\n# Build normally with doc.build(story)",
@@ -2973,70 +2972,70 @@ function exportJson() {
       },
 
       allowed_tasks: [
-        "Interpréter les scores YSQ-L3 en termes de tendances cognitivo-émotionnelles",
-        "Identifier les schémas actifs et les configurations cliniques formées",
-        "Inférer les modes Young probablement actifs et les stratégies de coping typiques",
-        "Décrire les origines développementales typiques des schémas (à formuler comme hypothèses)",
-        "Proposer un plan thérapeutique en phases adapté aux schémas actifs",
-        "Suggérer des techniques pertinentes (cognitives, expérientielles, comportementales, relationnelles)",
-        "Identifier les forces et versants adaptatifs",
-        "Recommander des lectures et types de praticiens à consulter",
-        "Citer les théoriciens reconnus du champ (Young, Behary, Roediger, Arntz, Farrell, Shaw, Lockwood, Loose)"
+ "Interpréter les scores YSQ-L3 en termes de tendances cognitivo-émotionnelles",
+ "Identifier les schémas actifs et les configurations cliniques formées",
+ "Inférer les modes Young probablement actifs et les stratégies de coping typiques",
+ "Décrire les origines développementales typiques des schémas (à formuler comme hypothèses)",
+ "Proposer un plan thérapeutique en phases adapté aux schémas actifs",
+ "Suggérer des techniques pertinentes (cognitives, expérientielles, comportementales, relationnelles)",
+ "Identifier les forces et versants adaptatifs",
+ "Recommander des lectures et types de praticiens à consulter",
+ "Citer les théoriciens reconnus du champ (Young, Behary, Roediger, Arntz, Farrell, Shaw, Lockwood, Loose)"
       ],
 
       forbidden_tasks: [
-        "Ne JAMAIS poser de diagnostic psychiatrique (dépression, TPB, TOC, anxiété généralisée, etc.) — le YSQ-L3 mesure des schémas, pas des troubles",
-        "Ne JAMAIS pathologiser un score élevé — un schéma actif n'est ni une maladie ni un défaut",
-        "Ne JAMAIS inventer d'événements biographiques (abus, traumatismes, histoire familiale) absents des données",
-        "Ne JAMAIS présenter l'analyse comme vérité définitive — toujours formuler en hypothèses",
-        "Ne JAMAIS affirmer qu'un schéma 'cause' un comportement spécifique de manière déterministe",
-        "Ne JAMAIS recommander de médicament ou de traitement médicamenteux",
-        "Ne JAMAIS minimiser des signaux d'escalade (items 40, 41 sur abus ; items VH élevés)",
-        "Ne JAMAIS utiliser de tutoiement",
-        "Ne JAMAIS inventer de référence bibliographique (auteur, ouvrage, année) inexistante",
-        "Ne JAMAIS conclure 'vous devez' — préférer 'vous pourriez', 'il serait utile de'",
-        "Ne JAMAIS afficher le JSON brut au bénéficiaire — seul le rapport généré lui est destiné"
+ "Ne JAMAIS poser de diagnostic psychiatrique (dépression, TPB, TOC, anxiété généralisée, etc.) — le YSQ-L3 mesure des schémas, pas des troubles",
+ "Ne JAMAIS pathologiser un score élevé — un schéma actif n'est ni une maladie ni un défaut",
+ "Ne JAMAIS inventer d'événements biographiques (abus, traumatismes, histoire familiale) absents des données",
+ "Ne JAMAIS présenter l'analyse comme vérité définitive — toujours formuler en hypothèses",
+ "Ne JAMAIS affirmer qu'un schéma 'cause' un comportement spécifique de manière déterministe",
+ "Ne JAMAIS recommander de médicament ou de traitement médicamenteux",
+ "Ne JAMAIS minimiser des signaux d'escalade (items 40, 41 sur abus ; items VH élevés)",
+ "Ne JAMAIS utiliser de tutoiement",
+ "Ne JAMAIS inventer de référence bibliographique (auteur, ouvrage, année) inexistante",
+ "Ne JAMAIS conclure 'vous devez' — préférer 'vous pourriez', 'il serait utile de'",
+ "Ne JAMAIS afficher le JSON brut au bénéficiaire — seul le rapport généré lui est destiné"
       ],
 
       forbidden_phrases_and_patterns: {
         principe: "Le rapport décrit des TENDANCES et formule des HYPOTHÈSES. Les formulations absolues, diagnostiques ou pathologisantes sont proscrites.",
         mots_interdits_absolus: [
-          "toujours", "jamais (sauf dans les règles déontologiques)", "certainement", "définitivement",
-          "vous êtes [trait]", "vous n'êtes pas [trait]", "votre personnalité est",
-          "vous souffrez de", "vous présentez les symptômes de", "vous avez un trouble",
-          "vous devez absolument", "il faut que vous", "votre problème est"
+ "toujours", "jamais (sauf dans les règles déontologiques)", "certainement", "définitivement",
+ "vous êtes [trait]", "vous n'êtes pas [trait]", "votre personnalité est",
+ "vous souffrez de", "vous présentez les symptômes de", "vous avez un trouble",
+ "vous devez absolument", "il faut que vous", "votre problème est"
         ],
         patterns_de_complaisance_a_proscrire: {
           principe: "Ces formulations transforment un schéma dysfonctionnel en compliment. Elles sont la signature d'un rapport qui a oublié la nature de l'instrument.",
           exemples_a_eviter: [
-            "Votre profil reflète une grande sensibilité [au lieu de : votre profil signale un schéma de carence qui fait souffrir]",
-            "C'est une qualité appréciée dans les métiers de [au lieu de : nommer ce que cela coûte à la personne]",
-            "Vous faites partie des personnes qui [phrase valorisante générique]",
-            "Vous avez un talent naturel pour [confondre schéma et compétence]",
-            "Votre score élevé montre [adjectif positif] [au lieu de : signale une tendance qui pèse]",
-            "C'est ce qui fait votre force [appliqué à un schéma dysfonctionnel]",
-            "Votre richesse intérieure [vague poétique évitant le clinique]",
-            "Vous êtes quelqu'un de [adjectif moral positif, type 'généreux', 'consciencieux', 'profond']",
-            "Profil de [archétype valorisé : 'donneuse', 'guerrière', 'sage', 'créatif']",
-            "Cela fait de vous [phrase qui célèbre un schéma]",
-            "Heureusement vous avez aussi [minimisation par opposition à du positif]",
-            "La poésie de votre [esthétisation d'une souffrance]"
+ "Votre profil reflète une grande sensibilité [au lieu de : votre profil signale un schéma de carence qui fait souffrir]",
+ "C'est une qualité appréciée dans les métiers de [au lieu de : nommer ce que cela coûte à la personne]",
+ "Vous faites partie des personnes qui [phrase valorisante générique]",
+ "Vous avez un talent naturel pour [confondre schéma et compétence]",
+ "Votre score élevé montre [adjectif positif] [au lieu de : signale une tendance qui pèse]",
+ "C'est ce qui fait votre force [appliqué à un schéma dysfonctionnel]",
+ "Votre richesse intérieure [vague poétique évitant le clinique]",
+ "Vous êtes quelqu'un de [adjectif moral positif, type 'généreux', 'consciencieux', 'profond']",
+ "Profil de [archétype valorisé : 'donneuse', 'guerrière', 'sage', 'créatif']",
+ "Cela fait de vous [phrase qui célèbre un schéma]",
+ "Heureusement vous avez aussi [minimisation par opposition à du positif]",
+ "La poésie de votre [esthétisation d'une souffrance]"
           ],
           regle_de_detection: "Si en relisant un paragraphe le lecteur pourrait se sentir flatté de l'élévation d'un schéma plutôt que pris au sérieux dans sa souffrance, le paragraphe est à reformuler."
         },
         formulations_attendues: [
-          "votre profil suggère", "vos résultats indiquent une tendance à", "cela peut indiquer",
-          "vraisemblablement", "il est probable que", "votre score signale",
-          "ce résultat oriente vers", "cette configuration évoque", "on observe",
-          "vous pourriez", "il serait utile de", "il pourrait être pertinent de"
+ "votre profil suggère", "vos résultats indiquent une tendance à", "cela peut indiquer",
+ "vraisemblablement", "il est probable que", "votre score signale",
+ "ce résultat oriente vers", "cette configuration évoque", "on observe",
+ "vous pourriez", "il serait utile de", "il pourrait être pertinent de"
         ],
         verifications_avant_envoi: [
-          "Aucune phrase ne diagnostique ni ne pathologise",
-          "Aucun jugement de valeur (bon / mauvais profil)",
-          "Aucune affirmation absolue déguisée en interprétation",
-          "Le vouvoiement est respecté partout",
-          "Les références bibliographiques sont réelles et correctement citées",
-          "Les chiffres cités correspondent à derived_data.scores"
+ "Aucune phrase ne diagnostique ni ne pathologise",
+ "Aucun jugement de valeur (bon / mauvais profil)",
+ "Aucune affirmation absolue déguisée en interprétation",
+ "Le vouvoiement est respecté partout",
+ "Les références bibliographiques sont réelles et correctement citées",
+ "Les chiffres cités correspondent à derived_data.scores"
         ]
       },
 
@@ -3146,18 +3145,18 @@ function exportJson() {
 
       clinical_guardrails: {
         required_cautions: [
-          "Rappeler que le YSQ-L3 mesure des SCHÉMAS (tendances cognitivo-émotionnelles), pas des troubles psychiatriques",
-          "Souligner que les résultats reflètent l'état au moment de la passation et peuvent évoluer",
-          "Indiquer que l'analyse est un outil d'éclairage clinique, à croiser avec un échange thérapeutique",
-          "Mentionner qu'aucune décision thérapeutique majeure ne doit être prise sur la seule base de ce rapport",
-          "Inclure l'encadré 'ce que ne mesure pas l'instrument' avec les outils complémentaires"
+ "Rappeler que le YSQ-L3 mesure des SCHÉMAS (tendances cognitivo-émotionnelles), pas des troubles psychiatriques",
+ "Souligner que les résultats reflètent l'état au moment de la passation et peuvent évoluer",
+ "Indiquer que l'analyse est un outil d'éclairage clinique, à croiser avec un échange thérapeutique",
+ "Mentionner qu'aucune décision thérapeutique majeure ne doit être prise sur la seule base de ce rapport",
+ "Inclure l'encadré 'ce que ne mesure pas l'instrument' avec les outils complémentaires"
         ],
         escalation_protocol: "Si derived_data.escalation_flags contient des éléments, les mentionner avec tact dans le rapport (sans alarmer ni détailler) et recommander un échange direct avec un psychologue clinicien formé. Si l'item 41 est à 5 ou 6, recommander explicitement une consultation.",
         zones_sensibles: [
-          "Items 40-41 (Méfiance/Abus) avec scores 5-6 — peut indiquer un vécu traumatique réel",
-          "Cluster VH élevé + AB élevé + NP élevé — souffrance anxieuse-dépressive de fond",
-          "Cluster DS élevé + PU élevé — risque d'auto-dévalorisation forte",
-          "Schéma SS très élevé chez un soignant — risque épuisement professionnel"
+ "Items 40-41 (Méfiance/Abus) avec scores 5-6 — peut indiquer un vécu traumatique réel",
+ "Cluster VH élevé + AB élevé + NP élevé — souffrance anxieuse-dépressive de fond",
+ "Cluster DS élevé + PU élevé — risque d'auto-dévalorisation forte",
+ "Schéma SS très élevé chez un soignant — risque épuisement professionnel"
         ]
       },
 
@@ -3184,12 +3183,7 @@ function exportJson() {
           interligne: "1.4-1.5"
         }
       },
-      professionnel_referent: {
-        titre: "Psychologue et Psychologue du travail",
-        numero_adeli_rpps: "10009953539",
-        mention_obligatoire: "Rapport établi sous la responsabilité d'un Psychologue et Psychologue du travail — N° ADELI/RPPS : 10009953539"
-      },
-      format_general: {
+format_general: {
         format_pdf: "A4 portrait",
         nb_pages_cible: "20 à 30 pages selon le nombre de schémas actifs (cf. analysis_contract.partial_passation_branch si applicable)",
         regle_longueur: "Adapter à la richesse du profil. Un profil avec 0-1 schéma actif = 20 pages. Un profil 4-7 schémas actifs = 25-30 pages. Ne pas étirer artificiellement.",
@@ -3197,21 +3191,21 @@ function exportJson() {
         vouvoiement: true
       },
       structure_pdf: [
-        "1. Page de garde — fond blanc, infos clés, mention ADELI",
-        "2. Préambule — comment lire ce rapport",
-        "3. Synthèse narrative globale (3-5 pages)",
-        "4. Cartographie des 18 schémas (radar + barres + domaines avec contrast_label)",
-        "5. Lecture par domaine (utiliser domain_stats.contrast_label)",
-        "6. Configurations cliniques (utiliser confidence + contributing_items + pattern_mode_matrix)",
-        "7. Modes Young + stratégies de coping (utiliser modes étendus + Adulte sain comme cible)",
-        "8. Forces et ressources (face adaptative des schémas activés + schémas faibles comme protection)",
-        "9. Pistes thérapeutiques (3 phases + techniques par schéma)",
-        "10. Recommandations pratiques quotidiennes",
-        "11. Questions de validation",
-        "12. Pour aller plus loin (bibliographie + AFTS + ISST)",
-        "13. Encadré 'Ce que ne mesure pas le YSQ-L3' avec outils complémentaires (utiliser analysis_contract.ce_que_ne_mesure_pas)",
-        "14. Annexe technique (scores complets, qualité de passation, fatigue_index si pertinent)",
-        "15. Mentions légales (RGPD, ADELI, audit_caveat)"
+ "1. Page de garde — fond blanc, infos clés, mention 'document confidentiel'",
+ "2. Préambule — comment lire ce rapport",
+ "3. Synthèse narrative globale (3-5 pages)",
+ "4. Cartographie des 18 schémas (radar + barres + domaines avec contrast_label)",
+ "5. Lecture par domaine (utiliser domain_stats.contrast_label)",
+ "6. Configurations cliniques (utiliser confidence + contributing_items + pattern_mode_matrix)",
+ "7. Modes Young + stratégies de coping (utiliser modes étendus + Adulte sain comme cible)",
+ "8. Forces et ressources (face adaptative des schémas activés + schémas faibles comme protection)",
+ "9. Pistes thérapeutiques (3 phases + techniques par schéma)",
+ "10. Recommandations pratiques quotidiennes",
+ "11. Questions de validation",
+ "12. Pour aller plus loin (bibliographie + AFTS + ISST)",
+ "13. Encadré 'Ce que ne mesure pas le YSQ-L3' avec outils complémentaires (utiliser analysis_contract.ce_que_ne_mesure_pas)",
+ "14. Annexe technique (scores complets, qualité de passation, fatigue_index si pertinent)",
+ "15. Mentions légales (RGPD, , audit_caveat)"
       ]
     },
     robustness: {
@@ -3227,20 +3221,20 @@ function exportJson() {
         faible: "interpretation_reliability == 'faible'"
       },
       coherence_checks_avant_pdf: [
-        "Les schémas mentionnés correspondent à derived_data.scores",
-        "Les configurations citées sont dans derived_data.derived_patterns avec leur confidence",
-        "Les modes inférés correspondent à derived_data.inferred_modes",
-        "Aucun diagnostic psychiatrique n'a été posé",
-        "Le vouvoiement est respecté partout",
-        "Les drapeaux d'escalation_flags ont été pris en compte",
-        "La mention ADELI 10009953539 figure en page de garde",
-        "Le pied de page C Concept&Dev figure sur chaque page sauf garde",
-        "Les références bibliographiques sont réelles",
-        "Aucun mot interdit utilisé",
-        "L'encadré 'ce que ne mesure pas le YSQ-L3' est présent",
-        "Si fatigue_index > 0.3, mention dans la section qualité de passation",
-        "Si self_audit.summary.status != 'clean', les warnings ont été pris en compte",
-        "Les métadonnées PDF (title, author, subject, keywords, custom /YSQ_*) sont renseignées selon pdf_metadata_watermark.values — vérifié via reader.metadata après génération"
+ "Les schémas mentionnés correspondent à derived_data.scores",
+ "Les configurations citées sont dans derived_data.derived_patterns avec leur confidence",
+ "Les modes inférés correspondent à derived_data.inferred_modes",
+ "Aucun diagnostic psychiatrique n'a été posé",
+ "Le vouvoiement est respecté partout",
+ "Les drapeaux d'escalation_flags ont été pris en compte",
+ "La mention figure en page de garde",
+ "Le pied de page C Concept&Dev figure sur chaque page sauf garde",
+ "Les références bibliographiques sont réelles",
+ "Aucun mot interdit utilisé",
+ "L'encadré 'ce que ne mesure pas le YSQ-L3' est présent",
+ "Si fatigue_index > 0.3, mention dans la section qualité de passation",
+ "Si self_audit.summary.status != 'clean', les warnings ont été pris en compte",
+ "Les métadonnées PDF (title, author, subject, keywords, custom /YSQ_*) sont renseignées selon pdf_metadata_watermark.values — vérifié via reader.metadata après génération"
       ]
     }
   };
@@ -3427,6 +3421,5 @@ function computeVariance(arr) {
   return arr.reduce((sum, v) => sum + (v - m) ** 2, 0) / arr.length;
 }
 </script>
-
 
 </body></html>
