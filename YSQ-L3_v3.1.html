@@ -2564,10 +2564,9 @@ function computeInstrumentHash() {
  * Export structuré C Concept&Dev, conçu pour alimenter un générateur
  * de rapport clinique avec garde-fous et contrôles de cohérence.
  * ───────────────────────────────────────────────────────── */
-// v3.1 — Scramble simple (XOR + Base64) du payload JSON
-// La clé est volontairement publique : le but est de rendre le fichier illisible
-// pour un utilisateur lambda qui l'ouvrirait dans un éditeur, PAS de chiffrer.
-// Le LLM lit la clé dans le contrat embarqué et déchiffre seul.
+// v3.1.1 — Scramble DÉSACTIVÉ en phase test (export JSON en clair).
+// La fonction reste disponible pour réactivation future si besoin.
+// XOR + Base64 — clé publique, anti-curieux, pas du chiffrement.
 const SCRAMBLE_KEY = 'C-Concept-Dev-2026';
 
 function scramblePayload(jsonString) {
@@ -2874,14 +2873,6 @@ function exportJson() {
       role: "Psychologue clinicien formé à la schémathérapie (Schema Therapy de Jeffrey Young). Tu rédiges un rapport de restitution destiné à la personne ayant passé le YSQ-L3. Ta posture est celle d'un thérapeute en consultation de restitution : chaleureuse mais rigoureuse, nuancée, sans complaisance ni dramatisation.",
       mission_principale: "Produire un rapport professionnel auto-suffisant à partir de ce JSON, sans demander d'information complémentaire à l'utilisateur. Le contenu, la mise en page, le ton et la structure sont entièrement définis par ce contrat.",
 
-      decoding_instructions: {
-        principe: "Le payload de données est volontairement scramblé pour rester illisible à l'oeil. Tu dois le déchiffrer avant analyse.",
-        algorithme: "XOR avec clé fixe puis Base64. Étapes : (1) Base64-decode la chaîne scrambled_payload. (2) XOR chaque byte avec la clé SCRAMBLE_KEY répétée cycliquement. (3) Interpréter le résultat en UTF-8 puis JSON.parse.",
-        scramble_key: "C-Concept-Dev-2026",
-        pseudo_code: "decoded = base64_decode(scrambled_payload); plain = ''; for i, b in enumerate(decoded): plain += chr(b ^ ord(SCRAMBLE_KEY[i % len(SCRAMBLE_KEY)])); data = json.loads(plain)",
-        but: "Empêcher la lecture directe par un utilisateur lambda. Pas de chiffrement cryptographique. Le contenu déchiffré reste sensible : à ne pas afficher en clair au bénéficiaire, seulement le rapport final."
-      },
-
       output_format_negotiation: {
         principe: "Adapter le format de sortie aux capacités de l'environnement d'exécution.",
         priorite_1_pdf: "Si tu peux exécuter du code (Python + ReportLab/WeasyPrint) : produire un vrai .pdf téléchargeable. C'est le format cible. IMPÉRATIF : appliquer les métadonnées watermark définies dans pdf_metadata_watermark AVANT de finaliser le PDF. Pas de PDF généré sans métadonnées.",
@@ -3133,22 +3124,8 @@ function exportJson() {
     }
   };
 
-  // ─── Scramble du payload et construction de l'enveloppe ───
-  const innerJsonString = JSON.stringify(innerPayload);
-  const scrambled = scramblePayload(innerJsonString);
-
-  const exportObj = {
-    _envelope: {
-      type: "ysq-l3-export",
-      version: "3.1",
-      readme: "Ce fichier contient un payload YSQ-L3 scramblé (anti-curieux, pas du chiffrement). Le LLM qui le reçoit déchiffre automatiquement en suivant les instructions du payload. Pour usage clinique sous responsabilité ADELI.",
-      llm_instructions: {
-        principe: "Le champ 'scrambled_payload' contient les données. Algorithme : (1) Base64-decode, (2) XOR chaque byte avec la clé répétée cycliquement, (3) UTF-8 decode, (4) JSON.parse. La clé est 'C-Concept-Dev-2026'. Après déchiffrement, lire analysis_contract et générer le rapport selon ses directives.",
-        pseudo_code_python: "import base64; key = 'C-Concept-Dev-2026'; decoded = base64.b64decode(scrambled_payload); plain = bytes(b ^ ord(key[i % len(key)]) for i, b in enumerate(decoded)).decode('utf-8'); data = json.loads(plain)"
-      }
-    },
-    scrambled_payload: scrambled
-  };
+  // ─── Export JSON en clair (phase test — pas de scramble) ───
+  const exportObj = innerPayload;
 
   const fileName = ('YSQ-L3_' + (state.profile.nom || 'anon') + '_' + (state.profile.prenom || '') + '_' + now.toISOString().split('T')[0] + '.json').replace(/\s+/g, '_');
   const blob = new Blob([JSON.stringify(exportObj, null, 2)], { type: 'application/json' });
@@ -3158,7 +3135,7 @@ function exportJson() {
   a.download = fileName;
   a.click();
   URL.revokeObjectURL(url);
-  showToast('JSON v3.1 (scramblé) téléchargé', 'success');
+  showToast('JSON v3.1 téléchargé', 'success');
 }
 
 /* ─────────────────────────────────────────────────────────
