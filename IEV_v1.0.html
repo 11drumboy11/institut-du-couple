@@ -501,13 +501,34 @@ function importYsqFile(file) {
   const reader = new FileReader();
   reader.onload = (e) => {
     try {
-      const wrapper = JSON.parse(e.target.result);
-      if (!wrapper.scrambled_payload) throw new Error('Pas un export YSQ scramblé');
-      const decoded = JSON.parse(unscrambleYsq(wrapper.scrambled_payload));
+      const parsed = JSON.parse(e.target.result);
+      let decoded = null;
+      let format = '';
+
+      // Cas 1 — JSON en clair (phase test ou nouvel export YSQ v3.1.1+)
+      // Reconnaissable à la présence directe de derived_data.scores ou meta.outil
+      if (parsed && (
+          (parsed.derived_data && parsed.derived_data.scores) ||
+          (parsed.meta && parsed.meta.outil === 'YSQ-L3')
+        )) {
+        decoded = parsed;
+        format = 'clair';
+      }
+      // Cas 2 — JSON scramblé (ancien format avec enveloppe)
+      else if (parsed && parsed.scrambled_payload) {
+        decoded = JSON.parse(unscrambleYsq(parsed.scrambled_payload));
+        format = 'déchiffré';
+      }
+      // Cas 3 — fichier non reconnu
+      else {
+        throw new Error('Format non reconnu — ni JSON YSQ en clair, ni JSON scramblé');
+      }
+
       state.ysq_imported = decoded;
       saveState();
-      showToast('YSQ-L3 importé avec succès', 'success');
-      // Refresh page
+      showToast('YSQ-L3 importé avec succès (' + format + ')', 'success');
+
+      // Refresh dropzone visual
       const dz = document.getElementById('ysqDropzone');
       if (dz) {
         dz.classList.add('imported');
@@ -515,7 +536,7 @@ function importYsqFile(file) {
           (decoded.profile?.prenom || '') + ' ' + (decoded.profile?.nom || '') + '</div>';
       }
     } catch (err) {
-      showToast('Fichier YSQ-L3 invalide ou non-déchiffrable', 'error');
+      showToast('Fichier YSQ-L3 invalide : ' + err.message, 'error');
       console.error(err);
     }
   };
