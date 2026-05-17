@@ -1,0 +1,1575 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portefeuille de compétences — Bilan de compétences 2.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter+Tight:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1f2d3a;
+  --ink-soft:#3b4a59;
+  --ink-mute:#6b7886;
+  --paper:#fbf7f1;
+  --paper-warm:#f3ece0;
+  --card:#ffffff;
+  --line:#e4dccd;
+  --line-strong:#c9bea7;
+  --accent:#345267;          /* bleu marine adouci */
+  --accent-soft:#dbe4ec;
+  --warm:#c1734a;            /* terracotta */
+  --warm-soft:#f1dccd;
+  --gold:#a8884a;
+  --shadow: 0 1px 2px rgba(31,45,58,.04), 0 8px 24px -12px rgba(31,45,58,.18);
+  --shadow-lg: 0 2px 4px rgba(31,45,58,.05), 0 24px 60px -20px rgba(31,45,58,.25);
+  --radius: 14px;
+  --serif:'Cormorant Garamond', 'Times New Roman', serif;
+  --sans:'Inter Tight', system-ui, -apple-system, sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background:var(--paper);
+  background-image:
+    radial-gradient(1200px 800px at 90% -10%, #f1dccd55, transparent 60%),
+    radial-gradient(900px 700px at -10% 110%, #dbe4ec88, transparent 60%);
+  background-attachment: fixed;
+  font-size:15.5px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ===== Layout ===== */
+.shell{max-width:980px;margin:0 auto;padding:32px 28px 120px}
+@media (max-width:640px){ .shell{padding:18px 14px 120px} }
+
+/* ===== Header / brand ===== */
+header.brand{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:24px;padding:28px 0 18px;border-bottom:1px solid var(--line);
+  margin-bottom:36px;
+}
+.brand-id{display:flex;flex-direction:column;gap:2px}
+.brand-id .mark{
+  font-family:var(--serif);font-weight:600;letter-spacing:.04em;
+  font-size:22px;color:var(--accent);
+}
+.brand-id .mark sup{font-size:.55em;color:var(--gold);margin-left:1px}
+.brand-id .sub{font-size:12px;color:var(--ink-mute);letter-spacing:.06em;text-transform:uppercase}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.toolbar button{
+  font-family:var(--sans);font-size:13px;font-weight:500;
+  border:1px solid var(--line-strong);background:var(--card);color:var(--ink-soft);
+  padding:8px 14px;border-radius:999px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;
+  transition:all .18s ease;
+}
+.toolbar button:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.toolbar button.warm:hover{background:var(--warm);border-color:var(--warm)}
+.toolbar .save-status{
+  font-size:12px;color:var(--ink-mute);align-self:center;
+  padding:0 8px;letter-spacing:.02em;
+  min-width:100px;text-align:right;
+}
+.toolbar .save-status.saved{color:#5a8a4c}
+
+/* ===== Cover ===== */
+.cover{
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow-lg);
+  padding:72px 64px 56px;
+  position:relative;
+  overflow:hidden;
+  margin-bottom:56px;
+  border:1px solid var(--line);
+}
+.cover::before{
+  content:"";position:absolute;inset:18px;border:1px solid var(--line);
+  border-radius:calc(var(--radius) - 4px);pointer-events:none;
+}
+.cover h1{
+  font-family:var(--serif);font-weight:500;
+  font-size:clamp(48px, 8vw, 88px);
+  line-height:.95;letter-spacing:-.01em;
+  margin:0 0 4px;color:var(--accent);
+  font-feature-settings:"swsh","ss01";
+}
+.cover h1 .of{font-style:italic;font-weight:400;color:var(--warm);font-size:.42em;display:block;letter-spacing:.04em;margin-bottom:8px}
+.cover .subtitle{
+  font-family:var(--serif);font-style:italic;font-size:22px;color:var(--ink-soft);
+  margin:28px 0 0;
+}
+.cover .subtitle::after{content:" ©";color:var(--gold);font-style:normal;font-size:.6em;vertical-align:super}
+.cover .of-line{
+  display:flex;align-items:center;gap:16px;margin:32px 0 28px;
+  font-family:var(--serif);font-style:italic;color:var(--ink-mute);font-size:18px;
+}
+.cover .of-line::before,.cover .of-line::after{
+  content:"";flex:1;height:1px;background:var(--line-strong);
+}
+.cover .name-field{
+  display:flex;justify-content:center;margin:8px 0 40px;
+}
+.cover .name-field input{
+  font-family:var(--serif);font-size:32px;text-align:center;
+  border:none;background:transparent;color:var(--accent);
+  border-bottom:1px solid var(--line-strong);
+  padding:8px 24px;min-width:280px;outline:none;
+}
+.cover .name-field input:focus{border-color:var(--warm)}
+
+.cover .compass{
+  display:flex;justify-content:center;margin:32px 0 8px;
+}
+.cover .compass svg{width:140px;height:140px;opacity:.85}
+
+.cover .footer-id{
+  text-align:center;font-size:12.5px;color:var(--ink-mute);
+  letter-spacing:.04em;margin-top:36px;
+}
+.cover .footer-id strong{color:var(--accent);font-weight:600}
+
+@media (max-width:640px){
+  .cover{padding:48px 24px 40px}
+  .cover .name-field input{font-size:24px;min-width:0;width:100%}
+}
+
+/* ===== Table of contents ===== */
+.toc{
+  background:var(--card);border-radius:var(--radius);border:1px solid var(--line);
+  box-shadow:var(--shadow);padding:40px 48px;margin-bottom:56px;
+}
+.toc h2{
+  font-family:var(--serif);font-weight:500;font-size:54px;
+  margin:0 0 4px;color:var(--accent);line-height:1;letter-spacing:-.01em;
+}
+.toc h2 + p{
+  font-family:var(--serif);font-style:italic;font-size:20px;color:var(--ink-soft);
+  margin:0 0 32px;
+}
+.toc ol{list-style:none;padding:0;margin:0;counter-reset:section}
+.toc ol li{
+  display:flex;align-items:center;gap:16px;padding:14px 0;
+  border-bottom:1px dashed var(--line);
+  counter-increment:section;
+}
+.toc ol li:last-child{border-bottom:none}
+.toc ol li a{
+  display:flex;align-items:center;gap:16px;width:100%;
+  text-decoration:none;color:var(--ink);
+  font-family:var(--serif);font-size:22px;font-style:italic;
+  transition:color .15s;
+}
+.toc ol li a:hover{color:var(--warm)}
+.toc .num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:38px;height:38px;border-radius:50%;
+  background:var(--accent);color:#fff;font-family:var(--sans);
+  font-size:13px;font-weight:600;font-style:normal;flex-shrink:0;
+}
+.toc .dots{flex:1;border-bottom:1px dotted var(--line-strong);margin-bottom:6px;height:1px}
+.toc .pg{font-family:var(--sans);font-size:13px;color:var(--ink-mute);font-style:normal}
+
+@media (max-width:640px){
+  .toc{padding:28px 22px}
+  .toc h2{font-size:38px}
+  .toc ol li a{font-size:18px;gap:12px}
+}
+
+/* ===== Section ===== */
+section.chapter{margin-bottom:72px;scroll-margin-top:20px}
+.chapter-head{
+  display:flex;align-items:center;gap:18px;margin-bottom:8px;
+}
+.chapter-head .num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:48px;height:48px;border-radius:50%;
+  background:var(--accent);color:#fff;
+  font-family:var(--sans);font-size:15px;font-weight:600;
+  flex-shrink:0;
+}
+.chapter-head h2{
+  font-family:var(--serif);font-weight:500;
+  font-size:clamp(34px, 5vw, 52px);line-height:1;letter-spacing:-.01em;
+  margin:0;color:var(--accent);
+}
+.chapter-intro{
+  font-family:var(--serif);font-style:italic;font-size:18px;
+  color:var(--ink-soft);margin:8px 0 28px 66px;
+  padding-left:0;
+}
+
+/* ===== Cards / fields ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:24px 26px;margin:16px 0;box-shadow:var(--shadow);
+  transition:box-shadow .2s, border-color .2s;
+}
+.card:focus-within{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft), var(--shadow)}
+.card .label{
+  font-family:var(--serif);font-style:italic;color:var(--accent);
+  font-size:18px;margin:0 0 12px;display:flex;align-items:center;gap:10px;
+}
+.card .label .hint{
+  font-family:var(--sans);font-style:normal;font-size:12px;
+  color:var(--ink-mute);font-weight:400;letter-spacing:.02em;
+}
+.card textarea, .card input[type=text]{
+  width:100%;border:none;outline:none;resize:vertical;
+  font-family:var(--sans);font-size:15px;color:var(--ink);
+  background:transparent;line-height:1.6;
+  min-height:90px;padding:4px 0;
+}
+.card textarea::placeholder, .card input::placeholder{
+  color:#b6ad9b;font-style:italic;
+}
+.card.small textarea{min-height:60px}
+
+.two-col{
+  display:grid;grid-template-columns:1fr 1fr;gap:18px;
+}
+@media (max-width:720px){ .two-col{grid-template-columns:1fr} }
+
+/* ===== Tables ===== */
+.table-wrap{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);overflow:hidden;margin:18px 0;
+}
+.table-wrap .t-head{
+  padding:18px 22px;border-bottom:1px solid var(--line);
+  background:var(--paper-warm);
+  display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.table-wrap .t-head h3{
+  font-family:var(--serif);font-style:italic;font-weight:500;
+  font-size:20px;margin:0;color:var(--accent);
+}
+.table-wrap .t-head .legend{font-size:12px;color:var(--ink-mute);max-width:560px}
+.table-wrap .t-head .legend code{
+  background:#fff;padding:1px 6px;border-radius:4px;font-family:var(--sans);
+  font-size:11px;border:1px solid var(--line);
+}
+table.grid{width:100%;border-collapse:collapse;font-size:14px}
+table.grid thead th{
+  background:#f8f2e6;color:var(--accent);font-weight:600;
+  text-align:left;padding:10px 12px;font-size:12px;
+  letter-spacing:.06em;text-transform:uppercase;
+  border-bottom:1px solid var(--line);
+}
+table.grid tbody td{
+  padding:0;border-bottom:1px solid var(--line);
+  vertical-align:top;
+}
+table.grid tbody td:not(:last-child){border-right:1px solid var(--line)}
+table.grid tbody tr:last-child td{border-bottom:none}
+table.grid td textarea, table.grid td input{
+  width:100%;border:none;outline:none;background:transparent;resize:vertical;
+  font-family:var(--sans);font-size:14px;color:var(--ink);
+  padding:10px 12px;min-height:60px;line-height:1.45;
+}
+table.grid td.compact textarea, table.grid td.compact input{min-height:40px}
+table.grid td select{
+  width:100%;border:none;background:transparent;outline:none;
+  padding:10px 12px;font-family:var(--sans);font-size:14px;color:var(--ink);
+  cursor:pointer;
+}
+table.grid tr:focus-within td{background:#fffdf8}
+
+.row-actions{padding:12px 16px;background:#faf6ec;display:flex;gap:8px;border-top:1px solid var(--line)}
+.row-actions button{
+  font-family:var(--sans);font-size:12.5px;font-weight:500;
+  border:1px solid var(--line-strong);background:#fff;color:var(--ink-soft);
+  padding:6px 12px;border-radius:999px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:5px;transition:all .15s;
+}
+.row-actions button:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.row-actions button.danger:hover{background:var(--warm);border-color:var(--warm)}
+
+/* mobility section */
+.mobility .pill-group{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.mobility .pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 12px;border:1px solid var(--line-strong);
+  border-radius:999px;background:#fff;cursor:pointer;
+  font-size:13px;color:var(--ink-soft);user-select:none;
+  transition:all .15s;
+}
+.mobility .pill input{accent-color:var(--accent)}
+.mobility .pill:has(input:checked){
+  background:var(--accent);color:#fff;border-color:var(--accent);
+}
+
+/* qualities cards */
+.qualities{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:12px}
+.qualities .q{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;box-shadow:var(--shadow);
+}
+.qualities .q .badge{
+  display:inline-block;font-family:var(--serif);font-style:italic;
+  color:var(--warm);font-size:14px;margin-bottom:6px;
+}
+.qualities .q input{
+  width:100%;border:none;background:transparent;outline:none;
+  font-family:var(--serif);font-size:22px;color:var(--accent);
+  font-weight:500;border-bottom:1px dashed var(--line);padding:4px 0;
+  margin-bottom:10px;
+}
+.qualities .q textarea{
+  width:100%;border:none;outline:none;resize:vertical;
+  font-family:var(--sans);font-size:13.5px;color:var(--ink-soft);
+  background:transparent;min-height:80px;line-height:1.5;
+}
+@media (max-width:720px){ .qualities{grid-template-columns:1fr} }
+
+/* Project blocks */
+.project{
+  background:var(--card);border-radius:var(--radius);
+  border:1px solid var(--line);box-shadow:var(--shadow);
+  padding:24px 26px;margin:18px 0;
+  position:relative;overflow:hidden;
+}
+.project::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+  background:linear-gradient(180deg, var(--accent), var(--warm));
+}
+.project.priority::before{background:linear-gradient(180deg, var(--warm), var(--gold))}
+.project h3{
+  font-family:var(--serif);font-weight:500;
+  font-size:28px;color:var(--accent);margin:0 0 16px;letter-spacing:-.005em;
+}
+.project.priority h3{color:var(--warm)}
+.project .field{margin-bottom:14px}
+.project .field .label{
+  font-family:var(--serif);font-style:italic;color:var(--ink-soft);
+  font-size:16px;margin:0 0 6px;
+}
+.project .field textarea{
+  width:100%;border:1px solid var(--line);outline:none;resize:vertical;
+  font-family:var(--sans);font-size:14.5px;color:var(--ink);
+  background:#fdfaf2;border-radius:8px;padding:10px 12px;
+  min-height:70px;line-height:1.55;transition:border-color .15s, background .15s;
+}
+.project .field textarea:focus{border-color:var(--accent);background:#fff}
+
+/* Synthesis grid */
+.synth{
+  display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px;
+}
+.synth .cell{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.synth .cell h4{
+  margin:0;padding:14px 18px;background:var(--paper-warm);
+  font-family:var(--serif);font-style:italic;font-weight:500;
+  font-size:18px;color:var(--accent);
+}
+.synth .cell textarea{
+  width:100%;border:none;outline:none;resize:vertical;
+  font-family:var(--sans);font-size:14px;color:var(--ink);
+  padding:14px 18px;min-height:90px;line-height:1.55;background:transparent;
+}
+@media (max-width:720px){ .synth{grid-template-columns:1fr} }
+
+/* Annexes */
+.annexes ul{list-style:none;padding:0;margin:0}
+.annexes li{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:12px 0;border-bottom:1px dashed var(--line);
+}
+.annexes li:last-child{border-bottom:none}
+.annexes li input[type=checkbox]{
+  accent-color:var(--accent);margin-top:5px;flex-shrink:0;
+  width:18px;height:18px;cursor:pointer;
+}
+.annexes li label{
+  font-family:var(--serif);font-size:18px;font-style:italic;
+  color:var(--ink-soft);cursor:pointer;
+}
+.annexes li:has(input:checked) label{color:var(--accent);text-decoration:line-through;text-decoration-color:var(--line-strong)}
+
+/* Example block (read-only model row) */
+.example{
+  margin:18px 0;border:1px dashed var(--warm);
+  border-radius:var(--radius);background:#fdf5ec;
+  overflow:hidden;
+}
+.example summary{
+  cursor:pointer;list-style:none;padding:14px 22px;
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--serif);font-style:italic;font-size:17px;
+  color:var(--warm);font-weight:500;
+  transition:background .15s;
+  user-select:none;
+}
+.example summary::-webkit-details-marker{display:none}
+.example summary:hover{background:#f7e6d4}
+.example summary .chev{
+  display:inline-block;transition:transform .2s;font-size:12px;
+  color:var(--warm);
+}
+.example[open] summary .chev{transform:rotate(90deg)}
+.example summary .tag{
+  background:var(--warm);color:#fff;
+  font-family:var(--sans);font-style:normal;font-size:10.5px;
+  font-weight:600;letter-spacing:.08em;
+  padding:3px 9px;border-radius:999px;text-transform:uppercase;
+}
+.example summary .label-txt{flex:1}
+.example .ex-body{padding:0 18px 18px}
+.example .ex-body .note{
+  font-size:12.5px;color:var(--ink-mute);font-style:italic;
+  padding:4px 4px 12px;
+}
+.example table.grid{background:#fffaf2;font-size:13.5px}
+.example table.grid thead th{background:#f5e3cf;color:var(--warm);border-color:#e8d4ba}
+.example table.grid td{
+  padding:10px 12px;border-color:#ead7be !important;
+  color:var(--ink-soft);
+}
+.example table.grid td .niv{
+  display:inline-block;min-width:22px;height:22px;line-height:22px;
+  text-align:center;border-radius:50%;
+  background:var(--warm);color:#fff;font-weight:600;font-size:12px;
+  margin:2px 3px 2px 0;
+}
+.example table.grid td strong{color:var(--accent);font-weight:600}
+.example table.grid ul{margin:0;padding-left:18px}
+.example table.grid ul li{margin-bottom:3px}
+
+/* Decorative chapter spacer */
+.chapter-spacer{
+  display:flex;align-items:center;gap:14px;margin:18px 0 24px 66px;
+  color:var(--ink-mute);font-family:var(--serif);font-style:italic;font-size:14px;
+}
+.chapter-spacer::before, .chapter-spacer::after{
+  content:"";flex:0 0 auto;width:30px;height:1px;background:var(--line-strong);
+}
+
+/* Bottom footer */
+footer.foot{
+  margin-top:80px;padding-top:28px;border-top:1px solid var(--line);
+  text-align:center;font-size:12px;color:var(--ink-mute);letter-spacing:.04em;
+}
+footer.foot strong{color:var(--accent)}
+
+/* Modal */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(31,45,58,.45);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;z-index:100;padding:20px;
+}
+.modal-backdrop.show{display:flex}
+.modal{
+  background:#fff;border-radius:var(--radius);max-width:480px;width:100%;
+  padding:28px;box-shadow:var(--shadow-lg);
+}
+.modal h3{font-family:var(--serif);font-size:26px;color:var(--accent);margin:0 0 8px}
+.modal p{color:var(--ink-soft);margin:0 0 18px}
+.modal .actions{display:flex;gap:10px;justify-content:flex-end}
+.modal .actions button{
+  font-family:var(--sans);font-size:14px;font-weight:500;
+  padding:9px 18px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--line-strong);background:#fff;color:var(--ink-soft);
+}
+.modal .actions button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.modal .actions button.danger{background:var(--warm);color:#fff;border-color:var(--warm)}
+
+/* ===== Print ===== */
+@media print{
+  body{background:#fff !important;font-size:11.5pt}
+  .toolbar, .row-actions, footer.foot{display:none !important}
+  .shell{max-width:none;padding:0;margin:0}
+  .cover, .toc, .card, .table-wrap, .project, .synth .cell, .qualities .q{
+    box-shadow:none !important;
+    border:1px solid #d4cab5 !important;
+    page-break-inside:avoid;
+  }
+  .cover{padding:40px}
+  section.chapter{page-break-before:always}
+  section.chapter:first-of-type{page-break-before:auto}
+  textarea, input{border-color:transparent !important;color:#000 !important}
+  body{background:#fff !important}
+  body::before{content:""}
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+<header class="brand">
+  <div class="brand-id">
+    <span class="mark">ITBC<sup>©</sup> · Institut Tarnais</span>
+    <span class="sub">Bilan de Compétences &amp; Santé au Travail</span>
+  </div>
+  <div class="toolbar">
+    <span class="save-status" id="saveStatus">—</span>
+    <button onclick="exportJSON()" title="Télécharger un fichier .json contenant toutes vos réponses">↓ Exporter</button>
+    <button onclick="document.getElementById('importInput').click()" title="Restaurer depuis un fichier .json">↑ Importer</button>
+    <input type="file" id="importInput" accept="application/json,.json" style="display:none" onchange="importJSON(event)">
+    <button onclick="window.print()" title="Imprimer ou enregistrer en PDF">🖨 Imprimer</button>
+    <button class="warm" onclick="askReset()" title="Effacer toutes vos réponses">↺ Réinitialiser</button>
+  </div>
+</header>
+
+<!-- ===== COVER ===== -->
+<div class="cover">
+  <h1><span class="of">Portefeuille</span>de Compétences</h1>
+  <div class="subtitle">Bilan de Compétences 2.0</div>
+  <div class="of-line">de</div>
+  <div class="name-field">
+    <input type="text" data-key="beneficiaire" placeholder="Votre prénom et nom">
+  </div>
+  <div class="compass">
+    <!-- inline compass SVG, decorative -->
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <radialGradient id="g1" cx="50%" cy="40%" r="60%">
+          <stop offset="0%" stop-color="#fbf7f1"/>
+          <stop offset="100%" stop-color="#dbe4ec"/>
+        </radialGradient>
+      </defs>
+      <circle cx="100" cy="100" r="86" fill="url(#g1)" stroke="#345267" stroke-width="2"/>
+      <circle cx="100" cy="100" r="72" fill="none" stroke="#345267" stroke-width=".6" stroke-dasharray="2 4"/>
+      <g stroke="#345267" stroke-width="1" fill="none">
+        <line x1="100" y1="20" x2="100" y2="34"/>
+        <line x1="100" y1="166" x2="100" y2="180"/>
+        <line x1="20" y1="100" x2="34" y2="100"/>
+        <line x1="166" y1="100" x2="180" y2="100"/>
+      </g>
+      <g font-family="Cormorant Garamond, serif" font-size="13" fill="#345267" text-anchor="middle">
+        <text x="100" y="18">N</text>
+        <text x="100" y="192">S</text>
+        <text x="14" y="105">O</text>
+        <text x="188" y="105">E</text>
+      </g>
+      <polygon points="100,50 108,100 100,90 92,100" fill="#c1734a"/>
+      <polygon points="100,150 108,100 100,110 92,100" fill="#345267"/>
+      <circle cx="100" cy="100" r="4" fill="#a8884a"/>
+    </svg>
+  </div>
+  <div class="footer-id">
+    <strong>ITBC<sup>©</sup></strong> · 693 Av des Terres Noires · 81370 St-Sulpice-La-Pointe<br>
+    06.87.10.14.34 · gaellekerjean.bilan@gmail.com
+  </div>
+</div>
+
+<!-- ===== TOC ===== -->
+<div class="toc">
+  <h2>Sommaire</h2>
+  <p>du portefeuille de compétences</p>
+  <ol>
+    <li><a href="#ch1"><span class="num">01</span><span>Contexte du bilan et retour historique</span><span class="dots"></span><span class="pg">→</span></a></li>
+    <li><a href="#ch2"><span class="num">02</span><span>Compétences acquises et transférables</span><span class="dots"></span><span class="pg">→</span></a></li>
+    <li><a href="#ch3"><span class="num">03</span><span>Connaissance de soi</span><span class="dots"></span><span class="pg">→</span></a></li>
+    <li><a href="#ch4"><span class="num">04</span><span>Perspectives d'évolution</span><span class="dots"></span><span class="pg">→</span></a></li>
+    <li><a href="#ch5"><span class="num">05</span><span>Mise en œuvre du projet</span><span class="dots"></span><span class="pg">→</span></a></li>
+    <li><a href="#ch6"><span class="num">06</span><span>Synthèse des éléments recueillis</span><span class="dots"></span><span class="pg">→</span></a></li>
+    <li><a href="#annexes"><span class="num">📎</span><span>Annexes</span><span class="dots"></span><span class="pg">→</span></a></li>
+  </ol>
+</div>
+
+<!-- ===== CHAPITRE 01 ===== -->
+<section class="chapter" id="ch1">
+  <div class="chapter-head">
+    <span class="num">01</span>
+    <h2>Contexte du bilan &amp; retour historique</h2>
+  </div>
+  <p class="chapter-intro">Circonstances du bilan — Formalisation et analyse du parcours — Questionnement sur les valeurs de vie</p>
+
+  <div class="card">
+    <p class="label">Raisons et circonstances du bilan <span class="hint">pourquoi je fais un bilan ? pourquoi aujourd'hui ?</span></p>
+    <textarea data-key="ch1_raisons" placeholder="Ce qui m'amène ici, ce qui s'est passé récemment, ce qui me pousse à entreprendre ce travail maintenant…"></textarea>
+  </div>
+
+  <div class="card">
+    <p class="label">Ce que j'attends de mon bilan <span class="hint">attentes, motivations</span></p>
+    <textarea data-key="ch1_attentes" placeholder="Mes attentes concrètes, ce que j'espère obtenir au terme de la démarche…"></textarea>
+  </div>
+
+  <div class="chapter-spacer">Retour historique</div>
+
+  <!-- Formations -->
+  <div class="table-wrap" id="tbl-formations">
+    <div class="t-head">
+      <h3>Parcours chronologique des formations initiales &amp; continues</h3>
+      <div class="legend">
+        Niveau d'intérêt : <code>−</code> faible · <code>+</code> moyen · <code>++</code> fort. Du plus récent au plus ancien.
+      </div>
+    </div>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:13%">Dates</th>
+          <th style="width:24%">Nature de la formation</th>
+          <th style="width:20%">Diplômes obtenus</th>
+          <th style="width:10%">Intérêt</th>
+          <th style="width:18%">Raison du choix</th>
+          <th style="width:15%">Interruption</th>
+        </tr>
+      </thead>
+      <tbody data-table="formations">
+        <!-- rows injected by JS -->
+      </tbody>
+    </table>
+    <div class="row-actions">
+      <button onclick="addRow('formations')">＋ Ajouter une ligne</button>
+    </div>
+  </div>
+
+  <!-- Expériences -->
+  <div class="table-wrap" id="tbl-experiences">
+    <div class="t-head">
+      <h3>Parcours chronologique des expériences professionnelles &amp; stages</h3>
+      <div class="legend">
+        Au moins 5 tâches principales par poste. Motif de départ en cas d'interruption.
+      </div>
+    </div>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:12%">Dates</th>
+          <th style="width:20%">Poste occupé</th>
+          <th style="width:16%">Entreprise · ville</th>
+          <th style="width:8%">Quotité</th>
+          <th style="width:8%">Intérêt</th>
+          <th style="width:24%">Tâches principales</th>
+          <th style="width:12%">Motif de départ</th>
+        </tr>
+      </thead>
+      <tbody data-table="experiences"></tbody>
+    </table>
+    <div class="row-actions">
+      <button onclick="addRow('experiences')">＋ Ajouter une ligne</button>
+    </div>
+  </div>
+
+  <!-- Activités personnelles -->
+  <div class="table-wrap" id="tbl-activites">
+    <div class="t-head">
+      <h3>Parcours chronologique des activités personnelles</h3>
+      <div class="legend">Loisirs, sports, pratiques artistiques, apprentissages, bénévolat, vie associative…</div>
+    </div>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:14%">Dates</th>
+          <th style="width:30%">Nature de l'activité</th>
+          <th style="width:12%">Durée (mois)</th>
+          <th style="width:22%">Raisons du choix</th>
+          <th style="width:22%">Motif d'interruption</th>
+        </tr>
+      </thead>
+      <tbody data-table="activites"></tbody>
+    </table>
+    <div class="row-actions">
+      <button onclick="addRow('activites')">＋ Ajouter une ligne</button>
+    </div>
+  </div>
+
+  <div class="chapter-spacer">Analyse du parcours</div>
+
+  <div class="two-col">
+    <div class="card">
+      <p class="label" style="color:#5a8a4c">Les plus <span class="hint">ce qui m'a porté, nourri, fait grandir</span></p>
+      <textarea data-key="ch1_plus" placeholder="Réussites, moments forts, fiertés, ce que j'ai aimé…"></textarea>
+    </div>
+    <div class="card">
+      <p class="label" style="color:var(--warm)">Les moins <span class="hint">ce qui a coincé, ce que je ne veux plus</span></p>
+      <textarea data-key="ch1_moins" placeholder="Difficultés, déceptions, ce qui m'a usé…"></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="label">Pistes professionnelles envisagées <span class="hint">premières intuitions, métiers à explorer</span></p>
+    <textarea data-key="ch1_pistes" placeholder="Les idées qui me viennent spontanément, même floues…"></textarea>
+  </div>
+
+  <div class="card">
+    <p class="label">Pour élaborer mon projet professionnel, j'ai besoin de…</p>
+    <textarea data-key="ch1_besoins" placeholder="Informations, rencontres, formations, temps de réflexion, immersion…"></textarea>
+  </div>
+</section>
+
+<!-- ===== CHAPITRE 02 ===== -->
+<section class="chapter" id="ch2">
+  <div class="chapter-head">
+    <span class="num">02</span>
+    <h2>Compétences acquises &amp; transférables</h2>
+  </div>
+  <p class="chapter-intro">Inventaire des talents — Émergence et retranscription des compétences professionnelles et personnelles</p>
+
+  <div class="chapter-spacer">Mes talents</div>
+
+  <div class="card">
+    <p class="label">Ce que je sais faire</p>
+    <textarea data-key="ch2_savoirfaire" placeholder="Mes savoir-faire, dans toute leur diversité, sans hiérarchie…"></textarea>
+  </div>
+  <div class="card">
+    <p class="label">Ce que j'aimerais retrouver dans un futur métier <span class="hint">même si je ne sais pas le faire</span></p>
+    <textarea data-key="ch2_souhaits" placeholder="Ce qui m'attire, m'inspire, me ferait vibrer…"></textarea>
+  </div>
+
+  <div class="chapter-spacer">Mes expériences les plus significatives</div>
+
+  <div class="two-col">
+    <div class="card">
+      <p class="label">Intitulés de mes emplois les plus significatifs</p>
+      <textarea data-key="ch2_emplois_signif" placeholder="Les postes qui ont compté, qui m'ont construit…"></textarea>
+    </div>
+    <div class="card">
+      <p class="label">Mes centres d'intérêts, mes loisirs</p>
+      <textarea data-key="ch2_loisirs" placeholder="Ce qui me passionne en dehors du travail…"></textarea>
+    </div>
+  </div>
+
+  <div class="chapter-spacer">Domaine d'intervention professionnel</div>
+
+  <div class="card small">
+    <p class="label">Intitulé de l'emploi décrit ci-dessous</p>
+    <input type="text" data-key="ch2_emploi_titre" placeholder="Ex. Responsable de service, Infirmière, Chef de projet…" style="border-bottom:1px solid var(--line);padding-bottom:6px">
+  </div>
+
+  <details class="example">
+    <summary>
+      <span class="chev">▶</span>
+      <span class="tag">Exemple</span>
+      <span class="label-txt">Chef de rayon — modèle complet pour s'inspirer</span>
+    </summary>
+    <div class="ex-body">
+      <p class="note">Cet exemple illustre comment décliner un poste en activités, savoir-faire, savoirs et savoir-être. Cliquez pour replier après lecture.</p>
+      <table class="grid">
+        <thead>
+          <tr>
+            <th style="width:14%">Activités</th>
+            <th style="width:30%">Savoir-faire</th>
+            <th style="width:7%">Niv.</th>
+            <th style="width:21%">Savoir</th>
+            <th style="width:7%">Niv.</th>
+            <th style="width:21%">Savoir-être</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Vente</strong></td>
+            <td>
+              <ul>
+                <li>Accueillir, informer et conseiller la clientèle</li>
+                <li>Superviser les ventes</li>
+                <li>Observer la concurrence</li>
+                <li>Régler les litiges</li>
+              </ul>
+            </td>
+            <td><span class="niv">3</span> <span class="niv">2</span> <span class="niv">1</span> <span class="niv">2</span></td>
+            <td>BTS Management des Unités Commerciales</td>
+            <td><span class="niv">2</span></td>
+            <td rowspan="4" style="vertical-align:middle">
+              <ul>
+                <li>Autonome</li>
+                <li>Polyvalent</li>
+                <li>Organisé, rigoureux</li>
+                <li>Aptitude à encadrer une équipe</li>
+                <li>Sens du service, à l'écoute, disponible</li>
+                <li>Capacité d'adaptation à une clientèle variée</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Gestion des marchandises</strong></td>
+            <td>
+              <ul>
+                <li>Gérer la réception, la vérification et le stockage des marchandises</li>
+                <li>Réaliser l'inventaire</li>
+                <li>Négocier les prix et quantités avec les fournisseurs</li>
+              </ul>
+            </td>
+            <td><span class="niv">3</span> <span class="niv">3</span> <span class="niv">1</span></td>
+            <td>Secteur de la distribution — rayons gérés : frais, épicerie, électroménager. Hypermarchés, petite surface de proximité</td>
+            <td><span class="niv">3</span></td>
+          </tr>
+          <tr>
+            <td><strong>Gestion du personnel</strong></td>
+            <td>
+              <ul>
+                <li>Participer au recrutement et à l'appréciation du personnel</li>
+                <li>Élaborer des plannings, gérer les absences et les congés payés</li>
+                <li>Organiser et contrôler le travail d'équipe</li>
+              </ul>
+            </td>
+            <td><span class="niv">1</span> <span class="niv">2</span> <span class="niv">2</span></td>
+            <td>Comptabilité, marchandisage, législation du travail</td>
+            <td><span class="niv">1</span></td>
+          </tr>
+          <tr>
+            <td><strong>Administratif &amp; financier</strong></td>
+            <td>
+              <ul>
+                <li>Mettre à jour le fichier caisse</li>
+                <li>Vérifier les factures et pièces comptables</li>
+                <li>Gérer le compte d'exploitation de son rayon</li>
+              </ul>
+            </td>
+            <td><span class="niv">3</span> <span class="niv">2</span> <span class="niv">2</span></td>
+            <td>Bureautique</td>
+            <td><span class="niv">3</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <div class="table-wrap" id="tbl-dip">
+    <div class="t-head">
+      <h3>Activités, savoir-faire, savoirs, savoir-être</h3>
+      <div class="legend">
+        Niveau de maîtrise : <code>1</code> à développer · <code>2</code> acquis · <code>3</code> maîtrisé (je peux former)
+      </div>
+    </div>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:14%">Activités</th>
+          <th style="width:28%">Savoir-faire</th>
+          <th style="width:9%">Niv.</th>
+          <th style="width:20%">Savoir (connaissances)</th>
+          <th style="width:9%">Niv.</th>
+          <th style="width:20%">Savoir-être</th>
+        </tr>
+      </thead>
+      <tbody data-table="domaine"></tbody>
+    </table>
+    <div class="row-actions">
+      <button onclick="addRow('domaine')">＋ Ajouter une activité</button>
+    </div>
+  </div>
+
+  <div class="chapter-spacer">Activités extra-professionnelles</div>
+
+  <details class="example">
+    <summary>
+      <span class="chev">▶</span>
+      <span class="tag">Exemple</span>
+      <span class="label-txt">Running — modèle complet pour s'inspirer</span>
+    </summary>
+    <div class="ex-body">
+      <p class="note">Une activité personnelle développe aussi des compétences. Voici comment décliner « running » sur les quatre colonnes.</p>
+      <table class="grid">
+        <thead>
+          <tr>
+            <th style="width:15%">Activité</th>
+            <th style="width:24%">Savoir-faire</th>
+            <th style="width:20%">Savoir</th>
+            <th style="width:21%">Savoir-être</th>
+            <th style="width:20%">Ce que cela m'apporte</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Running</strong></td>
+            <td>
+              <ul>
+                <li>Me repérer dans l'espace</li>
+                <li>Me préparer à l'effort musculaire</li>
+                <li>Gérer mon allure et ma respiration</li>
+                <li>Planifier mes entraînements</li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li>Techniques d'échauffement et d'étirement</li>
+                <li>Être résistant à l'effort</li>
+                <li>Notions de nutrition sportive</li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li>Endurance</li>
+                <li>Persévérance</li>
+                <li>Force mentale</li>
+                <li>Discipline</li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li>Bien-être</li>
+                <li>Gestion du stress</li>
+                <li>Confiance en soi</li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <div class="table-wrap" id="tbl-extra">
+    <div class="t-head">
+      <h3>Mes activités extra-professionnelles et ce qu'elles m'apportent</h3>
+      <div class="legend">Pour chaque activité, déclinez ce qu'elle a développé chez vous et ce qu'elle vous apporte.</div>
+    </div>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:15%">Activité</th>
+          <th style="width:24%">Savoir-faire</th>
+          <th style="width:20%">Savoir</th>
+          <th style="width:21%">Savoir-être</th>
+          <th style="width:20%">Ce que cela m'apporte</th>
+        </tr>
+      </thead>
+      <tbody data-table="extra"></tbody>
+    </table>
+    <div class="row-actions">
+      <button onclick="addRow('extra')">＋ Ajouter une activité</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CHAPITRE 03 ===== -->
+<section class="chapter" id="ch3">
+  <div class="chapter-head">
+    <span class="num">03</span>
+    <h2>Connaissance de soi</h2>
+  </div>
+  <p class="chapter-intro">Analyse des résultats aux tests et questionnaires — Mobilité, valeurs, personnalité</p>
+
+  <div class="card">
+    <p class="label">Analyse des tests et questionnaires <span class="hint">restitution en entretien</span></p>
+    <textarea data-key="ch3_tests" placeholder="Synthèse personnelle des restitutions de tests (MBTI, RIASEC, IRMR, valeurs…) — ce qui résonne, ce qui me surprend, ce que je retiens…" style="min-height:140px"></textarea>
+  </div>
+
+  <div class="chapter-spacer">Mobilité géographique</div>
+
+  <div class="card mobility">
+    <p class="label">Je dispose d'un ou plusieurs permis</p>
+    <div class="pill-group">
+      <label class="pill"><input type="checkbox" data-key="ch3_permis_b"> Permis B</label>
+      <label class="pill"><input type="checkbox" data-key="ch3_permis_a"> Permis A / moto</label>
+      <label class="pill"><input type="checkbox" data-key="ch3_permis_c"> Permis C / poids lourd</label>
+      <label class="pill"><input type="checkbox" data-key="ch3_permis_d"> Permis D / transport en commun</label>
+      <label class="pill"><input type="checkbox" data-key="ch3_permis_ee"> Permis EB / EC / ED</label>
+    </div>
+    <input type="text" data-key="ch3_permis_autres" placeholder="Autres permis ou précisions…" style="border-bottom:1px solid var(--line);width:100%;padding:6px 0;font-family:var(--sans);font-size:14px;background:transparent;border-top:none;border-left:none;border-right:none;outline:none">
+  </div>
+
+  <div class="card mobility">
+    <p class="label">Moyens de locomotion</p>
+    <div class="pill-group">
+      <label class="pill"><input type="checkbox" data-key="ch3_loc_voiture"> Voiture personnelle</label>
+      <label class="pill"><input type="checkbox" data-key="ch3_loc_2roues"> Deux-roues</label>
+      <label class="pill"><input type="checkbox" data-key="ch3_loc_velo"> Vélo</label>
+      <label class="pill"><input type="checkbox" data-key="ch3_loc_tc"> Transports en commun</label>
+      <label class="pill"><input type="checkbox" data-key="ch3_loc_covoit"> Covoiturage</label>
+    </div>
+    <input type="text" data-key="ch3_loc_autres" placeholder="Précisions (utilitaire, mobilité réduite, etc.)" style="border-bottom:1px solid var(--line);width:100%;padding:6px 0;font-family:var(--sans);font-size:14px;background:transparent;border-top:none;border-left:none;border-right:none;outline:none">
+  </div>
+
+  <div class="card mobility">
+    <p class="label">Mon secteur de mobilité</p>
+    <div class="pill-group">
+      <label class="pill"><input type="checkbox" data-key="ch3_sect_local"> Local</label>
+      <label class="pill"><input type="checkbox" data-key="ch3_sect_dep"> Départemental / régional</label>
+      <label class="pill"><input type="checkbox" data-key="ch3_sect_nat"> National</label>
+      <label class="pill"><input type="checkbox" data-key="ch3_sect_int"> International</label>
+    </div>
+    <textarea data-key="ch3_sect_precis" placeholder="Précisez (rayon en km, départements, conditions…)" style="min-height:50px"></textarea>
+  </div>
+
+  <div class="chapter-spacer">Mes valeurs</div>
+
+  <div class="card">
+    <p class="label">Mes valeurs les plus importantes</p>
+    <textarea data-key="ch3_valeurs" placeholder="Ex. autonomie, transmission, justice, créativité, sécurité, lien aux autres…"></textarea>
+  </div>
+  <div class="card">
+    <p class="label">Quel(s) décalage(s) existe(nt) avec ce que je vis actuellement dans mon contexte professionnel ?</p>
+    <textarea data-key="ch3_decalages" placeholder="Là où ça frotte entre mes valeurs et la réalité de mon travail…"></textarea>
+  </div>
+
+  <div class="chapter-spacer">Ma personnalité</div>
+
+  <p style="margin:18px 0 8px 0;font-family:var(--serif);font-style:italic;color:var(--ink-soft);font-size:16px">D'après les tests réalisés, trois de mes qualités &amp; leurs arguments</p>
+  <div class="qualities">
+    <div class="q">
+      <span class="badge">Qualité 1</span>
+      <input type="text" data-key="ch3_q1_titre" placeholder="Ex. Empathie">
+      <textarea data-key="ch3_q1_arg" placeholder="Comment cette qualité se manifeste, exemples concrets…"></textarea>
+    </div>
+    <div class="q">
+      <span class="badge">Qualité 2</span>
+      <input type="text" data-key="ch3_q2_titre" placeholder="Ex. Rigueur">
+      <textarea data-key="ch3_q2_arg" placeholder="Comment cette qualité se manifeste…"></textarea>
+    </div>
+    <div class="q">
+      <span class="badge">Qualité 3</span>
+      <input type="text" data-key="ch3_q3_titre" placeholder="Ex. Adaptabilité">
+      <textarea data-key="ch3_q3_arg" placeholder="Comment cette qualité se manifeste…"></textarea>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <p class="label">Et un défaut ou un travers <span class="hint">en conscience, sans complaisance ni dureté</span></p>
+    <textarea data-key="ch3_defaut" placeholder="Ce sur quoi j'ai à travailler, ou ce qui peut me jouer des tours…"></textarea>
+  </div>
+</section>
+
+<!-- ===== CHAPITRE 04 ===== -->
+<section class="chapter" id="ch4">
+  <div class="chapter-head">
+    <span class="num">04</span>
+    <h2>Perspectives d'évolution</h2>
+  </div>
+  <p class="chapter-intro">Émergence des pistes professionnelles — Confrontation avec l'environnement</p>
+
+  <div class="card">
+    <p class="label">Émergence des pistes professionnelles <span class="hint">fiches métiers, offres d'emploi, contenus de formation à joindre en annexe</span></p>
+    <textarea data-key="ch4_emergence" placeholder="Pistes explorées, ce que j'ai découvert, ce qui m'attire, ce qui m'éloigne…" style="min-height:140px"></textarea>
+  </div>
+
+  <div class="card">
+    <p class="label">Confrontation avec l'environnement <span class="hint">étude du marché de l'emploi, enquêtes métier, résultats d'immersion</span></p>
+    <textarea data-key="ch4_environnement" placeholder="Ce que m'ont appris les rencontres, les enquêtes, les recherches sur le marché…" style="min-height:140px"></textarea>
+  </div>
+
+  <div class="table-wrap">
+    <div class="t-head">
+      <h3>Comparaison des pistes envisagées</h3>
+      <div class="legend">Pour chaque piste : ce que j'y trouve, ce qui me freine, ce qu'il me faut comme prérequis.</div>
+    </div>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:18%">Piste métier</th>
+          <th style="width:22%">Atouts / ce qui m'attire</th>
+          <th style="width:22%">Freins / vigilances</th>
+          <th style="width:19%">Prérequis (formation, expérience)</th>
+          <th style="width:19%">Marché / opportunités</th>
+        </tr>
+      </thead>
+      <tbody data-table="pistes"></tbody>
+    </table>
+    <div class="row-actions">
+      <button onclick="addRow('pistes')">＋ Ajouter une piste</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CHAPITRE 05 ===== -->
+<section class="chapter" id="ch5">
+  <div class="chapter-head">
+    <span class="num">05</span>
+    <h2>Mise en œuvre du projet</h2>
+  </div>
+  <p class="chapter-intro">Projet(s) retenu(s) et plan d'action — Projet prioritaire et projets alternatifs</p>
+
+  <!-- PROJET PRIORITAIRE -->
+  <div class="project priority">
+    <h3>Projet prioritaire</h3>
+    <div class="field">
+      <p class="label">Nature du projet</p>
+      <textarea data-key="ch5_pp_nature" placeholder="Intitulé, secteur, statut envisagé (salarié, indépendant, création d'activité…)"></textarea>
+    </div>
+    <div class="field">
+      <p class="label">Motivations</p>
+      <textarea data-key="ch5_pp_motivations" placeholder="Pourquoi ce projet, ce qui me met en mouvement…"></textarea>
+    </div>
+    <div class="field">
+      <p class="label">Éléments en faveur du projet</p>
+      <textarea data-key="ch5_pp_atouts" placeholder="Compétences déjà acquises, contacts, marché favorable, contexte personnel…"></textarea>
+    </div>
+    <div class="two-col">
+      <div class="field">
+        <p class="label">Nécessité d'une formation ?</p>
+        <textarea data-key="ch5_pp_formation" placeholder="Laquelle, durée, financement envisagé (CPF, Transition Pro…)"></textarea>
+      </div>
+      <div class="field">
+        <p class="label">Nécessité d'une VAE ?</p>
+        <textarea data-key="ch5_pp_vae" placeholder="Diplôme visé, organisme certificateur, recevabilité…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLAN ACTION PP -->
+  <div class="table-wrap">
+    <div class="t-head">
+      <h3>Plan d'action — Projet prioritaire</h3>
+      <div class="legend">Lister les actions à entreprendre, dans quel ordre, dans quel délai, avec qui.</div>
+    </div>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:50%">Étape</th>
+          <th style="width:25%">Quand / échéance</th>
+          <th style="width:25%">Interlocuteurs</th>
+        </tr>
+      </thead>
+      <tbody data-table="plan_pp"></tbody>
+    </table>
+    <div class="row-actions">
+      <button onclick="addRow('plan_pp')">＋ Ajouter une étape</button>
+    </div>
+  </div>
+
+  <!-- PROJET ALTERNATIF 1 -->
+  <div class="project">
+    <h3>Projet alternatif 1</h3>
+    <div class="field">
+      <p class="label">Nature</p>
+      <textarea data-key="ch5_pa1_nature" placeholder="Intitulé, secteur, statut envisagé…"></textarea>
+    </div>
+    <div class="field">
+      <p class="label">Motivations</p>
+      <textarea data-key="ch5_pa1_motivations" placeholder="Pourquoi cette alternative…"></textarea>
+    </div>
+    <div class="field">
+      <p class="label">Éléments en faveur du projet</p>
+      <textarea data-key="ch5_pa1_atouts" placeholder="Ce qui rend ce plan B crédible et désirable…"></textarea>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <div class="t-head">
+      <h3>Plan d'action — Projet alternatif 1</h3>
+    </div>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:50%">Étape</th>
+          <th style="width:25%">Quand / échéance</th>
+          <th style="width:25%">Interlocuteurs</th>
+        </tr>
+      </thead>
+      <tbody data-table="plan_pa1"></tbody>
+    </table>
+    <div class="row-actions">
+      <button onclick="addRow('plan_pa1')">＋ Ajouter une étape</button>
+    </div>
+  </div>
+
+  <!-- PROJET ALTERNATIF 2 -->
+  <div class="project">
+    <h3>Projet alternatif 2</h3>
+    <div class="field">
+      <p class="label">Nature</p>
+      <textarea data-key="ch5_pa2_nature" placeholder="Intitulé, secteur, statut envisagé…"></textarea>
+    </div>
+    <div class="field">
+      <p class="label">Motivations</p>
+      <textarea data-key="ch5_pa2_motivations"></textarea>
+    </div>
+    <div class="field">
+      <p class="label">Éléments en faveur du projet</p>
+      <textarea data-key="ch5_pa2_atouts"></textarea>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <div class="t-head">
+      <h3>Plan d'action — Projet alternatif 2</h3>
+    </div>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:50%">Étape</th>
+          <th style="width:25%">Quand / échéance</th>
+          <th style="width:25%">Interlocuteurs</th>
+        </tr>
+      </thead>
+      <tbody data-table="plan_pa2"></tbody>
+    </table>
+    <div class="row-actions">
+      <button onclick="addRow('plan_pa2')">＋ Ajouter une étape</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CHAPITRE 06 ===== -->
+<section class="chapter" id="ch6">
+  <div class="chapter-head">
+    <span class="num">06</span>
+    <h2>Synthèse des éléments recueillis</h2>
+  </div>
+  <p class="chapter-intro">Vue d'ensemble — ce que j'ai appris, ce que je retiens, où je vais</p>
+
+  <div class="synth">
+    <div class="cell"><h4>Intérêts</h4><textarea data-key="ch6_interets" placeholder="Ce qui m'anime, ce qui me met en mouvement…"></textarea></div>
+    <div class="cell"><h4>Formation</h4><textarea data-key="ch6_formation" placeholder="Diplômes, formations clés, niveau…"></textarea></div>
+    <div class="cell"><h4>Motivations &amp; valeurs</h4><textarea data-key="ch6_motivations" placeholder="Ce qui donne du sens à mon engagement…"></textarea></div>
+    <div class="cell"><h4>Expériences les plus significatives</h4><textarea data-key="ch6_experiences" placeholder="Les jalons marquants…"></textarea></div>
+    <div class="cell"><h4>Conditions de travail / mobilité</h4><textarea data-key="ch6_conditions" placeholder="Cadre, rythme, géographie, équipe…"></textarea></div>
+    <div class="cell"><h4>Compétences</h4><textarea data-key="ch6_competences" placeholder="Mes savoir, savoir-faire, savoir-être clés…"></textarea></div>
+    <div class="cell"><h4>Atouts</h4><textarea data-key="ch6_atouts" placeholder="Mes ressources pour avancer…"></textarea></div>
+    <div class="cell"><h4>Freins</h4><textarea data-key="ch6_freins" placeholder="Ce qui peut me ralentir, à anticiper…"></textarea></div>
+    <div class="cell"><h4>Souhaits d'évolution</h4><textarea data-key="ch6_souhaits" placeholder="Direction(s) souhaitée(s)…"></textarea></div>
+    <div class="cell"><h4>Hypothèse de projet</h4><textarea data-key="ch6_hypothese" placeholder="Mon projet, en une phrase claire…"></textarea></div>
+  </div>
+</section>
+
+<!-- ===== ANNEXES ===== -->
+<section class="chapter annexes" id="annexes">
+  <div class="chapter-head">
+    <span class="num">📎</span>
+    <h2>Annexes</h2>
+  </div>
+  <p class="chapter-intro">Pièces justificatives et traces à joindre au portefeuille</p>
+
+  <div class="card">
+    <ul>
+      <li><input type="checkbox" id="anx1" data-key="anx_emploi"><label for="anx1">Attestations d'emploi</label></li>
+      <li><input type="checkbox" id="anx2" data-key="anx_formation"><label for="anx2">Attestations de formation</label></li>
+      <li><input type="checkbox" id="anx3" data-key="anx_stages"><label for="anx3">Conventions de stages</label></li>
+      <li><input type="checkbox" id="anx4" data-key="anx_diplomes"><label for="anx4">Diplômes</label></li>
+      <li><input type="checkbox" id="anx5" data-key="anx_temoignages"><label for="anx5">Témoignages écrits (collègues, amis, relations)</label></li>
+      <li><input type="checkbox" id="anx6" data-key="anx_photos"><label for="anx6">Photos de réalisations</label></li>
+      <li><input type="checkbox" id="anx7" data-key="anx_cpf"><label for="anx7">Décompte des heures CPF</label></li>
+      <li><input type="checkbox" id="anx8" data-key="anx_autres"><label for="anx8">Autres documents (à préciser ci-dessous)</label></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <p class="label">Notes complémentaires sur les annexes</p>
+    <textarea data-key="anx_notes" placeholder="Liste des pièces, références, dates, lieux de conservation…"></textarea>
+  </div>
+</section>
+
+<footer class="foot">
+  <strong>ITBC<sup>©</sup></strong> · 693 Av des Terres Noires · 81370 St-Sulpice-La-Pointe · 06.87.10.14.34 · gaellekerjean.bilan@gmail.com<br>
+  <em style="color:var(--gold)">Bilan de Compétences 2.0 ©</em>
+</footer>
+
+</div><!-- /shell -->
+
+<!-- Modal -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <h3 id="modalTitle">Confirmer</h3>
+    <p id="modalText">Êtes-vous sûr ?</p>
+    <div class="actions">
+      <button onclick="closeModal()">Annuler</button>
+      <button id="modalConfirm" class="danger primary">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ==============================================================
+   STORAGE
+   ============================================================== */
+const STORAGE_KEY = 'itbc_portefeuille_v1';
+
+const TABLE_SCHEMAS = {
+  formations: {
+    fields: [
+      {key:'dates', type:'input', placeholder:'2018 – 2020'},
+      {key:'nature', type:'textarea', placeholder:'Intitulé, contenu, matières…'},
+      {key:'diplome', type:'textarea', placeholder:'Diplôme obtenu (attestations en annexe)'},
+      {key:'interet', type:'select', options:['','−','+','++']},
+      {key:'raison', type:'textarea', placeholder:'Pourquoi cette formation'},
+      {key:'interruption', type:'textarea', placeholder:'Si interruption, motif'},
+    ]
+  },
+  experiences: {
+    fields: [
+      {key:'dates', type:'input', placeholder:'2020 – 2024'},
+      {key:'poste', type:'textarea', placeholder:'Intitulé du poste'},
+      {key:'entreprise', type:'textarea', placeholder:'Nom · ville'},
+      {key:'quotite', type:'input', placeholder:'100%'},
+      {key:'interet', type:'select', options:['','−','+','++']},
+      {key:'taches', type:'textarea', placeholder:'5 tâches principales minimum'},
+      {key:'motif', type:'textarea', placeholder:'Motif de départ'},
+    ]
+  },
+  activites: {
+    fields: [
+      {key:'dates', type:'input', placeholder:'2015 – auj.'},
+      {key:'nature', type:'textarea', placeholder:'Sport, art, bénévolat…'},
+      {key:'mois', type:'input', placeholder:'24'},
+      {key:'raisons', type:'textarea', placeholder:'Ce qui m\'a poussé à choisir…'},
+      {key:'motif', type:'textarea', placeholder:'Si interrompue, pourquoi'},
+    ]
+  },
+  domaine: {
+    fields: [
+      {key:'activite', type:'textarea', placeholder:'Ex. Vente, gestion d\'équipe…'},
+      {key:'savoirfaire', type:'textarea', placeholder:'Verbes d\'action : accueillir, gérer, planifier…'},
+      {key:'niv_sf', type:'select', options:['','1','2','3']},
+      {key:'savoir', type:'textarea', placeholder:'Connaissances : techniques, produits, disciplines…'},
+      {key:'niv_s', type:'select', options:['','1','2','3']},
+      {key:'savoiretre', type:'textarea', placeholder:'Qualités personnelles mobilisées'},
+    ]
+  },
+  extra: {
+    fields: [
+      {key:'activite', type:'textarea', placeholder:'Ex. Running, théâtre, bénévolat…'},
+      {key:'savoirfaire', type:'textarea', placeholder:'Verbes d\'action'},
+      {key:'savoir', type:'textarea', placeholder:'Connaissances mobilisées'},
+      {key:'savoiretre', type:'textarea', placeholder:'Qualités développées'},
+      {key:'apport', type:'textarea', placeholder:'Bien-être, lien social, confiance…'},
+    ]
+  },
+  pistes: {
+    fields: [
+      {key:'metier', type:'textarea', placeholder:'Intitulé du métier ou de la fonction'},
+      {key:'atouts', type:'textarea', placeholder:'Ce qui m\'attire'},
+      {key:'freins', type:'textarea', placeholder:'Ce qui me retient ou questionne'},
+      {key:'prerequis', type:'textarea', placeholder:'Formation, expérience, certification…'},
+      {key:'marche', type:'textarea', placeholder:'Offres, secteur, prospective'},
+    ]
+  },
+  plan_pp: {
+    fields: [
+      {key:'etape', type:'textarea', placeholder:'Action concrète à mener'},
+      {key:'quand', type:'textarea', placeholder:'Date / échéance'},
+      {key:'qui', type:'textarea', placeholder:'Personnes, organismes ressources'},
+    ]
+  },
+  plan_pa1: { fields: null }, // alias of plan_pp
+  plan_pa2: { fields: null },
+};
+TABLE_SCHEMAS.plan_pa1.fields = TABLE_SCHEMAS.plan_pp.fields;
+TABLE_SCHEMAS.plan_pa2.fields = TABLE_SCHEMAS.plan_pp.fields;
+
+const INITIAL_ROWS = {
+  formations: 3, experiences: 3, activites: 3,
+  domaine: 4, extra: 3, pistes: 2,
+  plan_pp: 4, plan_pa1: 3, plan_pa2: 3,
+};
+
+let state = { fields:{}, tables:{} };
+let saveTimer = null;
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      state = JSON.parse(raw);
+      if(!state.fields) state.fields = {};
+      if(!state.tables) state.tables = {};
+    }
+  }catch(e){ console.warn('load failed', e); state = {fields:{}, tables:{}}; }
+}
+
+function persist(){
+  clearTimeout(saveTimer);
+  setStatus('Modifié…', false);
+  saveTimer = setTimeout(()=>{
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      setStatus('Enregistré ✓', true);
+    }catch(e){
+      console.error(e);
+      setStatus('Erreur d\'enregistrement', false);
+    }
+  }, 350);
+}
+
+function setStatus(msg, ok){
+  const el = document.getElementById('saveStatus');
+  el.textContent = msg;
+  el.classList.toggle('saved', !!ok);
+}
+
+/* ==============================================================
+   FIELDS
+   ============================================================== */
+function initFields(){
+  document.querySelectorAll('[data-key]').forEach(el=>{
+    const key = el.dataset.key;
+    const val = state.fields[key];
+    if(val !== undefined){
+      if(el.type === 'checkbox'){ el.checked = !!val; }
+      else { el.value = val; }
+    }
+    const evt = (el.tagName==='SELECT' || el.type==='checkbox') ? 'change' : 'input';
+    el.addEventListener(evt, ()=>{
+      state.fields[key] = (el.type==='checkbox') ? el.checked : el.value;
+      persist();
+    });
+  });
+}
+
+/* ==============================================================
+   TABLES
+   ============================================================== */
+function makeCellEl(field, value){
+  let el;
+  if(field.type === 'textarea'){
+    el = document.createElement('textarea');
+    el.rows = 2;
+  } else if(field.type === 'select'){
+    el = document.createElement('select');
+    field.options.forEach(opt=>{
+      const o = document.createElement('option');
+      o.value = opt; o.textContent = opt || '—';
+      el.appendChild(o);
+    });
+  } else {
+    el = document.createElement('input');
+    el.type = 'text';
+  }
+  if(field.placeholder) el.placeholder = field.placeholder;
+  if(value !== undefined && value !== null) el.value = value;
+  return el;
+}
+
+function buildRow(tableKey, rowData){
+  const schema = TABLE_SCHEMAS[tableKey];
+  const tr = document.createElement('tr');
+  schema.fields.forEach(field=>{
+    const td = document.createElement('td');
+    if(field.type !== 'textarea') td.classList.add('compact');
+    const el = makeCellEl(field, rowData[field.key]);
+    el.addEventListener('input', ()=>{
+      rowData[field.key] = el.value;
+      persist();
+    });
+    el.addEventListener('change', ()=>{
+      rowData[field.key] = el.value;
+      persist();
+    });
+    td.appendChild(el);
+    tr.appendChild(td);
+  });
+  // delete button as part of last cell
+  const lastTd = tr.lastChild;
+  const delBtn = document.createElement('button');
+  delBtn.innerHTML = '✕';
+  delBtn.title = 'Supprimer cette ligne';
+  delBtn.style.cssText = 'position:absolute;top:6px;right:6px;background:transparent;border:none;color:#b6ad9b;cursor:pointer;font-size:14px;padding:2px 6px;border-radius:50%;line-height:1';
+  delBtn.onmouseenter = ()=>{ delBtn.style.background='#f1dccd'; delBtn.style.color='#c1734a'; };
+  delBtn.onmouseleave = ()=>{ delBtn.style.background='transparent'; delBtn.style.color='#b6ad9b'; };
+  delBtn.onclick = ()=>{
+    const idx = state.tables[tableKey].indexOf(rowData);
+    if(idx > -1){ state.tables[tableKey].splice(idx,1); persist(); renderTable(tableKey); }
+  };
+  lastTd.style.position = 'relative';
+  lastTd.appendChild(delBtn);
+  return tr;
+}
+
+function renderTable(tableKey){
+  const tbody = document.querySelector(`[data-table="${tableKey}"]`);
+  if(!tbody) return;
+  tbody.innerHTML = '';
+  if(!state.tables[tableKey] || !state.tables[tableKey].length){
+    state.tables[tableKey] = [];
+    const n = INITIAL_ROWS[tableKey] || 2;
+    for(let i=0;i<n;i++) state.tables[tableKey].push({});
+  }
+  state.tables[tableKey].forEach(rowData=>{
+    tbody.appendChild(buildRow(tableKey, rowData));
+  });
+}
+
+function addRow(tableKey){
+  if(!state.tables[tableKey]) state.tables[tableKey] = [];
+  state.tables[tableKey].push({});
+  persist();
+  renderTable(tableKey);
+  // focus first input of new row
+  const tbody = document.querySelector(`[data-table="${tableKey}"]`);
+  const lastRow = tbody.lastElementChild;
+  const first = lastRow && lastRow.querySelector('textarea, input, select');
+  if(first) first.focus();
+}
+
+function initTables(){
+  Object.keys(TABLE_SCHEMAS).forEach(renderTable);
+}
+
+/* ==============================================================
+   EXPORT / IMPORT / RESET
+   ============================================================== */
+function exportJSON(){
+  const data = {
+    _meta: {
+      app: 'ITBC Portefeuille de compétences 2.0',
+      version: 1,
+      exported_at: new Date().toISOString(),
+    },
+    ...state
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const name = (state.fields.beneficiaire || 'portefeuille').replace(/[^a-zA-Z0-9_-]+/g,'_');
+  const date = new Date().toISOString().slice(0,10);
+  a.href = url; a.download = `${name}_portefeuille_${date}.json`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function importJSON(e){
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const data = JSON.parse(reader.result);
+      if(!data.fields && !data.tables){
+        alert('Fichier non reconnu — assurez-vous que c\'est un export de ce portefeuille.');
+        return;
+      }
+      openModal({
+        title:'Importer ces données ?',
+        text:'Vos données actuelles seront remplacées par celles du fichier. Cette action est irréversible.',
+        confirmLabel:'Remplacer',
+        danger:true,
+        onConfirm:()=>{
+          state = { fields: data.fields || {}, tables: data.tables || {} };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          location.reload();
+        }
+      });
+    }catch(err){
+      alert('Erreur de lecture du fichier : ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function askReset(){
+  openModal({
+    title:'Tout effacer ?',
+    text:'Toutes vos réponses seront définitivement supprimées de ce navigateur. Pensez à exporter d\'abord si vous voulez conserver une copie.',
+    confirmLabel:'Tout effacer',
+    danger:true,
+    onConfirm:()=>{
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+  });
+}
+
+function openModal({title, text, confirmLabel, danger, onConfirm}){
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalText').textContent = text;
+  const btn = document.getElementById('modalConfirm');
+  btn.textContent = confirmLabel || 'Confirmer';
+  btn.classList.toggle('danger', !!danger);
+  btn.onclick = ()=>{ closeModal(); onConfirm && onConfirm(); };
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('show'); }
+document.getElementById('modal').addEventListener('click', e=>{
+  if(e.target.id === 'modal') closeModal();
+});
+
+/* ==============================================================
+   BOOT
+   ============================================================== */
+loadState();
+initFields();
+initTables();
+setStatus(localStorage.getItem(STORAGE_KEY) ? 'Enregistré ✓' : 'Prêt', !!localStorage.getItem(STORAGE_KEY));
+</script>
+
+</body>
+</html>
